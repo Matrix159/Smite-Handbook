@@ -11,7 +11,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.matrix.materializedsmite.ui.GodDetails
 import com.matrix.materializedsmite.ui.GodList
-import com.matrix.materializedsmite.viewmodels.SmiteAppViewModel
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 
@@ -25,15 +24,15 @@ fun SmiteApp() {
   val navController: NavHostController = rememberNavController()
   val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-  val smiteAppViewModel: SmiteAppViewModel = viewModel()
+  val smiteViewModel: SmiteViewModel = viewModel()
   NavHost(navController = navController, startDestination = NavigationRoutes.GodList) {
     composable(NavigationRoutes.GodList) {
-      val smiteViewModel = hiltViewModel<SmiteViewModel>()
+      //val smiteViewModel = hiltViewModel<SmiteViewModel>()
       GodList(smiteViewModel) { selectedGod ->
-        smiteAppViewModel.setGod(selectedGod)
+        smiteViewModel.setGod(selectedGod)
         navController.navigate(NavigationRoutes.GotDetails)
       }
     }
-    composable(NavigationRoutes.GotDetails) { GodDetails(smiteAppViewModel) }
+    composable(NavigationRoutes.GotDetails) { GodDetails(smiteViewModel) }
   }
 }

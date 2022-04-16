@@ -11,11 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.matrix.materializedsmite.viewmodels.SmiteAppViewModel
+import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GodDetails(smiteAppViewModel: SmiteAppViewModel, modifier: Modifier = Modifier) {
+fun GodDetails(smiteAppViewModel: SmiteViewModel, modifier: Modifier = Modifier) {
   val selectedGod = smiteAppViewModel.selectedGod.value
   if (selectedGod != null) {
     Column(

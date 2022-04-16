@@ -29,9 +29,12 @@ fun GodList(
 ) {
   Column {
     val gods = smiteViewModel.gods.value
-    LaunchedEffect(true) {
-      smiteViewModel.getGods()
+    if (gods.isEmpty()) {
+      LaunchedEffect(true) {
+        smiteViewModel.getGods()
+      }
     }
+
     if (gods.isNotEmpty()) {
       LazyVerticalGrid(cells = GridCells.Fixed(3), modifier = Modifier.fillMaxSize()) {
         items(items = gods) { god ->

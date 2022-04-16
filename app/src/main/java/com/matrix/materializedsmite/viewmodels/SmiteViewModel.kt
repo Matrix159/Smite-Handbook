@@ -20,8 +20,16 @@ class SmiteViewModel @Inject constructor(
   val gods: State<List<GodInformation>>
     get() = _gods
 
+  private val _selectedGod: MutableState<GodInformation?> = mutableStateOf(null)
+  val selectedGod: State<GodInformation?>
+    get() = _selectedGod
+
   suspend fun getGods() {
     val gods: ApiResult<List<GodInformation>> = smiteRepo.getGods()
     _gods.value = gods.successOr(listOf())
+  }
+
+  fun setGod(godInformation: GodInformation) {
+    _selectedGod.value = godInformation
   }
 }
