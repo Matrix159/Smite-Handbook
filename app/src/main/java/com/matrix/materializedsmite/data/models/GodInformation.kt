@@ -206,3 +206,7 @@ data class Ability(
   @SerialName("URL")
   val url: String
 )
+
+//val mockedGodInformation = GodInformation(
+//
+//)
