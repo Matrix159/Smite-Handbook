@@ -5,5 +5,5 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 
 class SmiteApi(private val client: HttpClient = ktorHttpClient) {
-  suspend fun getGods(): List<GodInformation> = client.get("http://192.168.86.34:3000/gods")
+  suspend fun getGods(): List<GodInformation> = client.get("http://matrixpi.ddns.net:3000/gods")
 }
