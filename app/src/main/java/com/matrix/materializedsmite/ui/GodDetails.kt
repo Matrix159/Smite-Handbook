@@ -2,6 +2,8 @@ package com.matrix.materializedsmite.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -22,6 +24,7 @@ fun GodDetails(smiteAppViewModel: SmiteViewModel, modifier: Modifier = Modifier)
       modifier = modifier
         .fillMaxSize()
         .padding(8.dp)
+        .verticalScroll(rememberScrollState())
     ) {
       Card(
         modifier = Modifier
@@ -46,11 +49,11 @@ fun GodDetails(smiteAppViewModel: SmiteViewModel, modifier: Modifier = Modifier)
           Text(selectedGod.name)
         }
       }
-      AbilityCard(abilityUrl = selectedGod.godAbility1URL, abilityName = selectedGod.ability1)
-      AbilityCard(abilityUrl = selectedGod.godAbility2URL, abilityName = selectedGod.ability2)
-      AbilityCard(abilityUrl = selectedGod.godAbility3URL, abilityName = selectedGod.ability3)
-      AbilityCard(abilityUrl = selectedGod.godAbility4URL, abilityName = selectedGod.ability4)
-      AbilityCard(abilityUrl = selectedGod.godAbility5URL, abilityName = selectedGod.ability5)
+      AbilityCard(selectedGod.abilityDetails1)
+      AbilityCard(selectedGod.abilityDetails2)
+      AbilityCard(selectedGod.abilityDetails3)
+      AbilityCard(selectedGod.abilityDetails4)
+      AbilityCard(selectedGod.abilityDetails5)
     }
   }
 }
