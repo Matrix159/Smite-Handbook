@@ -3,6 +3,7 @@ package com.matrix.materializedsmite.ui
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +43,10 @@ fun GodList(
     }
 
     if (gods.isNotEmpty()) {
-      LazyVerticalGrid(cells = GridCells.Fixed(3), modifier = Modifier.fillMaxSize()) {
+      LazyVerticalGrid(
+        cells = GridCells.Fixed(3),
+        modifier = Modifier.fillMaxSize()
+      ) {
         items(items = gods) { god ->
           Box(
             contentAlignment = Alignment.BottomCenter,
@@ -54,7 +59,7 @@ fun GodList(
           ) {
             Image(
               painter = rememberImagePainter(god.godCardURL),
-              contentDescription = "Smite god image",
+              contentDescription = god.name,
               contentScale = ContentScale.Crop,
               alignment = Alignment.TopCenter,
               modifier = Modifier.height(180.dp).fillMaxWidth()

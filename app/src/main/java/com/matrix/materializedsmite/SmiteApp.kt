@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.matrix.materializedsmite.ui.GodDetails
+import com.matrix.materializedsmite.ui.GodDetailsExperiment
 import com.matrix.materializedsmite.ui.GodList
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
@@ -33,6 +34,6 @@ fun SmiteApp() {
         navController.navigate(NavigationRoutes.GotDetails)
       }
     }
-    composable(NavigationRoutes.GotDetails) { GodDetails(smiteViewModel) }
+    composable(NavigationRoutes.GotDetails) { GodDetailsExperiment(smiteViewModel) }
   }
 }
