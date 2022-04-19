@@ -1,5 +1,6 @@
 package com.matrix.materializedsmite.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +26,36 @@ class SmiteViewModel @Inject constructor(
     get() = _selectedGod
 
   suspend fun getGods() {
-    val gods: ApiResult<List<GodInformation>> = smiteRepo.getGods()
-    _gods.value = gods.successOr(listOf())
+    try {
+      _gods.value = smiteRepo.getGods()
+    } catch (ex: Exception) {
+      Log.e("SmiteViewModel", ex.toString())
+    }
   }
 
   fun setGod(godInformation: GodInformation) {
     _selectedGod.value = godInformation
+  }
+
+  fun goToPreviousGod() {
+     selectedGod.value?.let {
+       if (gods.value.isNotEmpty()) {
+         val currentIndex = gods.value.indexOf(selectedGod.value)
+         if (currentIndex - 1 >= 0) {
+           _selectedGod.value = gods.value[currentIndex - 1]
+         }
+       }
+     }
+  }
+
+  fun goToNextGod() {
+    selectedGod.value?.let {
+      if (gods.value.isNotEmpty()) {
+        val currentIndex = gods.value.indexOf(selectedGod.value)
+        if (currentIndex + 1 < gods.value.count()) {
+          _selectedGod.value = gods.value[currentIndex + 1]
+        }
+      }
+    }
   }
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.matrix.materializedsmite.data.models.GodInformation
+import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -29,9 +30,14 @@ fun GodList(
   smiteViewModel: SmiteViewModel,
   godClicked: (godInfo: GodInformation) -> Unit
 ) {
-  Column {
+  Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier.fillMaxSize()
+  ) {
     val gods = smiteViewModel.gods.value
     if (gods.isEmpty()) {
+      Loader()
       LaunchedEffect(true) {
         smiteViewModel.getGods()
       }

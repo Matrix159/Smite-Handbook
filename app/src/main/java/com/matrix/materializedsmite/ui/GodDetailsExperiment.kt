@@ -3,11 +3,14 @@ package com.matrix.materializedsmite.ui
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
@@ -23,12 +26,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun GodDetailsExperiment(smiteAppViewModel: SmiteViewModel, modifier: Modifier = Modifier) {
+fun GodDetailsExperiment(smiteAppViewModel: SmiteViewModel,
+                         modifier: Modifier = Modifier) {
   val selectedGod = smiteAppViewModel.selectedGod.value
   val swipeState = rememberSwipeableState(initialValue = 0)
   val heightInPx: Float = with(LocalDensity.current) {
@@ -69,9 +74,23 @@ fun GodDetailsExperiment(smiteAppViewModel: SmiteViewModel, modifier: Modifier =
               1f to Color(0xFF000000)
             )
           )
-//          .border(1.dp, Color.Red)
-//          .height(heightInDp + with(LocalDensity.current) { swipeState.offset.value.toDp() })
       )
+//      Row(
+//        horizontalArrangement = Arrangement.SpaceBetween,
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier.matchParentSize()
+//      ) {
+//        Icon(
+//          imageVector = Icons.Default.KeyboardArrowLeft,
+//          contentDescription = "Go to previous God",
+//          modifier = Modifier.size(64.dp).background(Color(0x80000000)).clickable { smiteAppViewModel.goToPreviousGod() }
+//        )
+//        Icon(
+//          imageVector = Icons.Default.KeyboardArrowRight,
+//          contentDescription = "Go to next God",
+//          modifier = Modifier.size(64.dp).background(Color(0x80000000)).clickable { smiteAppViewModel.goToNextGod() }
+//        )
+//      }
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -89,10 +108,16 @@ fun GodDetailsExperiment(smiteAppViewModel: SmiteViewModel, modifier: Modifier =
       val detailsOffset: Dp =
         if (swipeState.currentValue == 0) heightInDp
         else with(LocalDensity.current) { (-swipeState.offset.value).toDp() }
-      Card(modifier = Modifier
+      Surface(modifier = Modifier
         .fillMaxWidth()
-        .height(heightInDp)
-        .offset(y = detailsOffset)
+        .swipeable(
+          state = swipeState,
+          anchors = anchors,
+          thresholds = { _, _ -> FractionalThreshold(0.3f) },
+          orientation = Orientation.Vertical
+        )
+        .height(with(LocalDensity.current) { (-swipeState.offset.value).toDp() })
+        //.offset(y = )
       ) {
         Text("test")
       }
