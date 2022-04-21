@@ -21,7 +21,6 @@ import coil.compose.rememberImagePainter
 import com.matrix.materializedsmite.data.models.GodInformation
 import java.util.*
 
-
 @Composable
 fun GodScreenBackground(
   selectedGod: GodInformation,
@@ -35,9 +34,11 @@ fun GodScreenBackground(
     modifier = modifier
   ) {
     Image(
-      painter = rememberImagePainter("https://webcdn.hirezstudios.com/smite/god-skins/" +
-        "${underscoreGodName}_standard-" +
-        "${dashGodName}.jpg"),
+      painter = rememberImagePainter(
+        "https://webcdn.hirezstudios.com/smite/god-skins/" +
+          "${underscoreGodName}_standard-" +
+          "${dashGodName}.jpg"
+      ),
       contentDescription = selectedGod.name,
       contentScale = ContentScale.Crop,
       alignment = Alignment.TopCenter,
@@ -68,8 +69,16 @@ fun GodScreenBackground(
         contentDescription = "Drag Up",
         modifier = Modifier.size(32.dp)
       )
-      Text(text = selectedGod.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge)
-      Text(text = selectedGod.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+      Text(
+        text = selectedGod.name,
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleLarge
+      )
+      Text(
+        text = selectedGod.title,
+        fontWeight = FontWeight.Bold,
+        style = MaterialTheme.typography.titleMedium
+      )
     }
   }
 }

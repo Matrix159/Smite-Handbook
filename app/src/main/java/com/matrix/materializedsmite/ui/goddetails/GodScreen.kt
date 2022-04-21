@@ -2,13 +2,15 @@ package com.matrix.materializedsmite.ui
 
 import android.util.Log
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,7 +25,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -49,13 +50,10 @@ fun GodScreen(
         available: Offset,
         source: NestedScrollSource
       ): Offset {
-        Log.d("onPreScroll delta: ", available.y.toString())
         val delta = available.y
         return if (delta < 0) {
-          // There is s (wat was I going to say here...)
           Offset(x = 0f, y = swipeState.performDrag(delta))
         } else {
-          // Parent consumed zero of the scroll
           Offset.Zero
         }
       }
@@ -65,9 +63,7 @@ fun GodScreen(
         available: Offset,
         source: NestedScrollSource
       ): Offset {
-        //Log.d("onPostScroll delta: ", available.y.toString())
-        val delta = available.y
-        return Offset(x = 0f, y = swipeState.performDrag(delta))
+        return Offset(x = 0f, y = swipeState.performDrag(available.y))
       }
 
       override suspend fun onPreFling(available: Velocity): Velocity {
@@ -103,7 +99,8 @@ fun GodScreen(
     ) {
       GodScreenBackground(
         selectedGod = selectedGod,
-        offset = swipeState.offset.value,
+        // Subtract height to "start" at 0 and then move upwards -Y
+        offset = swipeState.offset.value - heightInPx,
         modifier = Modifier.matchParentSize()
       )
       GodDetails(
@@ -111,12 +108,6 @@ fun GodScreen(
         scrollState = scrollState,
         modifier = Modifier
           .matchParentSize()
-//        .swipeable(
-//          state = swipeState,
-//          anchors = anchors,
-//          thresholds = { _, _ -> FractionalThreshold(0.2f) },
-//          orientation = Orientation.Vertical
-//        )
           .offset(x = 0.dp, y = with(LocalDensity.current) { (swipeState.offset.value).toDp() })
       )
     }

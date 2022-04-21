@@ -81,7 +81,8 @@ fun GodList(
                     0F to Color.Transparent,
                     .5F to Color(0x40000000),
                     .75f to Color(0x80000000),
-                    1f to Color(0xFF000000))
+                    1f to Color(0xFF000000)
+                  )
                 )
             )
             Text(

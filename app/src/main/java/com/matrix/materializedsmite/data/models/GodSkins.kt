@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GodSkin (
+data class GodSkin(
   @SerialName("godIcon_URL")
   val godIconURL: String,
 

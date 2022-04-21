@@ -9,11 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.matrix.materializedsmite.data.models.GodInformation
 import com.matrix.materializedsmite.data.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SmiteViewModel @Inject constructor(
@@ -49,14 +46,14 @@ class SmiteViewModel @Inject constructor(
   }
 
   fun goToPreviousGod() {
-     selectedGod.value?.let {
-       if (gods.value.isNotEmpty()) {
-         val currentIndex = gods.value.indexOf(selectedGod.value)
-         if (currentIndex - 1 >= 0) {
-           _selectedGod.value = gods.value[currentIndex - 1]
-         }
-       }
-     }
+    selectedGod.value?.let {
+      if (gods.value.isNotEmpty()) {
+        val currentIndex = gods.value.indexOf(selectedGod.value)
+        if (currentIndex - 1 >= 0) {
+          _selectedGod.value = gods.value[currentIndex - 1]
+        }
+      }
+    }
   }
 
   fun goToNextGod() {
