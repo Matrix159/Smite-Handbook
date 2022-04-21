@@ -5,12 +5,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.matrix.materializedsmite.data.ApiResult
+import androidx.lifecycle.viewModelScope
 import com.matrix.materializedsmite.data.models.GodInformation
 import com.matrix.materializedsmite.data.smite.SmiteRepository
-import com.matrix.materializedsmite.data.successOr
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SmiteViewModel @Inject constructor(
@@ -26,10 +29,18 @@ class SmiteViewModel @Inject constructor(
     get() = _selectedGod
 
   suspend fun getGods() {
-    try {
-      _gods.value = smiteRepo.getGods()
-    } catch (ex: Exception) {
-      Log.e("SmiteViewModel", ex.toString())
+    viewModelScope.launch {
+      try {
+        _gods.value = smiteRepo.getGods()
+//        for (god in _gods.value) {
+//          val skins = smiteRepo.getGodSkins(god.id)
+//          val skinUrlFound = skins.firstOrNull { skin -> skin.skinName == "Standard ${god.name}" }?.godSkinURL
+//          Log.d("SKIN FOUND: ", skinUrlFound.toString())
+//          god.godCardURL = skinUrlFound ?: god.godCardURL
+//        }
+      } catch (ex: Exception) {
+        Log.e("SmiteViewModel", ex.toString())
+      }
     }
   }
 

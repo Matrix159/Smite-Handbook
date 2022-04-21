@@ -1,6 +1,7 @@
 package com.matrix.materializedsmite.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,8 +22,8 @@ import com.matrix.materializedsmite.data.models.ItemDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AbilityCard(abilityDetails: Ability) {
-  Card(modifier = Modifier.padding(bottom = 8.dp).fillMaxWidth()) {
+fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
+  Card(modifier = modifier) {
     Row {
       Image(
         painter = rememberImagePainter(abilityDetails.url),

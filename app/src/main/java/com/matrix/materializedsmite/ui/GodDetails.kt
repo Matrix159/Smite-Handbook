@@ -1,59 +1,42 @@
 package com.matrix.materializedsmite.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GodDetails(smiteAppViewModel: SmiteViewModel, modifier: Modifier = Modifier) {
+fun GodDetails(smiteAppViewModel: SmiteViewModel,
+               scrollState: ScrollState,
+               modifier: Modifier = Modifier) {
   val selectedGod = smiteAppViewModel.selectedGod.value
-  if (selectedGod != null) {
-    Column(
-      modifier = modifier
-        .fillMaxSize()
-        .padding(8.dp)
-        .verticalScroll(rememberScrollState())
-    ) {
-      Card(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(300.dp)
-          .padding(bottom = 16.dp)
-      ) {
-        Image(
-          painter = rememberImagePainter(selectedGod.godCardURL),
-          contentDescription = selectedGod.name,
-          contentScale = ContentScale.Crop,
-          alignment = Alignment.TopCenter,
-          modifier = Modifier
-            .height(200.dp)
-            .fillMaxWidth()
-        )
-        Row(
-          verticalAlignment = Alignment.CenterVertically,
-          horizontalArrangement = Arrangement.Start,
-          modifier = Modifier.fillMaxSize()
-        ) {
-          Text(selectedGod.name)
-        }
+  Surface(modifier) {
+    Column(modifier = Modifier.verticalScroll(scrollState)) {
+      selectedGod?.run {
+        AbilityCard(abilityDetails1, modifier = Modifier
+          .padding(bottom = 8.dp)
+          .fillMaxWidth())
+        AbilityCard(abilityDetails2, modifier = Modifier
+          .padding(bottom = 8.dp)
+          .fillMaxWidth())
+        AbilityCard(abilityDetails3, modifier = Modifier
+          .padding(bottom = 8.dp)
+          .fillMaxWidth())
+        AbilityCard(abilityDetails4, modifier = Modifier
+          .padding(bottom = 8.dp)
+          .fillMaxWidth())
+        AbilityCard(abilityDetails5, modifier = Modifier
+          .padding(bottom = 8.dp)
+          .fillMaxWidth())
       }
-      AbilityCard(selectedGod.abilityDetails1)
-      AbilityCard(selectedGod.abilityDetails2)
-      AbilityCard(selectedGod.abilityDetails3)
-      AbilityCard(selectedGod.abilityDetails4)
-      AbilityCard(selectedGod.abilityDetails5)
     }
   }
 }

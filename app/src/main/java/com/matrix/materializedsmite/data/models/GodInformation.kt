@@ -160,12 +160,12 @@ data class GodInformation(
   val godAbility5URL: String,
 
   @SerialName("godCard_URL")
-  val godCardURL: String,
+  var godCardURL: String,
 
   @SerialName("godIcon_URL")
   val godIconURL: String,
 
-  val id: Long,
+  val id: Int,
   val latestGod: String,
 
   @SerialName("ret_msg")
