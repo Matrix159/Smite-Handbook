@@ -23,7 +23,11 @@ import java.util.*
 
 
 @Composable
-fun GodScreenBackground(selectedGod: GodInformation, offset: Float, modifier: Modifier = Modifier) {
+fun GodScreenBackground(
+  selectedGod: GodInformation,
+  offset: Float,
+  modifier: Modifier = Modifier
+) {
   val underscoreGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "_")
   val dashGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "-")
   Box(

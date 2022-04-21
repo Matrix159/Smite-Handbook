@@ -39,7 +39,7 @@ fun GodScreen(
     LocalConfiguration.current.screenHeightDp.dp.toPx()
   }
   val heightInDp: Dp = LocalConfiguration.current.screenHeightDp.dp
-  val anchors = mapOf(0f to 0, -heightInPx to 1)
+  val anchors = mapOf(heightInPx to 0, 0f to 1)
   //Log.d("SCREEN HEIGHT: ", LocalConfiguration.current.screenHeightDp.toString())
   Log.d("SWIPE STATE: ", with(LocalDensity.current) { swipeState.offset.value }.toString())
   //Log.d("Progress fraction: ", swipeState.progress.fraction.toString())
@@ -117,7 +117,7 @@ fun GodScreen(
 //          thresholds = { _, _ -> FractionalThreshold(0.2f) },
 //          orientation = Orientation.Vertical
 //        )
-          .offset(x = 0.dp, y = with(LocalDensity.current) { (heightInPx + swipeState.offset.value).toDp() })
+          .offset(x = 0.dp, y = with(LocalDensity.current) { (swipeState.offset.value).toDp() })
       )
     }
 
