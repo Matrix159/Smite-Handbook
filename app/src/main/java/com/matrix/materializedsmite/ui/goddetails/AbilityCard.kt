@@ -1,23 +1,23 @@
 package com.matrix.materializedsmite.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.matrix.materializedsmite.data.models.Ability
 import com.matrix.materializedsmite.data.models.AbilityDescription
 import com.matrix.materializedsmite.data.models.ItemDescription
@@ -25,10 +25,17 @@ import com.matrix.materializedsmite.data.models.ItemDescription
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
-  Card(modifier = modifier) {
+  var expanded by remember { mutableStateOf(false) }
+  Card(modifier = modifier
+    .animateContentSize()
+    .clickable { expanded = !expanded }
+  ) {
     Row {
-      Image(
-        painter = rememberImagePainter(abilityDetails.url),
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(abilityDetails.url)
+          .crossfade(true)
+          .build(),
         contentDescription = abilityDetails.summary,
         contentScale = ContentScale.Crop,
         alignment = Alignment.Center,
@@ -41,13 +48,15 @@ fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
         Text(
           text = abilityDetails.summary,
           style = MaterialTheme.typography.titleLarge,
-          modifier = Modifier.padding(4.dp)
+          modifier = Modifier.padding(top = 20.dp, end = 4.dp, bottom = 4.dp, start = 4.dp)
         )
-        Text(
-          text = abilityDetails.description.itemDescription.description,
-          style = MaterialTheme.typography.bodyMedium,
-          modifier = Modifier.padding(4.dp)
-        )
+        if (expanded) {
+          Text(
+            text = abilityDetails.description.itemDescription.description,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(4.dp)
+          )
+        }
       }
     }
   }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,10 +17,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.matrix.materializedsmite.data.models.GodInformation
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
@@ -58,14 +62,13 @@ fun GodList(
               .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
               .clickable { godClicked(god) }
           ) {
-            Image(
-              painter = rememberImagePainter(god.godCardURL),
+            AsyncImage(
+              model = god.godCardURL,
               contentDescription = god.name,
               contentScale = ContentScale.Crop,
               alignment = Alignment.TopCenter,
               modifier = Modifier.height(180.dp).fillMaxWidth()
             )
-
 //            Row(
 //              modifier = Modifier.fillMaxSize(),
 //              verticalAlignment = Alignment.CenterVertically,
