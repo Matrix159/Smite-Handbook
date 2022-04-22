@@ -1,6 +1,5 @@
 package com.matrix.materializedsmite.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,7 +7,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -17,7 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.matrix.materializedsmite.data.models.GodInformation
 import java.util.*
 
@@ -29,19 +28,34 @@ fun GodScreenBackground(
 ) {
   val underscoreGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "_")
   val dashGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "-")
+  val godNameNoSpaces = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "")
   Box(
     contentAlignment = Alignment.BottomCenter,
     modifier = modifier
   ) {
-    Image(
-      painter = rememberImagePainter(
+
+    var image by remember {
+      mutableStateOf(
         "https://webcdn.hirezstudios.com/smite/god-skins/" +
           "${underscoreGodName}_standard-" +
           "${dashGodName}.jpg"
-      ),
+      )
+    }
+
+    AsyncImage(
+      model = image,
       contentDescription = selectedGod.name,
       contentScale = ContentScale.Crop,
       alignment = Alignment.TopCenter,
+      onError = { state ->
+        // Implement a fallback
+        val fallbackUrl = "https://webcdn.hirezstudios.com/smite/god-skins/" +
+          "${underscoreGodName}_standard-" +
+          "${godNameNoSpaces}.jpg"
+        if (image != fallbackUrl) {
+          image = fallbackUrl
+        }
+      },
       modifier = Modifier
         .matchParentSize()
         .offset(y = with(LocalDensity.current) { (offset * .10f).toDp() })

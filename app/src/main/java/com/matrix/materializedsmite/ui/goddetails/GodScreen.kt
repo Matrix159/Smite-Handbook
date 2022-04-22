@@ -35,14 +35,14 @@ fun GodScreen(
   val selectedGod = smiteAppViewModel.selectedGod.value
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
-  Log.d("Scroll state: ", scrollState.value.toString())
+  //Log.d("Scroll state: ", scrollState.value.toString())
   val heightInPx: Float = with(LocalDensity.current) {
     LocalConfiguration.current.screenHeightDp.dp.toPx()
   }
   val heightInDp: Dp = LocalConfiguration.current.screenHeightDp.dp
   val anchors = mapOf(heightInPx to 0, 0f to 1)
   //Log.d("SCREEN HEIGHT: ", LocalConfiguration.current.screenHeightDp.toString())
-  Log.d("SWIPE STATE: ", with(LocalDensity.current) { swipeState.offset.value }.toString())
+  //Log.d("SWIPE STATE: ", with(LocalDensity.current) { swipeState.offset.value }.toString())
   //Log.d("Progress fraction: ", swipeState.progress.fraction.toString())
   val connection = remember {
     object : NestedScrollConnection {
