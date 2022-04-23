@@ -2,7 +2,6 @@ package com.matrix.materializedsmite.ui
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
@@ -12,10 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.matrix.materializedsmite.ui.goddetails.AbilityImage
+import com.matrix.materializedsmite.ui.goddetails.AbilityCard
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 @Composable

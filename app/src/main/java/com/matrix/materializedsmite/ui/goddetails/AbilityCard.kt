@@ -1,4 +1,4 @@
-package com.matrix.materializedsmite.ui
+package com.matrix.materializedsmite.ui.goddetails
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
