@@ -63,23 +63,25 @@ fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
   }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun Preview() {
-  AbilityCard(
-    Ability(
-      id = 1,
-      summary = "Shield of Achilles",
-      url = "https://webcdn.hirezstudios.com/smite/god-abilities/shield-of-achilles.jpg",
-      description = AbilityDescription(
-        itemDescription = ItemDescription(
-          cooldown = "14s",
-          cost = "60/65/70/75/80",
-          description = "Achilles punches forward with the edge of his Shield, inflicting massive damage and stunning enemy targets hit by the impact. The force of his punch continues to radiate past his initial target area, dealing 75% damage to targets farther away.",
-          menuitems = listOf(),
-          rankitems = listOf()
+  MaterialTheme {
+    AbilityCard(
+      Ability(
+        id = 1,
+        summary = "Shield of Achilles",
+        url = "https://webcdn.hirezstudios.com/smite/god-abilities/shield-of-achilles.jpg",
+        description = AbilityDescription(
+          itemDescription = ItemDescription(
+            cooldown = "14s",
+            cost = "60/65/70/75/80",
+            description = "Achilles punches forward with the edge of his Shield, inflicting massive damage and stunning enemy targets hit by the impact. The force of his punch continues to radiate past his initial target area, dealing 75% damage to targets farther away.",
+            menuitems = listOf(),
+            rankitems = listOf()
+          )
         )
       )
     )
-  )
+  }
 }
