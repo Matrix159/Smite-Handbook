@@ -1,6 +1,5 @@
-package com.matrix.materializedsmite.ui
+package com.matrix.materializedsmite.ui.goddetails
 
-import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,7 +25,7 @@ import kotlin.math.abs
 @Composable
 fun GodScreenBackground(
   selectedGod: GodInformation,
-  offset: Float,
+  offset: Pair<Float, Float>, // Current offset & Max offset
   modifier: Modifier = Modifier
 ) {
   val underscoreGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "_")
@@ -50,7 +49,7 @@ fun GodScreenBackground(
       contentDescription = selectedGod.name,
       contentScale = ContentScale.Crop,
       alignment = Alignment.TopCenter,
-      onError = { state ->
+      onError = {
         // Implement a fallback
         val fallbackUrl = "https://webcdn.hirezstudios.com/smite/god-skins/" +
           "${underscoreGodName}_standard-" +
@@ -59,10 +58,10 @@ fun GodScreenBackground(
           image = fallbackUrl
         }
       },
-      //alpha = abs(1 - abs(offset * .1f)),
+      alpha = 1 - abs(offset.first / offset.second),
       modifier = Modifier
         .matchParentSize()
-        .offset(y = with(LocalDensity.current) { (offset * .10f).toDp() })
+        .offset(y = with(LocalDensity.current) { (offset.first * .10f).toDp() })
     )
     Box(
       modifier = Modifier
@@ -80,7 +79,7 @@ fun GodScreenBackground(
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier
         .padding(start = 16.dp, end = 16.dp, bottom = 64.dp)
-        .offset(y = with(LocalDensity.current) { (offset * .10f).toDp() })
+        .offset(y = with(LocalDensity.current) { (offset.first * .10f).toDp() })
     ) {
       val infiniteTransition = rememberInfiniteTransition()
       val iconOffset by infiniteTransition.animateFloat(

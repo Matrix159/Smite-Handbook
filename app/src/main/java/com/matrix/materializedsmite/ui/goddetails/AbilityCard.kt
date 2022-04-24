@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -24,7 +25,11 @@ import com.matrix.materializedsmite.data.models.ItemDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
+fun AbilityCard(
+  abilityDetails: Ability,
+  isPassiveAbility: Boolean = false,
+  modifier: Modifier = Modifier
+) {
   var expanded by remember { mutableStateOf(false) }
   Card(modifier = modifier
     .animateContentSize()
@@ -46,17 +51,61 @@ fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
           .size(54.dp)
       )
       Column {
-        Text(
-          text = abilityDetails.summary,
-          style = MaterialTheme.typography.titleMedium,
-          modifier = Modifier.padding(top = 20.dp, end = 4.dp, bottom = 4.dp, start = 4.dp)
-        )
+        Row(
+          horizontalArrangement = Arrangement.SpaceBetween,
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp, end = 8.dp, bottom = 4.dp, start = 4.dp)
+        ) {
+          Text(
+            text = abilityDetails.summary,
+            style = MaterialTheme.typography.titleMedium,
+          )
+          if (isPassiveAbility) {
+            Text(
+              text = "Passive",
+              fontStyle = FontStyle.Italic,
+              style = MaterialTheme.typography.titleMedium
+            )
+          }
+        }
+
         if (expanded) {
           Text(
             text = abilityDetails.description.itemDescription.description,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(4.dp)
           )
+
+          val cooldown = abilityDetails.description.itemDescription.cooldown
+          val cost = abilityDetails.description.itemDescription.cost
+          Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(top = 8.dp, end = 8.dp)
+          ) {
+            if (cooldown.isNotBlank()) {
+              Column {
+                Text("Cooldown", style = MaterialTheme.typography.labelMedium)
+                Text(cooldown, style = MaterialTheme.typography.bodyMedium)
+              }
+            }
+            if (cost.isNotBlank()) {
+              Column(horizontalAlignment = Alignment.End) {
+                Text("Cost", style = MaterialTheme.typography.labelMedium)
+                Text(cost, style = MaterialTheme.typography.bodyMedium)
+              }
+            }
+          }
+
+          for (rankItem in abilityDetails.description.itemDescription.rankitems) {
+            Text(
+              "${rankItem.description} ${rankItem.value}",
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
+            )
+          }
         }
       }
     }

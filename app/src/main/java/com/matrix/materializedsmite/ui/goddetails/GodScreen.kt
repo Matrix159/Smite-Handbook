@@ -1,4 +1,4 @@
-package com.matrix.materializedsmite.ui
+package com.matrix.materializedsmite.ui.goddetails
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import com.matrix.materializedsmite.ui.goddetails.GodDetails
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -35,15 +34,12 @@ fun GodScreen(
   val selectedGod = smiteAppViewModel.selectedGod.value
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
-  //Log.d("Scroll state: ", scrollState.value.toString())
+
   val heightInPx: Float = with(LocalDensity.current) {
     LocalConfiguration.current.screenHeightDp.dp.toPx()
   }
-  val heightInDp: Dp = LocalConfiguration.current.screenHeightDp.dp
   val anchors = mapOf(heightInPx to 0, 0f to 1)
-  //Log.d("SCREEN HEIGHT: ", LocalConfiguration.current.screenHeightDp.toString())
-  //Log.d("SWIPE STATE: ", with(LocalDensity.current) { swipeState.offset.value }.toString())
-  //Log.d("Progress fraction: ", swipeState.progress.fraction.toString())
+
   val connection = remember {
     object : NestedScrollConnection {
       override fun onPreScroll(
@@ -99,8 +95,8 @@ fun GodScreen(
     ) {
       GodScreenBackground(
         selectedGod = selectedGod,
-        // Subtract height to "start" at 0 and then move upwards -Y
-        offset = swipeState.offset.value - heightInPx,
+        // Subtract height to "start" at 0 and then move upwards -Y, pass in maximum offset as well
+        offset = Pair(swipeState.offset.value - heightInPx, -heightInPx),
         modifier = Modifier.matchParentSize()
       )
       GodDetails(

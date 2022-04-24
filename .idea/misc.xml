@@ -5,10 +5,11 @@
       <map>
         <entry key="../../../../layout/compose-model-1650583063504.xml" value="0.5" />
         <entry key="../../../../layout/compose-model-1650731100341.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1650839762602.xml" value="0.2833333333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
