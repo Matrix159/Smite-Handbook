@@ -1,10 +1,9 @@
-package com.matrix.materializedsmite.ui
+package com.matrix.materializedsmite.ui.goddetails
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,9 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.matrix.materializedsmite.ui.goddetails.AbilityCard
+import com.matrix.materializedsmite.R
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
 @Composable
@@ -33,13 +33,27 @@ fun GodDetails(
       var selectedAbility: Int by remember { mutableStateOf(0) }
       selectedGod?.run {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//          Row {
+          Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+          ) {
+            Image(
+              painterResource(R.drawable.arthurian_logo),
+              "Pantheon",
+              modifier = Modifier.size(42.dp)
+            )
 //            AsyncImage(
 //              model = selectedGod.
 //            )
-//            Text(selectedGod.name, style = MaterialTheme.typography.displaySmall)
+            Text(selectedGod.name, style = MaterialTheme.typography.titleLarge)
+            Image(
+              painterResource(R.drawable.assassin),
+              "Assassin",
+              modifier = Modifier.size(42.dp)
+            )
 //            AsyncImage()
-//          }
+          }
 
           // Passive
           AbilityCard(

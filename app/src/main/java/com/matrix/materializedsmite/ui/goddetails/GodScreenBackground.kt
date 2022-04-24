@@ -1,5 +1,7 @@
 package com.matrix.materializedsmite.ui
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.materializedsmite.data.models.GodInformation
 import java.util.*
+import kotlin.math.abs
 
 @Composable
 fun GodScreenBackground(
@@ -56,6 +59,7 @@ fun GodScreenBackground(
           image = fallbackUrl
         }
       },
+      //alpha = abs(1 - abs(offset * .1f)),
       modifier = Modifier
         .matchParentSize()
         .offset(y = with(LocalDensity.current) { (offset * .10f).toDp() })
@@ -78,10 +82,20 @@ fun GodScreenBackground(
         .padding(start = 16.dp, end = 16.dp, bottom = 64.dp)
         .offset(y = with(LocalDensity.current) { (offset * .10f).toDp() })
     ) {
+      val infiniteTransition = rememberInfiniteTransition()
+      val iconOffset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -15f,
+        animationSpec = infiniteRepeatable(
+          animation = tween(800, easing = LinearEasing),
+          repeatMode = RepeatMode.Reverse
+        )
+      )
+
       Icon(
         imageVector = Icons.Default.KeyboardArrowUp,
         contentDescription = "Drag Up",
-        modifier = Modifier.size(32.dp)
+        modifier = Modifier.size(32.dp).offset(y = iconOffset.dp)
       )
       Text(
         text = selectedGod.name,

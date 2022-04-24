@@ -28,7 +28,7 @@ fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
   var expanded by remember { mutableStateOf(false) }
   Card(modifier = modifier
     .animateContentSize()
-    .clip(MaterialTheme.shapes.extraLarge)
+    .clip(MaterialTheme.shapes.large)
     .clickable { expanded = !expanded }
   ) {
     Row {
@@ -43,12 +43,12 @@ fun AbilityCard(abilityDetails: Ability, modifier: Modifier = Modifier) {
         modifier = Modifier
           .padding(4.dp)
           .clip(CircleShape)
-          .size(64.dp)
+          .size(54.dp)
       )
       Column {
         Text(
           text = abilityDetails.summary,
-          style = MaterialTheme.typography.titleLarge,
+          style = MaterialTheme.typography.titleMedium,
           modifier = Modifier.padding(top = 20.dp, end = 4.dp, bottom = 4.dp, start = 4.dp)
         )
         if (expanded) {
