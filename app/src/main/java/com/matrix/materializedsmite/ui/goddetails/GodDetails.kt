@@ -23,14 +23,9 @@ fun GodDetails(
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
-//  val systemUiController = rememberSystemUiController()
-//  systemUiController.setSystemBarsColor(
-//    color = Color.Transparent
-//  )
   val selectedGod = smiteAppViewModel.selectedGod.value
   Surface(modifier) {
     Column(modifier = Modifier.verticalScroll(scrollState)) {
-      var selectedAbility: Int by remember { mutableStateOf(0) }
       selectedGod?.run {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
           Row(
