@@ -8,11 +8,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.matrix.materializedsmite.R
+import com.matrix.materializedsmite.ui.components.Chip
+import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.utils.getPantheonResourceId
 import com.matrix.materializedsmite.utils.getRoleResourceId
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
@@ -30,12 +33,14 @@ fun GodDetails(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
           Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
               .fillMaxWidth()
-              .padding(8.dp)
+              .padding(16.dp, 8.dp)
           ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+              horizontalAlignment = Alignment.CenterHorizontally,
+              modifier = Modifier.weight(1f)
+            ) {
               Image(
                 painterResource(getRoleResourceId(selectedGod.roles)),
                 selectedGod.roles,
@@ -43,8 +48,16 @@ fun GodDetails(
               )
               Text(selectedGod.roles)
             }
-            Text(selectedGod.name, style = MaterialTheme.typography.titleLarge)
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+              selectedGod.name,
+              textAlign = TextAlign.Center,
+              style = MaterialTheme.typography.titleLarge,
+              modifier = Modifier.weight(1f, true)
+            )
+            Column(
+              horizontalAlignment = Alignment.CenterHorizontally,
+              modifier = Modifier.weight(1f)
+            ) {
               Image(
                 painterResource(getPantheonResourceId(selectedGod.pantheon)),
                 "Pantheon",
@@ -55,36 +68,48 @@ fun GodDetails(
 
           }
 
-          // Passive
-          AbilityCard(
-            abilityDetails5,
-            isPassiveAbility = true,
-            modifier = Modifier
-              .padding(8.dp)
-              .fillMaxWidth(),
+          var selectedChip by rememberSaveable { mutableStateOf(0) }
+          ChipRow(listOf("Abilities", "Stats", "Lore")) { selectedChip = it }
 
-          )
-          AbilityCard(
-            abilityDetails1, modifier = Modifier
-              .padding(8.dp)
-              .fillMaxWidth()
-          )
-          AbilityCard(
-            abilityDetails2, modifier = Modifier
-              .padding(8.dp)
-              .fillMaxWidth()
-          )
-          AbilityCard(
-            abilityDetails3, modifier = Modifier
-              .padding(8.dp)
-              .fillMaxWidth()
-          )
-          AbilityCard(
-            abilityDetails4, modifier = Modifier
-              .padding(8.dp)
-              .fillMaxWidth()
-          )
+          when (selectedChip) {
+            0 -> {
+              AbilityCard(
+                abilityDetails5,
+                isPassiveAbility = true,
+                modifier = Modifier
+                  .padding(8.dp)
+                  .fillMaxWidth(),
 
+                )
+              AbilityCard(
+                abilityDetails1, modifier = Modifier
+                  .padding(8.dp)
+                  .fillMaxWidth()
+              )
+              AbilityCard(
+                abilityDetails2, modifier = Modifier
+                  .padding(8.dp)
+                  .fillMaxWidth()
+              )
+              AbilityCard(
+                abilityDetails3, modifier = Modifier
+                  .padding(8.dp)
+                  .fillMaxWidth()
+              )
+              AbilityCard(
+                abilityDetails4, modifier = Modifier
+                  .padding(8.dp)
+                  .fillMaxWidth()
+              )
+            }
+            2 -> Text(
+              selectedGod.lore.replace("\\n", "\r\n"),
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(16.dp)
+            )
+            // Passive
+
+          }
         }
       }
     }

@@ -40,8 +40,6 @@ object NavigationRoutes {
 )
 @Composable
 fun SmiteApp() {
-
-
   val smiteViewModel: SmiteViewModel = viewModel()
   val navController: NavHostController = rememberAnimatedNavController()
 
