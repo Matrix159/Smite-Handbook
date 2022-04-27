@@ -4,12 +4,19 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matrix.materializedsmite.data.models.GodInformation
+import com.matrix.materializedsmite.data.models.GodSkin
 import com.matrix.materializedsmite.data.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,24 +24,40 @@ class SmiteViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository
 ) : ViewModel() {
 
-  private val _gods: MutableState<List<GodInformation>> = mutableStateOf(listOf())
-  val gods: State<List<GodInformation>>
-    get() = _gods
 
-  private val _selectedGod: MutableState<GodInformation?> = mutableStateOf(null)
-  val selectedGod: State<GodInformation?>
-    get() = _selectedGod
+  private val _gods = MutableStateFlow<List<GodInformation>>(listOf())
+  val gods: StateFlow<List<GodInformation>> = _gods
 
-  suspend fun getGods() {
-    viewModelScope.launch {
+  private val _selectedGod = MutableStateFlow<GodInformation?>(null)
+  val selectedGod: StateFlow<GodInformation?> = _selectedGod
+
+  private val _selectedGodSkins = MutableStateFlow<List<GodSkin>>(listOf())
+  val selectedGodSkins: StateFlow<List<GodSkin>> = _selectedGodSkins
+
+  init {
+    viewModelScope.launch(Dispatchers.IO) {
       try {
         _gods.value = smiteRepo.getGods()
-//        for (god in _gods.value) {
-//          val skins = smiteRepo.getGodSkins(god.id)
-//          val skinUrlFound = skins.firstOrNull { skin -> skin.skinName == "Standard ${god.name}" }?.godSkinURL
-//          Log.d("SKIN FOUND: ", skinUrlFound.toString())
-//          god.godCardURL = skinUrlFound ?: god.godCardURL
-//        }
+      } catch (ex: Exception) {
+        Log.e("SmiteViewModel", ex.toString())
+      }
+      _selectedGod.collect {
+        try {
+          it?.let {
+            _selectedGodSkins.value = smiteRepo.getGodSkins(it.id)
+            Log.d("SELECTED GOD SKINS: ", _selectedGodSkins.value.joinToString(separator = ", "))
+          }
+        } catch (ex: Exception) {
+          Log.e("SmiteViewModel", ex.toString())
+        }
+      }
+    }
+  }
+  // private val godSkins = _selectedGod.
+  suspend fun getGods() {
+    viewModelScope.launch(Dispatchers.IO) {
+      try {
+        _gods.value = smiteRepo.getGods()
       } catch (ex: Exception) {
         Log.e("SmiteViewModel", ex.toString())
       }
@@ -43,27 +66,5 @@ class SmiteViewModel @Inject constructor(
 
   fun setGod(godInformation: GodInformation) {
     _selectedGod.value = godInformation
-  }
-
-  fun goToPreviousGod() {
-    selectedGod.value?.let {
-      if (gods.value.isNotEmpty()) {
-        val currentIndex = gods.value.indexOf(selectedGod.value)
-        if (currentIndex - 1 >= 0) {
-          _selectedGod.value = gods.value[currentIndex - 1]
-        }
-      }
-    }
-  }
-
-  fun goToNextGod() {
-    selectedGod.value?.let {
-      if (gods.value.isNotEmpty()) {
-        val currentIndex = gods.value.indexOf(selectedGod.value)
-        if (currentIndex + 1 < gods.value.count()) {
-          _selectedGod.value = gods.value[currentIndex + 1]
-        }
-      }
-    }
   }
 }

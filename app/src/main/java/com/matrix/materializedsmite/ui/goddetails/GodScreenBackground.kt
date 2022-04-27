@@ -94,16 +94,19 @@ fun GodScreenBackground(
       Icon(
         imageVector = Icons.Default.KeyboardArrowUp,
         contentDescription = "Drag Up",
+        tint = Color.White,
         modifier = Modifier.size(32.dp).offset(y = iconOffset.dp)
       )
       Text(
         text = selectedGod.name,
         fontWeight = FontWeight.Bold,
+        color = Color.White,
         style = MaterialTheme.typography.titleLarge
       )
       Text(
         text = selectedGod.title,
         fontWeight = FontWeight.Bold,
+        color = Color.White,
         style = MaterialTheme.typography.titleMedium
       )
     }

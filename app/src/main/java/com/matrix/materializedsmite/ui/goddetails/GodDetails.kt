@@ -1,5 +1,6 @@
 package com.matrix.materializedsmite.ui.goddetails
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
@@ -14,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.matrix.materializedsmite.ui.components.Chip
 import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.utils.getPantheonResourceId
 import com.matrix.materializedsmite.utils.getRoleResourceId
@@ -26,10 +26,10 @@ fun GodDetails(
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
-  val selectedGod = smiteAppViewModel.selectedGod.value
+  val selectedGodState by smiteAppViewModel.selectedGod.collectAsState()
   Surface(modifier) {
     Column(modifier = Modifier.verticalScroll(scrollState)) {
-      selectedGod?.run {
+      selectedGodState?.let { selectedGod ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
           Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -69,12 +69,13 @@ fun GodDetails(
           }
 
           var selectedChip by rememberSaveable { mutableStateOf(0) }
-          ChipRow(listOf("Abilities", "Stats", "Lore")) { selectedChip = it }
+          ChipRow(listOf("Abilities", "Lore", "Skins")) { selectedChip = it }
+          val godSkins by smiteAppViewModel.selectedGodSkins.collectAsState()
 
           when (selectedChip) {
             0 -> {
               AbilityCard(
-                abilityDetails5,
+                selectedGod.abilityDetails5,
                 isPassiveAbility = true,
                 modifier = Modifier
                   .padding(8.dp)
@@ -82,33 +83,34 @@ fun GodDetails(
 
                 )
               AbilityCard(
-                abilityDetails1, modifier = Modifier
+                selectedGod.abilityDetails1, modifier = Modifier
                   .padding(8.dp)
                   .fillMaxWidth()
               )
               AbilityCard(
-                abilityDetails2, modifier = Modifier
+                selectedGod.abilityDetails2, modifier = Modifier
                   .padding(8.dp)
                   .fillMaxWidth()
               )
               AbilityCard(
-                abilityDetails3, modifier = Modifier
+                selectedGod.abilityDetails3, modifier = Modifier
                   .padding(8.dp)
                   .fillMaxWidth()
               )
               AbilityCard(
-                abilityDetails4, modifier = Modifier
+                selectedGod.abilityDetails4, modifier = Modifier
                   .padding(8.dp)
                   .fillMaxWidth()
               )
             }
-            2 -> Text(
+            1 -> Text(
               selectedGod.lore.replace("\\n", "\r\n"),
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.padding(16.dp)
             )
-            // Passive
-
+            2 -> GodSkins(godSkins, Modifier.fillMaxSize())
+            // This composable doesn't work as it uses a scrollable element within a scrollable
+            //
           }
         }
       }

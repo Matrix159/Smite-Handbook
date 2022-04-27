@@ -11,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,12 +41,12 @@ fun GodList(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
-    val gods = smiteViewModel.gods.value
+    val gods by smiteViewModel.gods.collectAsState()
     if (gods.isEmpty()) {
       Loader()
-      LaunchedEffect(true) {
-        smiteViewModel.getGods()
-      }
+//      LaunchedEffect(true) {
+//        smiteViewModel.getGods()
+//      }
     }
 
     if (gods.isNotEmpty()) {
@@ -67,7 +69,9 @@ fun GodList(
               contentDescription = god.name,
               contentScale = ContentScale.Crop,
               alignment = Alignment.TopCenter,
-              modifier = Modifier.height(180.dp).fillMaxWidth()
+              modifier = Modifier
+                .height(180.dp)
+                .fillMaxWidth()
             )
 //            Row(
 //              modifier = Modifier.fillMaxSize(),

@@ -3,23 +3,19 @@ package com.matrix.materializedsmite.ui.goddetails
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.matrix.materializedsmite.data.models.Ability
 import com.matrix.materializedsmite.data.models.AbilityDescription
 import com.matrix.materializedsmite.data.models.ItemDescription
@@ -39,24 +35,21 @@ fun AbilityCard(
   ) {
     Row {
       AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(abilityDetails.url)
-          .crossfade(true)
-          .build(),
+        model = abilityDetails.url,
         contentDescription = abilityDetails.summary,
         contentScale = ContentScale.Crop,
         alignment = Alignment.Center,
         modifier = Modifier
-          .padding(4.dp)
-          .clip(CircleShape)
-          .size(54.dp)
+          .animateContentSize()
+          .clip(MaterialTheme.shapes.small)
+          .size(if (expanded) 72.dp else 54.dp)
       )
       Column {
         Row(
           horizontalArrangement = Arrangement.SpaceBetween,
           modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, end = 8.dp, bottom = 4.dp, start = 4.dp)
+            .padding(top = 16.dp, end = 8.dp, bottom = 4.dp, start = 4.dp)
         ) {
           Text(
             text = abilityDetails.summary,
