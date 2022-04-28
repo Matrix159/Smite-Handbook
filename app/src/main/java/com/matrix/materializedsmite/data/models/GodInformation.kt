@@ -174,23 +174,18 @@ data class GodInformation(
 
 @Serializable
 data class AbilityDescription(
-  val itemDescription: ItemDescription
+  val itemDescription: AbilityItemDescription
 )
 
 @Serializable
-data class ItemDescription(
+data class AbilityItemDescription(
   val cooldown: String,
   val cost: String,
   val description: String,
-  val menuitems: List<Item>,
-  val rankitems: List<Item>
+  val menuitems: List<LowerDescriptionValue>,
+  val rankitems: List<LowerDescriptionValue>
 )
 
-@Serializable
-data class Item(
-  val description: String,
-  val value: String
-)
 
 @Serializable
 data class Ability(

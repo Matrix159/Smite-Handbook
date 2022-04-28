@@ -25,6 +25,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.matrix.materializedsmite.ui.GodList
+import com.matrix.materializedsmite.ui.ItemList
 import com.matrix.materializedsmite.ui.goddetails.GodScreen
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
@@ -124,7 +125,7 @@ fun SmiteApp() {
       }
       navigation(startDestination = "itemList", route = Screen.Items.route) {
         composable("itemList") {
-          Text("Items here")
+          ItemList(smiteViewModel = smiteViewModel)
         }
       }
     }

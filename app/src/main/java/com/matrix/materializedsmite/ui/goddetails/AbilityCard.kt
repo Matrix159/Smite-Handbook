@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.materializedsmite.data.models.Ability
 import com.matrix.materializedsmite.data.models.AbilityDescription
-import com.matrix.materializedsmite.data.models.ItemDescription
+import com.matrix.materializedsmite.data.models.AbilityItemDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,7 +116,7 @@ fun Preview() {
         summary = "Shield of Achilles",
         url = "https://webcdn.hirezstudios.com/smite/god-abilities/shield-of-achilles.jpg",
         description = AbilityDescription(
-          itemDescription = ItemDescription(
+          itemDescription = AbilityItemDescription(
             cooldown = "14s",
             cost = "60/65/70/75/80",
             description = "Achilles punches forward with the edge of his Shield, inflicting massive damage and stunning enemy targets hit by the impact. The force of his punch continues to radiate past his initial target area, dealing 75% damage to targets farther away.",

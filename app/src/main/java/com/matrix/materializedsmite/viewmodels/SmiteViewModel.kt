@@ -10,6 +10,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.matrix.materializedsmite.data.models.GodInformation
 import com.matrix.materializedsmite.data.models.GodSkin
+import com.matrix.materializedsmite.data.models.Item
 import com.matrix.materializedsmite.data.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,10 +35,14 @@ class SmiteViewModel @Inject constructor(
   private val _selectedGodSkins = MutableStateFlow<List<GodSkin>>(listOf())
   val selectedGodSkins: StateFlow<List<GodSkin>> = _selectedGodSkins
 
+  private val _items = MutableStateFlow<List<Item>>(listOf())
+  val items: StateFlow<List<Item>> = _items
+
   init {
     viewModelScope.launch(Dispatchers.IO) {
       try {
         _gods.value = smiteRepo.getGods()
+        _items.value = smiteRepo.getItems()
       } catch (ex: Exception) {
         Log.e("SmiteViewModel", ex.toString())
       }
