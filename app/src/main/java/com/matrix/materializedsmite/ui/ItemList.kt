@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -44,7 +45,7 @@ fun ItemList(
 
     if (items.isNotEmpty()) {
       LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Fixed(4),
         modifier = Modifier.fillMaxSize()
       ) {
         items(items = items) { item ->
@@ -81,8 +82,9 @@ fun ItemList(
             Text(
               text = item.deviceName,
               fontWeight = FontWeight.Bold,
-              fontSize = 16.sp,
+              fontSize = 12.sp,
               color = Color.White,
+              textAlign = TextAlign.Center,
               modifier = Modifier.padding(8.dp)
             )
           }
