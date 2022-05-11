@@ -1,5 +1,7 @@
 package com.matrix.materializedsmite.ui.goddetails
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -26,6 +28,21 @@ fun GodDetails(
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
+//  val url = "https://static.wikia.nocookie.net/smite_gamepedia/images/5/5b/Cthulhu_select.ogg/revision/latest?cb=20200617130449" // your URL here
+//  LaunchedEffect(true) {
+//    MediaPlayer().apply {
+//      setAudioAttributes(
+//        AudioAttributes.Builder()
+//          .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+//          .setUsage(AudioAttributes.USAGE_MEDIA)
+//          .build()
+//      )
+//      setDataSource(url)
+//      prepare() // might take long! (for buffering, etc)
+//      start()
+//    }
+//  }
+
   val selectedGodState by smiteAppViewModel.selectedGod.collectAsState()
   Surface(modifier) {
     Column(modifier = Modifier.verticalScroll(scrollState)) {

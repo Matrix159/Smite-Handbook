@@ -9,10 +9,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
@@ -31,24 +31,49 @@ import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 @Composable
 fun ItemList(
   smiteViewModel: SmiteViewModel,
-  //itemClicked: (itemInfo: itemInformation) -> Unit
 ) {
   Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
+    var searchValue by remember { mutableStateOf("") }
+    var selectedTier by remember { mutableStateOf<Int?>(null) }
     val items by smiteViewModel.items.collectAsState()
+    val filteredItems = remember(items, searchValue, selectedTier) {
+      items
+        .filter { item ->
+          if (searchValue.isNotBlank()) {
+            item.deviceName.contains(searchValue, true) && item.activeFlag == "y"
+          } else {
+            item.activeFlag == "y"
+          }
+        }.filter {
+            item -> selectedTier?.let { item.itemTier.toInt() == it } ?: true
+        }
+    }
+    OutlinedTextField(
+      value = searchValue,
+      onValueChange = { searchValue = it },
+      label = {
+        Text("Search for an item")
+      },
+      singleLine = true,
+      modifier = Modifier.padding(4.dp)
+    )
+    ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), chipSelected = {
+      selectedTier = it + 1
+    })
     if (items.isEmpty()) {
       Loader()
     }
 
-    if (items.isNotEmpty()) {
+    if (filteredItems.isNotEmpty()) {
       LazyVerticalGrid(
-        columns = GridCells.Fixed(4),
+        columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize()
       ) {
-        items(items = items) { item ->
+        items(items = filteredItems) { item ->
           Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
@@ -56,7 +81,7 @@ fun ItemList(
               .padding(8.dp)
               .clip(MaterialTheme.shapes.extraLarge)
               .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
-              //.clickable { itemClicked(item) }
+            //.clickable { itemClicked(item) }
           ) {
             AsyncImage(
               model = item.itemIconURL,
@@ -82,7 +107,7 @@ fun ItemList(
             Text(
               text = item.deviceName,
               fontWeight = FontWeight.Bold,
-              fontSize = 12.sp,
+              fontSize = 14.sp,
               color = Color.White,
               textAlign = TextAlign.Center,
               modifier = Modifier.padding(8.dp)

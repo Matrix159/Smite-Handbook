@@ -58,7 +58,7 @@ class SmiteViewModel @Inject constructor(
       }
     }
   }
-  // private val godSkins = _selectedGod.
+
   suspend fun getGods() {
     viewModelScope.launch(Dispatchers.IO) {
       try {
