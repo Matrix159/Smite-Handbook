@@ -33,7 +33,7 @@ fun ItemList(
   smiteViewModel: SmiteViewModel,
 ) {
   Column(
-    verticalArrangement = Arrangement.Center,
+    verticalArrangement = Arrangement.Top,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
@@ -61,9 +61,9 @@ fun ItemList(
       singleLine = true,
       modifier = Modifier.padding(4.dp)
     )
-    ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), chipSelected = {
-      selectedTier = it + 1
-    })
+    ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), unselectable = true) {
+      selectedTier = it?.let { it + 1 }
+    }
     if (items.isEmpty()) {
       Loader()
     }

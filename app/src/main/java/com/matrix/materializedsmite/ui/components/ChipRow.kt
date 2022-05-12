@@ -12,8 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChipRow(values: List<String>, chipSelected: (index: Int) -> Unit) {
-  var selectedChip by rememberSaveable { mutableStateOf(0) }
+fun ChipRow(
+  values: List<String>,
+  unselectable: Boolean = false,
+  chipSelected: (index: Int?) -> Unit
+) {
+  var selectedChip by rememberSaveable { mutableStateOf(if (unselectable) null else 0) }
   Row(
     modifier = Modifier
       .padding(4.dp, 8.dp)
@@ -24,8 +28,14 @@ fun ChipRow(values: List<String>, chipSelected: (index: Int) -> Unit) {
         text = value,
         selected = selectedChip == index,
         onClick = {
-          selectedChip = index
-          chipSelected(selectedChip)
+          // If already selected, unselect
+          if (unselectable && selectedChip == index) {
+            selectedChip = null
+            chipSelected(null)
+          } else {
+            selectedChip = index
+            chipSelected(selectedChip)
+          }
         },
         modifier = Modifier
           .weight(1f)

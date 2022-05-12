@@ -1,8 +1,5 @@
 package com.matrix.materializedsmite.ui.goddetails
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
@@ -86,7 +83,7 @@ fun GodDetails(
           }
 
           var selectedChip by rememberSaveable { mutableStateOf(0) }
-          ChipRow(listOf("Abilities", "Lore", "Skins")) { selectedChip = it }
+          ChipRow(listOf("Abilities", "Lore", "Skins")) { selectedChip = it ?: 0 }
           val godSkins by smiteAppViewModel.selectedGodSkins.collectAsState()
 
           when (selectedChip) {
