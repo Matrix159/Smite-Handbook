@@ -6,7 +6,7 @@ import com.matrix.materializedsmite.R
  * Returns the resource id associated with the input role, else 0 if none maps
  */
 fun getRoleResourceId(role: String): Int {
-  return when(role) {
+  return when (role) {
     "Warrior" -> R.drawable.warrior
     "Guardian" -> R.drawable.guardian
     "Assassin" -> R.drawable.assassin
@@ -20,7 +20,7 @@ fun getRoleResourceId(role: String): Int {
  * Returns the resource id associated with the input pantheon, else 0 if none maps
  */
 fun getPantheonResourceId(pantheon: String): Int {
-  return when(pantheon) {
+  return when (pantheon) {
     "Arthurian" -> R.drawable.arthurian
     "Babylonian" -> R.drawable.babylonian
     "Celtic" -> R.drawable.celtic

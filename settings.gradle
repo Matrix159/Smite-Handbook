@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MaterializedSmite"
 include ':app'
+include ':api'

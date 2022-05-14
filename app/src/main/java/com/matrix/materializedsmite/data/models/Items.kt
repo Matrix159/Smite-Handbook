@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Item (
+data class Item(
   @SerialName("ActiveFlag")
   val activeFlag: String,
 
@@ -58,7 +58,7 @@ data class Item (
 )
 
 @Serializable
-data class ItemDescription (
+data class ItemDescription(
   @SerialName("Description")
   val description: String? = null,
 

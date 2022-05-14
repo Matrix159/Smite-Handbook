@@ -1,13 +1,13 @@
 package com.matrix.materializedsmite.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -18,7 +18,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,7 +29,6 @@ import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.SmiteViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ItemList(
   smiteViewModel: SmiteViewModel,
@@ -48,10 +49,11 @@ fun ItemList(
           } else {
             item.activeFlag == "y"
           }
-        }.filter {
-            item -> selectedTier?.let { item.itemTier.toInt() == it } ?: true
+        }.filter { item ->
+          selectedTier?.let { item.itemTier.toInt() == it } ?: true
         }
     }
+    val focusManager = LocalFocusManager.current
     OutlinedTextField(
       value = searchValue,
       onValueChange = { searchValue = it },
@@ -59,6 +61,10 @@ fun ItemList(
         Text("Search for an item")
       },
       singleLine = true,
+      keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+      keyboardActions = KeyboardActions(onDone = {
+        focusManager.clearFocus()
+      }),
       modifier = Modifier.padding(4.dp)
     )
     ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), unselectable = true) {
@@ -77,7 +83,8 @@ fun ItemList(
           Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
-              .fillMaxWidth()
+              //.height(128.dp)
+              //.fillMaxWidth()
               .padding(8.dp)
               .clip(MaterialTheme.shapes.extraLarge)
               .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
@@ -87,7 +94,7 @@ fun ItemList(
               model = item.itemIconURL,
               contentDescription = item.deviceName,
               contentScale = ContentScale.FillWidth,
-              alignment = Alignment.TopCenter,
+              alignment = Alignment.Center,
               modifier = Modifier
                 //.height(80.dp)
                 .fillMaxWidth()

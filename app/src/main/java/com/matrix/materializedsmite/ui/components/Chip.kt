@@ -33,7 +33,9 @@ fun Chip(
       text = text,
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.labelLarge,
-      modifier = Modifier.padding(30.dp, 8.dp).fillMaxWidth()
+      modifier = Modifier
+        .padding(30.dp, 8.dp)
+        .fillMaxWidth()
     )
   }
 }

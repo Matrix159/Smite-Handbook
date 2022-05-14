@@ -15,10 +15,12 @@ import coil.compose.AsyncImage
 import com.matrix.materializedsmite.data.models.Ability
 
 @Composable
-fun AbilityImage(ability: Ability,
-                 modifier: Modifier = Modifier,
-                 selected: Boolean = false,
-                 clicked: () -> Unit) {
+fun AbilityImage(
+  ability: Ability,
+  modifier: Modifier = Modifier,
+  selected: Boolean = false,
+  clicked: () -> Unit
+) {
   AsyncImage(
     model = ability.url,
     contentDescription = ability.summary,
@@ -26,8 +28,10 @@ fun AbilityImage(ability: Ability,
     alignment = Alignment.Center,
     modifier = modifier
       .clip(CircleShape)
-      .size(64.dp).let {
+      .size(64.dp)
+      .let {
         if (selected) it.border(1.dp, Color.Yellow, CircleShape) else it
-      }.clickable(onClick = clicked)
+      }
+      .clickable(onClick = clicked)
   )
 }

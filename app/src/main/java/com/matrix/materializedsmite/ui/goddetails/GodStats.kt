@@ -20,7 +20,9 @@ fun GodStats(selectedGod: GodInformation, modifier: Modifier = Modifier) {
       onValueChange = { sliderValue = it },
       valueRange = 1f..20f,
       steps = 18,
-      modifier = Modifier.padding(16.dp).height(36.dp)
+      modifier = Modifier
+        .padding(16.dp)
+        .height(36.dp)
     )
     Text(sliderValue.roundToInt().toString())
   }

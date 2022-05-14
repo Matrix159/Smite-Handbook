@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.matrix.materializedsmite.R
 import com.matrix.materializedsmite.data.models.Ability
 import com.matrix.materializedsmite.data.models.AbilityDescription
 import com.matrix.materializedsmite.data.models.AbilityItemDescription

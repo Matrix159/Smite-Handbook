@@ -4,6 +4,7 @@ import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
+import io.ktor.client.features.cache.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
@@ -50,4 +51,6 @@ val ktorHttpClient = HttpClient(Android) {
   install(DefaultRequest) {
     header(HttpHeaders.ContentType, ContentType.Application.Json)
   }
+
+  install(HttpCache)
 }

@@ -3,7 +3,6 @@ package com.matrix.materializedsmite.data.smite
 import com.matrix.materializedsmite.data.models.GodInformation
 import com.matrix.materializedsmite.data.models.GodSkin
 import com.matrix.materializedsmite.data.models.Item
-import kotlinx.coroutines.flow.Flow
 
 interface SmiteRepository {
   suspend fun getGods(): List<GodInformation>
