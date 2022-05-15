@@ -1,20 +1,23 @@
 package com.matrix.materializedsmite
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -26,21 +29,25 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.matrix.materializedsmite.ui.GodList
 import com.matrix.materializedsmite.ui.ItemList
 import com.matrix.materializedsmite.ui.goddetails.GodScreen
-import com.matrix.materializedsmite.viewmodels.SmiteViewModel
+import com.matrix.materializedsmite.ui.itemdetails.ItemDetails
+import com.matrix.materializedsmite.viewmodels.GodViewModel
+import com.matrix.materializedsmite.viewmodels.ItemViewModel
 
 
 object NavigationRoutes {
-  val GodList = "GodList"
-  val GodDetails = "GodDetails"
+  const val GodList = "GodList"
+  const val GodDetails = "GodDetails"
+  const val ItemList = "ItemList"
+  const val ItemDetails = "ItemDetails"
 }
 
 @OptIn(
-  ExperimentalAnimationApi::class, ExperimentalMaterialApi::class,
+  ExperimentalAnimationApi::class,
   ExperimentalMaterial3Api::class
 )
 @Composable
 fun SmiteApp() {
-  val smiteViewModel: SmiteViewModel = viewModel()
+  //val smiteViewModel: SmiteViewModel = viewModel()
   val navController: NavHostController = rememberAnimatedNavController()
 
   Scaffold(bottomBar = {
@@ -58,6 +65,9 @@ fun SmiteApp() {
               // Pop up to the start destination of the graph to
               // avoid building up a large stack of destinations
               // on the back stack as users select items
+              Log.d("back stack entry", navBackStackEntry.toString())
+              Log.d("current destination", currentDestination.toString())
+              //TODO: There's an issue where the second graph's details screen state isn't restored, but the first is
               popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
               }
@@ -94,10 +104,14 @@ fun SmiteApp() {
               else -> null
             }
           }
-        ) {
-          //val smiteViewModel = hiltViewModel<SmiteViewModel>()
-          GodList(smiteViewModel) { selectedGod ->
-            smiteViewModel.setGod(selectedGod)
+        ) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Gods.route)
+          }
+          val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
+
+          GodList(godViewModel) { selectedGod ->
+            godViewModel.setGod(selectedGod)
             navController.navigate(NavigationRoutes.GodDetails)
           }
         }
@@ -118,13 +132,39 @@ fun SmiteApp() {
             }
           }
 
-        ) {
-          GodScreen(smiteViewModel)
+        ) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Gods.route)
+          }
+          val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
+
+          val god by godViewModel.selectedGod.collectAsState()
+          Log.d("god", (god != null).toString())
+          GodScreen(godViewModel)
         }
       }
-      navigation(startDestination = "itemList", route = Screen.Items.route) {
-        composable("itemList") {
-          ItemList(smiteViewModel = smiteViewModel)
+      navigation(startDestination = NavigationRoutes.ItemList, route = Screen.Items.route) {
+        composable(NavigationRoutes.ItemList) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Items.route)
+          }
+          val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
+
+          val items by itemViewModel.items.collectAsState()
+          ItemList(items = items) {
+            itemViewModel.setItem(it)
+            navController.navigate(NavigationRoutes.ItemDetails)
+          }
+        }
+        composable(NavigationRoutes.ItemDetails) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Items.route)
+          }
+          val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
+
+          val item by itemViewModel.selectedItem.collectAsState()
+          Log.d("item", item.toString())
+          ItemDetails(itemViewModel, modifier = Modifier.fillMaxSize())
         }
       }
     }

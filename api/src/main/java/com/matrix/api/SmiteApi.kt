@@ -1,8 +1,8 @@
-package com.matrix.materializedsmite.data
+package com.matrix.api
 
-import com.matrix.materializedsmite.data.models.GodInformation
-import com.matrix.materializedsmite.data.models.GodSkin
-import com.matrix.materializedsmite.data.models.Item
+import com.matrix.api.models.GodInformation
+import com.matrix.api.models.GodSkin
+import com.matrix.api.models.Item
 import io.ktor.client.*
 import io.ktor.client.request.*
 

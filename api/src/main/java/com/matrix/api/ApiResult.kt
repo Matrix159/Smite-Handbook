@@ -1,4 +1,4 @@
-package com.matrix.materializedsmite.data
+package com.matrix.api
 
 /**
  * A generic class that holds a value or an exception

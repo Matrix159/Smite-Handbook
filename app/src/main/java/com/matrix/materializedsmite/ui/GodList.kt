@@ -24,14 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.matrix.materializedsmite.data.models.GodInformation
+import com.matrix.api.models.GodInformation
 import com.matrix.materializedsmite.ui.components.Loader
-import com.matrix.materializedsmite.viewmodels.SmiteViewModel
+import com.matrix.materializedsmite.viewmodels.GodViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GodList(
-  smiteViewModel: SmiteViewModel,
+  godViewModel: GodViewModel,
   godClicked: (godInfo: GodInformation) -> Unit
 ) {
   Column(
@@ -39,7 +39,7 @@ fun GodList(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
-    val gods by smiteViewModel.gods.collectAsState()
+    val gods by godViewModel.gods.collectAsState()
     if (gods.isEmpty()) {
       Loader()
     }

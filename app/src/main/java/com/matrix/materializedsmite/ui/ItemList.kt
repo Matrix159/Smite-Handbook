@@ -2,6 +2,7 @@ package com.matrix.materializedsmite.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,22 +27,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.matrix.api.models.Item
 import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.ui.components.Loader
-import com.matrix.materializedsmite.viewmodels.SmiteViewModel
+import com.matrix.materializedsmite.viewmodels.GodViewModel
 
 @Composable
 fun ItemList(
-  smiteViewModel: SmiteViewModel,
+  items: List<Item>,
+  itemClicked: (item: Item) -> Unit,
 ) {
   Column(
     verticalArrangement = Arrangement.Top,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
-    var searchValue by remember { mutableStateOf("") }
-    var selectedTier by remember { mutableStateOf<Int?>(null) }
-    val items by smiteViewModel.items.collectAsState()
+    var searchValue by rememberSaveable { mutableStateOf("") }
+    var selectedTier by rememberSaveable { mutableStateOf<Int?>(null) }
     val filteredItems = remember(items, searchValue, selectedTier) {
       items
         .filter { item ->
@@ -88,7 +91,7 @@ fun ItemList(
               .padding(8.dp)
               .clip(MaterialTheme.shapes.extraLarge)
               .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
-            //.clickable { itemClicked(item) }
+              .clickable { itemClicked(item) }
           ) {
             AsyncImage(
               model = item.itemIconURL,

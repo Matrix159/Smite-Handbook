@@ -3,10 +3,10 @@ package com.matrix.materializedsmite.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.materializedsmite.data.models.GodInformation
-import com.matrix.materializedsmite.data.models.GodSkin
-import com.matrix.materializedsmite.data.models.Item
-import com.matrix.materializedsmite.data.smite.SmiteRepository
+import com.matrix.api.models.GodInformation
+import com.matrix.api.models.GodSkin
+import com.matrix.api.models.Item
+import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SmiteViewModel @Inject constructor(
+class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository
 ) : ViewModel() {
 
@@ -29,16 +29,13 @@ class SmiteViewModel @Inject constructor(
   private val _selectedGodSkins = MutableStateFlow<List<GodSkin>>(listOf())
   val selectedGodSkins: StateFlow<List<GodSkin>> = _selectedGodSkins
 
-  private val _items = MutableStateFlow<List<Item>>(listOf())
-  val items: StateFlow<List<Item>> = _items
 
   init {
     viewModelScope.launch(Dispatchers.IO) {
       try {
         _gods.value = smiteRepo.getGods()
-        _items.value = smiteRepo.getItems()
       } catch (ex: Exception) {
-        Log.e("SmiteViewModel", ex.toString())
+        Log.e("GodViewModel", ex.toString())
       }
       _selectedGod.collect {
         try {
@@ -46,7 +43,7 @@ class SmiteViewModel @Inject constructor(
             _selectedGodSkins.value = smiteRepo.getGodSkins(it.id)
           }
         } catch (ex: Exception) {
-          Log.e("SmiteViewModel", ex.toString())
+          Log.e("GodViewModel", ex.toString())
         }
       }
     }

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
-import com.matrix.materializedsmite.data.models.GodSkin
+import com.matrix.api.models.GodSkin
 
 @Composable
 fun GodSkins(godSkins: List<GodSkin>, modifier: Modifier = Modifier) {

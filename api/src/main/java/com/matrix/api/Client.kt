@@ -1,4 +1,4 @@
-package com.matrix.materializedsmite.data
+package com.matrix.api
 
 import android.util.Log
 import io.ktor.client.*

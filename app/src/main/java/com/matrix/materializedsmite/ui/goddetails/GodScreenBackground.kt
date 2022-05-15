@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.materializedsmite.data.models.GodInformation
+import com.matrix.api.models.GodInformation
 import java.util.*
 import kotlin.math.abs
 

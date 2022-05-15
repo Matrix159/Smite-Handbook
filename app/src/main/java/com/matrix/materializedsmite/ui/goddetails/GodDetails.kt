@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.dp
 import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.utils.getPantheonResourceId
 import com.matrix.materializedsmite.utils.getRoleResourceId
-import com.matrix.materializedsmite.viewmodels.SmiteViewModel
+import com.matrix.materializedsmite.viewmodels.GodViewModel
 
 @Composable
 fun GodDetails(
-  smiteAppViewModel: SmiteViewModel,
+  smiteAppViewModel: GodViewModel,
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {

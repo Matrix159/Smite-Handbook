@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.matrix.materializedsmite.data.models.GodInformation
+import com.matrix.api.models.GodInformation
 import kotlin.math.roundToInt
 
 @Composable

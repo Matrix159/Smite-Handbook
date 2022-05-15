@@ -1,4 +1,4 @@
-package com.matrix.materializedsmite.data.models
+package com.matrix.api.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -11,6 +11,8 @@ import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,15 +24,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import com.matrix.materializedsmite.viewmodels.SmiteViewModel
+import com.matrix.materializedsmite.viewmodels.GodViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GodScreen(
-  smiteAppViewModel: SmiteViewModel,
+  smiteAppViewModel: GodViewModel,
   modifier: Modifier = Modifier
 ) {
-  val selectedGod = smiteAppViewModel.selectedGod.value
+  val selectedGod by smiteAppViewModel.selectedGod.collectAsState()
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
 
@@ -93,7 +95,7 @@ fun GodScreen(
         .nestedScroll(connection),
     ) {
       GodScreenBackground(
-        selectedGod = selectedGod,
+        selectedGod = selectedGod!!,
         // Subtract height to "start" at 0 and then move upwards -Y, pass in maximum offset as well
         offset = Pair(swipeState.offset.value - heightInPx, -heightInPx),
         modifier = Modifier.matchParentSize()
