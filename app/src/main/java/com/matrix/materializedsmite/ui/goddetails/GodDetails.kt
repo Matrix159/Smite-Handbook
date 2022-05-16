@@ -1,5 +1,9 @@
 package com.matrix.materializedsmite.ui.goddetails
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
@@ -18,6 +22,7 @@ import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.utils.getPantheonResourceId
 import com.matrix.materializedsmite.utils.getRoleResourceId
 import com.matrix.materializedsmite.viewmodels.GodViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun GodDetails(
@@ -117,14 +122,13 @@ fun GodDetails(
                   .fillMaxWidth()
               )
             }
-            1 -> Text(
-              selectedGod.lore.replace("\\n", "\r\n"),
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.padding(16.dp)
-            )
+            1 -> {
+             Lore(
+               god = selectedGod,
+               modifier = Modifier.fillMaxSize()
+             )
+            }
             2 -> GodSkins(godSkins, Modifier.fillMaxSize())
-            // This composable doesn't work as it uses a scrollable element within a scrollable
-            //
           }
         }
       }
