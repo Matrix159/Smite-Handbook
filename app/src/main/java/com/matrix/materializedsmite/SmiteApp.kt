@@ -53,8 +53,10 @@ fun SmiteApp() {
   Scaffold(bottomBar = {
     val topScreens = listOf(Screen.Gods, Screen.Items)
     NavigationBar {
+
       val navBackStackEntry by navController.currentBackStackEntryAsState()
       val currentDestination = navBackStackEntry?.destination
+
       topScreens.forEachIndexed { index, screen ->
         NavigationBarItem(
           icon = { Icon(painterResource(screen.iconResourceId), contentDescription = null) },
@@ -65,9 +67,6 @@ fun SmiteApp() {
               // Pop up to the start destination of the graph to
               // avoid building up a large stack of destinations
               // on the back stack as users select items
-              Log.d("back stack entry", navBackStackEntry.toString())
-              Log.d("current destination", currentDestination.toString())
-              //TODO: There's an issue where the second graph's details screen state isn't restored, but the first is
               popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
               }
@@ -149,7 +148,6 @@ fun SmiteApp() {
             navController.getBackStackEntry(Screen.Items.route)
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-
           val items by itemViewModel.items.collectAsState()
           ItemList(items = items) {
             itemViewModel.setItem(it)
@@ -162,9 +160,10 @@ fun SmiteApp() {
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
 
-          val item by itemViewModel.selectedItem.collectAsState()
-          Log.d("item", item.toString())
-          ItemDetails(itemViewModel, modifier = Modifier.fillMaxSize())
+          val item = itemViewModel.selectedItem.collectAsState().value
+          if (item != null) {
+            ItemDetails(item, modifier = Modifier.fillMaxSize())
+          }
         }
       }
     }

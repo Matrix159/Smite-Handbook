@@ -1,8 +1,11 @@
 package com.matrix.api.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class Item(
   @SerialName("ActiveFlag")
@@ -55,8 +58,9 @@ data class Item(
 
   @SerialName("ret_msg")
   val retMsg: String? = null
-)
+) : Parcelable
 
+@Parcelize
 @Serializable
 data class ItemDescription(
   @SerialName("Description")
@@ -67,4 +71,4 @@ data class ItemDescription(
 
   @SerialName("SecondaryDescription")
   val secondaryDescription: String? = null
-)
+) : Parcelable
