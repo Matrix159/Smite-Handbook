@@ -23,7 +23,7 @@ const val ITEM_STATE = "ItemViewModel_Item"
 class ItemViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
   private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : ViewModel(), CanError {
 
   private val _items = MutableStateFlow<List<Item>>(savedStateHandle[ITEMS_STATE] ?: listOf())
   val items: StateFlow<List<Item>> = _items
@@ -37,9 +37,10 @@ class ItemViewModel @Inject constructor(
         try {
           _items.value = smiteRepo.getItems()
           savedStateHandle[ITEMS_STATE] = _items.value
-          Log.i("items were loaded", "here")
+          error = null
         } catch (ex: Exception) {
-          Log.e("ItemViewModel", ex.toString())
+          error = ex
+          Log.e(ItemViewModel::class.simpleName, ex.toString())
         }
       }
     }
@@ -49,4 +50,7 @@ class ItemViewModel @Inject constructor(
     _selectedItem.value = item
     savedStateHandle[ITEM_STATE] = item
   }
+
+  override var error: Exception? = null
+
 }

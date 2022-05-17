@@ -148,8 +148,7 @@ fun SmiteApp() {
             navController.getBackStackEntry(Screen.Items.route)
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-          val items by itemViewModel.items.collectAsState()
-          ItemList(items = items) {
+          ItemList(itemViewModel) {
             itemViewModel.setItem(it)
             navController.navigate(NavigationRoutes.ItemDetails)
           }

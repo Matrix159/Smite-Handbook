@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.matrix.api.models.GodInformation
+import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.GodViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GodList(
   godViewModel: GodViewModel,
@@ -40,11 +40,11 @@ fun GodList(
     modifier = Modifier.fillMaxSize()
   ) {
     val gods by godViewModel.gods.collectAsState()
-    if (gods.isEmpty()) {
+    if (godViewModel.error != null) {
+      ErrorText(godViewModel.error?.message ?: "An error occurred, please try reloading.")
+    } else if (gods.isEmpty()) {
       Loader()
-    }
-
-    if (gods.isNotEmpty()) {
+    } else {
       LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize()

@@ -29,12 +29,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.matrix.api.models.Item
 import com.matrix.materializedsmite.ui.components.ChipRow
+import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.GodViewModel
+import com.matrix.materializedsmite.viewmodels.ItemViewModel
 
 @Composable
 fun ItemList(
-  items: List<Item>,
+  itemViewModel: ItemViewModel,
   itemClicked: (item: Item) -> Unit,
 ) {
   Column(
@@ -42,6 +44,7 @@ fun ItemList(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
+    val items by itemViewModel.items.collectAsState()
     var searchValue by rememberSaveable { mutableStateOf("") }
     var selectedTier by rememberSaveable { mutableStateOf<Int?>(null) }
     val filteredItems = remember(items, searchValue, selectedTier) {
@@ -73,11 +76,11 @@ fun ItemList(
     ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), unselectable = true) {
       selectedTier = it?.let { it + 1 }
     }
-    if (items.isEmpty()) {
+    if (itemViewModel.error != null) {
+      ErrorText(itemViewModel.error?.message ?: "An error occurred, please try reloading.")
+    } else if (items.isEmpty()) {
       Loader()
-    }
-
-    if (filteredItems.isNotEmpty()) {
+    } else {
       LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize()

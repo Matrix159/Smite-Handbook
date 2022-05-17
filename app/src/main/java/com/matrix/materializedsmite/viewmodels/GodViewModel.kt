@@ -16,9 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GodViewModel @Inject constructor(
-  private val smiteRepo: SmiteRepository
-) : ViewModel() {
-
+  private val smiteRepo: SmiteRepository,
+) : ViewModel(), CanError {
 
   private val _gods = MutableStateFlow<List<GodInformation>>(listOf())
   val gods: StateFlow<List<GodInformation>> = _gods
@@ -34,27 +33,21 @@ class GodViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       try {
         _gods.value = smiteRepo.getGods()
+        error = null
       } catch (ex: Exception) {
+        error = ex
         Log.e("GodViewModel", ex.toString())
       }
       _selectedGod.collect {
         try {
           it?.let {
             _selectedGodSkins.value = smiteRepo.getGodSkins(it.id)
+            error = null
           }
         } catch (ex: Exception) {
+          error = ex
           Log.e("GodViewModel", ex.toString())
         }
-      }
-    }
-  }
-
-  suspend fun getGods() {
-    viewModelScope.launch(Dispatchers.IO) {
-      try {
-        _gods.value = smiteRepo.getGods()
-      } catch (ex: Exception) {
-        Log.e("SmiteViewModel", ex.toString())
       }
     }
   }
@@ -62,4 +55,6 @@ class GodViewModel @Inject constructor(
   fun setGod(godInformation: GodInformation) {
     _selectedGod.value = godInformation
   }
+
+  override var error: Exception? = null
 }
