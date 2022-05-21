@@ -81,7 +81,7 @@ data class GodInformation(
   val mp5PerLevel: Double,
 
   @SerialName("MagicProtection")
-  val magicProtection: Long,
+  val magicProtection: Double,
 
   @SerialName("MagicProtectionPerLevel")
   val magicProtectionPerLevel: Double,
@@ -117,7 +117,7 @@ data class GodInformation(
   val physicalPowerPerLevel: Double,
 
   @SerialName("PhysicalProtection")
-  val physicalProtection: Long,
+  val physicalProtection: Double,
 
   @SerialName("PhysicalProtectionPerLevel")
   val physicalProtectionPerLevel: Double,
