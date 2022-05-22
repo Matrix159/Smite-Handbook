@@ -1,5 +1,7 @@
 package com.matrix.materializedsmite.ui.goddetails
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +11,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,8 +23,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.matrix.materializedsmite.viewmodels.GodDetailsUiState
 import com.matrix.materializedsmite.viewmodels.GodViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -32,7 +37,19 @@ fun GodScreen(
   smiteAppViewModel: GodViewModel,
   modifier: Modifier = Modifier
 ) {
-  val selectedGod by smiteAppViewModel.selectedGod.collectAsState()
+  // Handle back presses while on the god screen in order to clear the selected god
+  //LocalOnBackPressedDispatcherOwner.current.onBackPressedDispatcher.
+  BackHandler(false) {
+    smiteAppViewModel.clearSelectedGod()
+    //backPressDispatcher?.onBackPressed()
+  }
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val godDetailsUiStateFlow = remember(smiteAppViewModel.godDetailsUiState, lifecycleOwner) {
+    smiteAppViewModel.godDetailsUiState.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+  }
+
+  val godDetailsUiState by godDetailsUiStateFlow.collectAsState(initial = GodDetailsUiState())
+
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
 
@@ -81,7 +98,7 @@ fun GodScreen(
       }
     }
   }
-  if (selectedGod != null) {
+  godDetailsUiState.selectedGod?.let { selectedGod ->
     Box(
       contentAlignment = Alignment.BottomCenter,
       modifier = modifier
@@ -95,13 +112,13 @@ fun GodScreen(
         .nestedScroll(connection),
     ) {
       GodScreenBackground(
-        selectedGod = selectedGod!!,
+        selectedGod = selectedGod,
         // Subtract height to "start" at 0 and then move upwards -Y, pass in maximum offset as well
         offset = Pair(swipeState.offset.value - heightInPx, -heightInPx),
         modifier = Modifier.matchParentSize()
       )
       GodDetails(
-        smiteAppViewModel,
+        godDetailsUiState,
         scrollState = scrollState,
         modifier = Modifier
           .matchParentSize()

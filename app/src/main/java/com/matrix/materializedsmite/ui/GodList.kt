@@ -1,6 +1,5 @@
 package com.matrix.materializedsmite.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,25 +7,29 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.api.models.GodInformation
 import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
+import com.matrix.materializedsmite.viewmodels.GodListUiState
 import com.matrix.materializedsmite.viewmodels.GodViewModel
 
 @Composable
@@ -34,22 +37,28 @@ fun GodList(
   godViewModel: GodViewModel,
   godClicked: (godInfo: GodInformation) -> Unit
 ) {
+  val lifecycleOwner = LocalLifecycleOwner.current
+  val godListUiStateFlow = remember(godViewModel.godListUiState, lifecycleOwner) {
+    godViewModel.godListUiState.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+  }
+
+  val godListUiState by godListUiStateFlow.collectAsState(initial = GodListUiState())
+
   Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.fillMaxSize()
   ) {
-    val gods by godViewModel.gods.collectAsState()
     if (godViewModel.error != null) {
       ErrorText(godViewModel.error?.message ?: "An error occurred, please try reloading.")
-    } else if (gods.isEmpty()) {
+    } else if (godListUiState.gods.isEmpty()) {
       Loader()
     } else {
       LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize()
       ) {
-        items(items = gods) { god ->
+        items(items = godListUiState.gods) { god ->
           Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier

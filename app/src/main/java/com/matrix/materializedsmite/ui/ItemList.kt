@@ -31,7 +31,6 @@ import com.matrix.api.models.Item
 import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
-import com.matrix.materializedsmite.viewmodels.GodViewModel
 import com.matrix.materializedsmite.viewmodels.ItemViewModel
 
 @Composable

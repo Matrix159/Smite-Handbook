@@ -5,11 +5,12 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class LowerDescriptionValue(
   val description: String,
   val value: String
-)
+) : Parcelable
 
 @Parcelize
 @Serializable

@@ -1,6 +1,8 @@
 package com.matrix.materializedsmite
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -47,7 +49,6 @@ object NavigationRoutes {
 )
 @Composable
 fun SmiteApp() {
-  //val smiteViewModel: SmiteViewModel = viewModel()
   val navController: NavHostController = rememberAnimatedNavController()
 
   Scaffold(bottomBar = {
@@ -57,7 +58,7 @@ fun SmiteApp() {
       val navBackStackEntry by navController.currentBackStackEntryAsState()
       val currentDestination = navBackStackEntry?.destination
 
-      topScreens.forEachIndexed { index, screen ->
+      topScreens.forEachIndexed { _, screen ->
         NavigationBarItem(
           icon = { Icon(painterResource(screen.iconResourceId), contentDescription = null) },
           label = { Text(stringResource(screen.resourceId)) },
@@ -137,8 +138,6 @@ fun SmiteApp() {
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
-          val god by godViewModel.selectedGod.collectAsState()
-          Log.d("god", (god != null).toString())
           GodScreen(godViewModel)
         }
       }

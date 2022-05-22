@@ -1,9 +1,5 @@
 package com.matrix.materializedsmite.ui.goddetails
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
@@ -11,8 +7,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,34 +20,17 @@ import androidx.compose.ui.unit.dp
 import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.utils.getPantheonResourceId
 import com.matrix.materializedsmite.utils.getRoleResourceId
-import com.matrix.materializedsmite.viewmodels.GodViewModel
-import kotlinx.coroutines.delay
+import com.matrix.materializedsmite.viewmodels.GodDetailsUiState
 
 @Composable
 fun GodDetails(
-  smiteAppViewModel: GodViewModel,
+  godDetailsUiState: GodDetailsUiState,
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
-//  val url = "https://static.wikia.nocookie.net/smite_gamepedia/images/5/5b/Cthulhu_select.ogg/revision/latest?cb=20200617130449" // your URL here
-//  LaunchedEffect(true) {
-//    MediaPlayer().apply {
-//      setAudioAttributes(
-//        AudioAttributes.Builder()
-//          .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-//          .setUsage(AudioAttributes.USAGE_MEDIA)
-//          .build()
-//      )
-//      setDataSource(url)
-//      prepare() // might take long! (for buffering, etc)
-//      start()
-//    }
-//  }
-
-  val selectedGodState by smiteAppViewModel.selectedGod.collectAsState()
   Surface(modifier) {
     Column(modifier = Modifier.verticalScroll(scrollState)) {
-      selectedGodState?.let { selectedGod ->
+      godDetailsUiState.selectedGod?.let { selectedGod ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
           Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -89,7 +71,6 @@ fun GodDetails(
 
           var selectedChip by rememberSaveable { mutableStateOf(0) }
           ChipRow(listOf("Abilities", "Lore", "Skins")) { selectedChip = it ?: 0 }
-          val godSkins by smiteAppViewModel.selectedGodSkins.collectAsState()
 
           when (selectedChip) {
             0 -> {
@@ -128,7 +109,7 @@ fun GodDetails(
                modifier = Modifier.fillMaxSize()
              )
             }
-            2 -> GodSkins(godSkins, Modifier.fillMaxSize())
+            2 -> GodSkins(godDetailsUiState.godSkins, Modifier.fillMaxSize())
           }
         }
       }

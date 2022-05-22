@@ -1,5 +1,6 @@
 package com.matrix.materializedsmite.ui.goddetails
 
+import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,22 +29,26 @@ fun GodScreenBackground(
   offset: Pair<Float, Float>, // Current offset & Max offset
   modifier: Modifier = Modifier
 ) {
-  val underscoreGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "_")
-  val dashGodName = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "-")
-  val godNameNoSpaces = selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "")
+
+  val underscoreGodName = remember(selectedGod) {
+    selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "_")
+  }
+  val dashGodName = remember(selectedGod) {
+    selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "-")
+  }
+  val godNameNoSpaces = remember(selectedGod) {
+    selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "")
+  }
+  var image = remember(underscoreGodName, dashGodName) {
+      "https://webcdn.hirezstudios.com/smite/god-skins/" +
+        "${underscoreGodName}_standard-" +
+        "${dashGodName}.jpg"
+  }
+
   Box(
     contentAlignment = Alignment.BottomCenter,
     modifier = modifier
   ) {
-
-    var image by remember {
-      mutableStateOf(
-        "https://webcdn.hirezstudios.com/smite/god-skins/" +
-          "${underscoreGodName}_standard-" +
-          "${dashGodName}.jpg"
-      )
-    }
-
     AsyncImage(
       model = image,
       contentDescription = selectedGod.name,

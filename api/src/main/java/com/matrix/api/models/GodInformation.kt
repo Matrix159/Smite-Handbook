@@ -1,8 +1,11 @@
 package com.matrix.api.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class GodInformation(
   @SerialName("Ability1")
@@ -170,13 +173,15 @@ data class GodInformation(
 
   @SerialName("ret_msg")
   val retMsg: String?
-)
+) : Parcelable
 
+@Parcelize
 @Serializable
 data class AbilityDescription(
   val itemDescription: AbilityItemDescription
-)
+) : Parcelable
 
+@Parcelize
 @Serializable
 data class AbilityItemDescription(
   val cooldown: String,
@@ -184,9 +189,9 @@ data class AbilityItemDescription(
   val description: String,
   val menuitems: List<LowerDescriptionValue>,
   val rankitems: List<LowerDescriptionValue>
-)
+) : Parcelable
 
-
+@Parcelize
 @Serializable
 data class Ability(
   @SerialName("Description")
@@ -200,7 +205,7 @@ data class Ability(
 
   @SerialName("URL")
   val url: String
-)
+) : Parcelable
 
 //val mockedGodInformation = GodInformation(
 //

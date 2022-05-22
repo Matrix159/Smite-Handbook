@@ -1,8 +1,11 @@
 package com.matrix.api.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class GodSkin(
   @SerialName("godIcon_URL")
@@ -36,4 +39,4 @@ data class GodSkin(
 
   @SerialName("skin_name")
   val skinName: String
-)
+) : Parcelable
