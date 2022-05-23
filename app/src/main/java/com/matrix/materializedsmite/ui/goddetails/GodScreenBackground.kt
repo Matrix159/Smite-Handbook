@@ -1,6 +1,5 @@
 package com.matrix.materializedsmite.ui.goddetails
 
-import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,7 +8,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -31,13 +32,22 @@ fun GodScreenBackground(
 ) {
 
   val underscoreGodName = remember(selectedGod) {
-    selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "_")
+    selectedGod.name
+      .lowercase(Locale.getDefault())
+      .replace(" ", "_")
+      .replace("'", "")
   }
   val dashGodName = remember(selectedGod) {
-    selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "-")
+    selectedGod.name
+      .lowercase(Locale.getDefault())
+      .replace(" ", "-")
+      .replace("'", "")
   }
   val godNameNoSpaces = remember(selectedGod) {
-    selectedGod.name.lowercase(Locale.getDefault()).replace(" ", "")
+    selectedGod.name
+      .lowercase(Locale.getDefault())
+      .replace(" ", "")
+      .replace("'", "")
   }
   var image = remember(underscoreGodName, dashGodName) {
       "https://webcdn.hirezstudios.com/smite/god-skins/" +

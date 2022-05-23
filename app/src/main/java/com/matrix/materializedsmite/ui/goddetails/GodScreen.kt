@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.placeholder.material.placeholder
 import com.matrix.materializedsmite.viewmodels.GodViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -93,7 +94,7 @@ fun GodScreen(
           thresholds = { _, _ -> FractionalThreshold(0.2f) },
           orientation = Orientation.Vertical
         )
-        .nestedScroll(connection),
+        .nestedScroll(connection)
     ) {
       GodScreenBackground(
         selectedGod = selectedGod,
