@@ -110,7 +110,7 @@ fun SmiteApp() {
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
-          GodList(godViewModel) { selectedGod ->
+          GodList(godViewModel, modifier = Modifier.fillMaxSize()) { selectedGod ->
             godViewModel.setGod(selectedGod)
             navController.navigate(NavigationRoutes.GodDetails)
           }
@@ -138,7 +138,12 @@ fun SmiteApp() {
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
-          GodScreen(godViewModel)
+          BackHandler {
+            //godViewModel.clearSelectedGod()
+            navController.popBackStack()
+          }
+
+          GodScreen(godViewModel, modifier = Modifier.fillMaxSize())
         }
       }
       navigation(startDestination = NavigationRoutes.ItemList, route = Screen.Items.route) {

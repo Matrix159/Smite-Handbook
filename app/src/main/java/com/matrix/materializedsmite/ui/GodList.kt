@@ -35,19 +35,15 @@ import com.matrix.materializedsmite.viewmodels.GodViewModel
 @Composable
 fun GodList(
   godViewModel: GodViewModel,
-  godClicked: (godInfo: GodInformation) -> Unit
+  modifier: Modifier = Modifier,
+  godClicked: (godInfo: GodInformation) -> Unit,
 ) {
-  val lifecycleOwner = LocalLifecycleOwner.current
-  val godListUiStateFlow = remember(godViewModel.godListUiState, lifecycleOwner) {
-    godViewModel.godListUiState.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-  }
-
-  val godListUiState by godListUiStateFlow.collectAsState(initial = GodListUiState())
+  val godListUiState by godViewModel.godListUiState
 
   Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier.fillMaxSize()
+    modifier = modifier
   ) {
     if (godViewModel.error != null) {
       ErrorText(godViewModel.error?.message ?: "An error occurred, please try reloading.")

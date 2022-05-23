@@ -1,6 +1,8 @@
 package com.matrix.materializedsmite.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.api.models.GodInformation
@@ -27,14 +29,14 @@ class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
 ) : ViewModel(), CanError {
 
-  private val _godListUiState = MutableStateFlow(GodListUiState())
-  val godListUiState: StateFlow<GodListUiState> = _godListUiState.asStateFlow()
+  private val _godListUiState = mutableStateOf(GodListUiState())
+  val godListUiState: State<GodListUiState> = _godListUiState
 
-  private val _godDetailsUiState = MutableStateFlow(GodDetailsUiState())
-  val godDetailsUiState: StateFlow<GodDetailsUiState> = _godDetailsUiState
+  private val _godDetailsUiState = mutableStateOf(GodDetailsUiState())
+  val godDetailsUiState: State<GodDetailsUiState> = _godDetailsUiState
 
-  private val _gods = MutableStateFlow<List<GodInformation>>(listOf())
-  val gods: StateFlow<List<GodInformation>> = _gods.asStateFlow()
+  //private val _gods = MutableStateFlow<List<GodInformation>>(listOf())
+  //val gods: StateFlow<List<GodInformation>> = _gods.asStateFlow()
 
   private val _selectedGod = MutableStateFlow<GodInformation?>(null)
   //val selectedGod: StateFlow<GodInformation?> = _selectedGod.asStateFlow()
@@ -43,7 +45,7 @@ class GodViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       try {
         val godsApiResult = smiteRepo.getGods()
-        _godListUiState.update { GodListUiState(gods = godsApiResult) }
+        _godListUiState.value = GodListUiState(gods = godsApiResult)
         error = null
       } catch (ex: Exception) {
         error = ex
@@ -51,14 +53,20 @@ class GodViewModel @Inject constructor(
       }
 
     }
-    _selectedGod.onEach { flowGodInformation ->
+    Log.d("GodViewModel", "init")
+    _selectedGod.onEach { godInformation ->
       try {
-        flowGodInformation?.let { selectedGod ->
-          var godSkins: List<GodSkin>
-          withContext(Dispatchers.IO) {
-            godSkins =  smiteRepo.getGodSkins(selectedGod.id)
+        when(godInformation) {
+          null -> {
+            _godDetailsUiState.value = GodDetailsUiState(selectedGod = null, godSkins = listOf())
           }
-          _godDetailsUiState.update { it.copy(selectedGod = selectedGod, godSkins = godSkins)}
+          else -> {
+            var godSkins: List<GodSkin>
+            withContext(Dispatchers.IO) {
+              godSkins =  smiteRepo.getGodSkins(godInformation.id)
+            }
+            _godDetailsUiState.value = GodDetailsUiState(selectedGod = godInformation, godSkins = godSkins)
+          }
         }
         error = null
       } catch (ex: Exception) {
@@ -66,19 +74,6 @@ class GodViewModel @Inject constructor(
         Log.e("GodViewModel", ex.toString())
       }
     }.launchIn(viewModelScope)
-//   viewModelScope.launch(Dispatchers.IO) {
-//     _selectedGod.collect {
-//       try {
-//         it?.let {
-//           _selectedGodSkins.value = smiteRepo.getGodSkins(it.id)
-//           error = null
-//         }
-//       } catch (ex: Exception) {
-//         error = ex
-//         Log.e("GodViewModel", ex.toString())
-//       }
-//     }
-//   }
   }
 
   fun setGod(godInformation: GodInformation) {
