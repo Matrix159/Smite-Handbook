@@ -61,11 +61,12 @@ class GodViewModel @Inject constructor(
             _godDetailsUiState.value = GodDetailsUiState(selectedGod = null, godSkins = listOf())
           }
           else -> {
+            _godDetailsUiState.value = GodDetailsUiState(selectedGod = godInformation, godSkins = listOf())
             var godSkins: List<GodSkin>
             withContext(Dispatchers.IO) {
               godSkins =  smiteRepo.getGodSkins(godInformation.id)
+              _godDetailsUiState.value = _godDetailsUiState.value.copy(godSkins = godSkins)
             }
-            _godDetailsUiState.value = GodDetailsUiState(selectedGod = godInformation, godSkins = godSkins)
           }
         }
         error = null
