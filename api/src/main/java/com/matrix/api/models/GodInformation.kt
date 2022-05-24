@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// TODO: make a parceable version in the app layer instead of the api layer that we convert to
 @Parcelize
 @Serializable
 data class GodInformation(

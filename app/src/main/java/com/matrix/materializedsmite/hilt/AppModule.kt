@@ -3,8 +3,8 @@ package com.matrix.materializedsmite.hilt
 import android.content.Context
 import androidx.room.Room
 import com.matrix.api.SmiteApi
-import com.matrix.database.DietDatabase
-import com.matrix.database.dao.DietDao
+import com.matrix.materializedsmite.database.SmiteDatabase
+import com.matrix.materializedsmite.database.dao.SmiteDao
 import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import com.matrix.materializedsmite.repositories.smite.impl.SmiteRepositoryImpl
 import dagger.Binds
@@ -26,16 +26,16 @@ abstract class AppModule {
     }
 
     @Provides
-    fun provideDietDao(database: DietDatabase): DietDao {
-      return database.dietDao()
+    fun provideDietDao(database: SmiteDatabase): SmiteDao {
+      return database.smiteDao()
     }
 
     @Provides
     @Singleton
-    fun provideDietDatabase(@ApplicationContext appContext: Context): DietDatabase {
+    fun provideDietDatabase(@ApplicationContext appContext: Context): SmiteDatabase {
       return Room.databaseBuilder(
         appContext,
-        DietDatabase::class.java,
+        SmiteDatabase::class.java,
         "diet_database"
       ).build()
     }
