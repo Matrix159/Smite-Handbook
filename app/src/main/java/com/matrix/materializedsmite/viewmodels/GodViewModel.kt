@@ -1,5 +1,7 @@
 package com.matrix.materializedsmite.viewmodels
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,14 +9,36 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.api.models.GodInformation
 import com.matrix.api.models.GodSkin
+import com.matrix.materializedsmite.SmiteApplication
+import com.matrix.materializedsmite.cache.Cache
 import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
+class GodListCache(private val sharedPreferences: SharedPreferences) : Cache<String, List<GodInformation>> {
+  override suspend fun getAsync(key: String): List<GodInformation> {
+    return withContext(Dispatchers.IO) {
+      sharedPreferences.getString(key, null)?.let {
+        Json.decodeFromString<List<GodInformation>>(it)
+      } ?: listOf()
+    }
+  }
+
+  override suspend fun setAsync(key: String, value: List<GodInformation>) {
+    return withContext(Dispatchers.IO) {
+      sharedPreferences.edit().let {
+        it.putString(key, Json.encodeToString(value))
+        it.apply()
+      }
+    }
+  }
+}
 data class GodListUiState(
   val gods: List<GodInformation> = listOf()
 )
@@ -29,6 +53,7 @@ class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
 ) : ViewModel(), CanError {
 
+  private val godListCache = GodListCache(SmiteApplication.instance.getSharedPreferences("god_list_cache", Context.MODE_PRIVATE))
   private val _godListUiState = mutableStateOf(GodListUiState())
   val godListUiState: State<GodListUiState> = _godListUiState
 
@@ -44,8 +69,10 @@ class GodViewModel @Inject constructor(
   init {
     viewModelScope.launch(Dispatchers.IO) {
       try {
-        val godsApiResult = smiteRepo.getGods()
+        val cachedGodList = godListCache.getAsync("god_list_cache")
+        val godsApiResult = cachedGodList.ifEmpty { smiteRepo.getGods() }
         _godListUiState.value = GodListUiState(gods = godsApiResult)
+        godListCache.setAsync("god_list_cache", godsApiResult)
         error = null
       } catch (ex: Exception) {
         error = ex
