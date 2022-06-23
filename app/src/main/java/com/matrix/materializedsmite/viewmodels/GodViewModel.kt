@@ -39,6 +39,7 @@ class GodListCache(private val sharedPreferences: SharedPreferences) : Cache<Str
     }
   }
 }
+
 data class GodListUiState(
   val gods: List<GodInformation> = listOf()
 )
@@ -48,12 +49,14 @@ data class GodDetailsUiState(
   val godSkins: List<GodSkin> = listOf()
 )
 
+const val GOD_LIST_CACHE_KEY = "god_list_cache"
+
 @HiltViewModel
 class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
 ) : ViewModel(), CanError {
 
-  private val godListCache = GodListCache(SmiteApplication.instance.getSharedPreferences("god_list_cache", Context.MODE_PRIVATE))
+  private val godListCache = GodListCache(SmiteApplication.instance.getSharedPreferences(GOD_LIST_CACHE_KEY, Context.MODE_PRIVATE))
   private val _godListUiState = mutableStateOf(GodListUiState())
   val godListUiState: State<GodListUiState> = _godListUiState
 
@@ -69,10 +72,12 @@ class GodViewModel @Inject constructor(
   init {
     viewModelScope.launch(Dispatchers.IO) {
       try {
-        val cachedGodList = godListCache.getAsync("god_list_cache")
-        val godsApiResult = cachedGodList.ifEmpty { smiteRepo.getGods() }
+        val godsApiResult = godListCache.getAsync(GOD_LIST_CACHE_KEY).ifEmpty {
+          val newResults = smiteRepo.getGods()
+          godListCache.setAsync(GOD_LIST_CACHE_KEY, newResults)
+          newResults
+        }
         _godListUiState.value = GodListUiState(gods = godsApiResult)
-        godListCache.setAsync("god_list_cache", godsApiResult)
         error = null
       } catch (ex: Exception) {
         error = ex
