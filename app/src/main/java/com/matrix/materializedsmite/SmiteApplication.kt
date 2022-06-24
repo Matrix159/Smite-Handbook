@@ -2,6 +2,9 @@ package com.matrix.materializedsmite
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber.*
+import timber.log.Timber.Forest.plant
+
 
 @HiltAndroidApp
 class SmiteApplication : Application() {
@@ -14,5 +17,11 @@ class SmiteApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     instance = this
+
+    if (BuildConfig.DEBUG) {
+      plant(DebugTree())
+    } else {
+      //plant(CrashReportingTree())
+    }
   }
 }

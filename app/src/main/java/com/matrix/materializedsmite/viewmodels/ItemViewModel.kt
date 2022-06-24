@@ -21,6 +21,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import javax.inject.Inject
 
 class ItemListCache(private val sharedPreferences: SharedPreferences) :
@@ -60,7 +61,7 @@ class ItemViewModel @Inject constructor(
   val selectedItem: StateFlow<Item?> = _selectedItem
 
   init {
-    Log.d(ItemViewModel::class.simpleName, "Init of ItemViewModel")
+    Timber.d("Init of ItemViewModel")
     viewModelScope.launch(Dispatchers.IO) {
       try {
         val itemList = itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
@@ -72,7 +73,7 @@ class ItemViewModel @Inject constructor(
         error = null
       } catch (ex: Exception) {
         error = ex
-        Log.e(ItemViewModel::class.simpleName, ex.toString())
+        Timber.e(ex.toString())
       }
     }
   }

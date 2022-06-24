@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 class GodListCache(private val sharedPreferences: SharedPreferences) : Cache<String, List<GodInformation>> {
   override suspend fun getAsync(key: String): List<GodInformation> {
@@ -81,22 +81,23 @@ class GodViewModel @Inject constructor(
         error = null
       } catch (ex: Exception) {
         error = ex
-        Log.e("GodViewModel", ex.toString())
+        Timber.e(ex.toString())
       }
 
     }
-    Log.d("GodViewModel", "init")
+    Timber.d("init")
     _selectedGod.onEach { godInformation ->
       try {
-        when(godInformation) {
+        when (godInformation) {
           null -> {
             _godDetailsUiState.value = GodDetailsUiState(selectedGod = null, godSkins = listOf())
           }
           else -> {
-            _godDetailsUiState.value = GodDetailsUiState(selectedGod = godInformation, godSkins = listOf())
+            _godDetailsUiState.value =
+              GodDetailsUiState(selectedGod = godInformation, godSkins = listOf())
             var godSkins: List<GodSkin>
             withContext(Dispatchers.IO) {
-              godSkins =  smiteRepo.getGodSkins(godInformation.id)
+              godSkins = smiteRepo.getGodSkins(godInformation.id)
               _godDetailsUiState.value = _godDetailsUiState.value.copy(godSkins = godSkins)
             }
           }
@@ -104,7 +105,7 @@ class GodViewModel @Inject constructor(
         error = null
       } catch (ex: Exception) {
         error = ex
-        Log.e("GodViewModel", ex.toString())
+        Timber.e(ex.toString())
       }
     }.launchIn(viewModelScope)
   }
