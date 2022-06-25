@@ -41,18 +41,15 @@ fun ItemList(
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit,
 ) {
-  Box(contentAlignment = Alignment.Center, modifier = modifier) {
-
-    var selectedItem: Item? by remember { mutableStateOf(null) }
-
     Column(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier.fillMaxSize()
+      modifier = modifier
     ) {
       val items by itemViewModel.items.collectAsState()
       var searchValue by rememberSaveable { mutableStateOf("") }
       var selectedTier by rememberSaveable { mutableStateOf<Int?>(null) }
+      var selectedItem: Item? by remember { mutableStateOf(null) }
       val filteredItems = remember(items, searchValue, selectedTier) {
         items
           .filter { item ->
@@ -82,73 +79,76 @@ fun ItemList(
       ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), unselectable = true) {
         selectedTier = it?.let { it + 1 }
       }
-      if (itemViewModel.error != null) {
-        ErrorText(itemViewModel.error?.message ?: "An error occurred, please try reloading.")
-      } else if (items.isEmpty()) {
-        Loader()
-      } else {
-        LazyVerticalGrid(
-          columns = GridCells.Fixed(3),
-          modifier = Modifier.fillMaxSize()
-        ) {
-          items(items = filteredItems) { item ->
-            Box(
-              contentAlignment = Alignment.BottomCenter,
-              modifier = Modifier
-                //.height(128.dp)
-                //.fillMaxWidth()
-                .padding(8.dp)
-                .clip(MaterialTheme.shapes.extraLarge)
-                .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
-                .clickable {
-                  // itemClicked(item)
-                  selectedItem = item
-                }
-            ) {
-              AsyncImage(
-                model = item.itemIconURL,
-                contentDescription = item.deviceName,
-                contentScale = ContentScale.FillWidth,
-                alignment = Alignment.Center,
-                modifier = Modifier
-                  //.height(80.dp)
-                  .fillMaxWidth()
-              )
+
+      Box(contentAlignment = Alignment.Center) {
+        if (itemViewModel.error != null) {
+          ErrorText(itemViewModel.error?.message ?: "An error occurred, please try reloading.")
+        } else if (items.isEmpty()) {
+          Loader()
+        } else {
+          LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier.fillMaxSize()
+          ) {
+            items(items = filteredItems) { item ->
               Box(
+                contentAlignment = Alignment.BottomCenter,
                 modifier = Modifier
-                  .matchParentSize()
-                  .background(
-                    brush = Brush.verticalGradient(
-                      0F to Color.Transparent,
-                      .5F to Color(0x40000000),
-                      .75f to Color(0x80000000),
-                      1f to Color(0xFF000000)
+                  //.height(128.dp)
+                  //.fillMaxWidth()
+                  .padding(8.dp)
+                  .clip(MaterialTheme.shapes.extraLarge)
+                  .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
+                  .clickable {
+                    // itemClicked(item)
+                    selectedItem = item
+                  }
+              ) {
+                AsyncImage(
+                  model = item.itemIconURL,
+                  contentDescription = item.deviceName,
+                  contentScale = ContentScale.FillWidth,
+                  alignment = Alignment.Center,
+                  modifier = Modifier
+                    //.height(80.dp)
+                    .fillMaxWidth()
+                )
+                Box(
+                  modifier = Modifier
+                    .matchParentSize()
+                    .background(
+                      brush = Brush.verticalGradient(
+                        0F to Color.Transparent,
+                        .5F to Color(0x40000000),
+                        .75f to Color(0x80000000),
+                        1f to Color(0xFF000000)
+                      )
                     )
-                  )
-              )
-              Text(
-                text = item.deviceName,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(8.dp)
-              )
+                )
+                Text(
+                  text = item.deviceName,
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 14.sp,
+                  color = Color.White,
+                  textAlign = TextAlign.Center,
+                  modifier = Modifier.padding(8.dp)
+                )
+              }
             }
+          }
+        }
+        this@Column.AnimatedVisibility(selectedItem != null) {
+          selectedItem?.let {
+            ItemDetails(selectedItem!!,
+              Modifier
+                //.border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)
+                .fillMaxSize()
+                .clickable { selectedItem = null }
+            )
           }
         }
       }
     }
-    AnimatedVisibility(selectedItem != null) {
-      selectedItem?.let {
-        ItemDetails(selectedItem!!,
-          Modifier
-            .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
-            .background(MaterialTheme.colorScheme.background, MaterialTheme.shapes.extraLarge)
-            .padding(16.dp)
-            .clickable { selectedItem = null }
-        )
-      }
-    }
   }
-}
