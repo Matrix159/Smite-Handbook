@@ -152,22 +152,23 @@ fun SmiteApp() {
             navController.getBackStackEntry(Screen.Items.route)
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-          ItemList(itemViewModel = itemViewModel, modifier = Modifier.fillMaxSize()) {
-            itemViewModel.setItem(it)
-            navController.navigate(NavigationRoutes.ItemDetails)
-          }
+          ItemList(itemViewModel = itemViewModel, modifier = Modifier.fillMaxSize())
+//          {
+//            itemViewModel.setItem(it)
+//            navController.navigate(NavigationRoutes.ItemDetails)
+//          }
         }
-        composable(NavigationRoutes.ItemDetails) { backStackEntry ->
-          val parentEntry = remember(backStackEntry) {
-            navController.getBackStackEntry(Screen.Items.route)
-          }
-          val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-
-          val item = itemViewModel.selectedItem.collectAsState().value
-          if (item != null) {
-            ItemDetails(item, modifier = Modifier.fillMaxSize())
-          }
-        }
+//        composable(NavigationRoutes.ItemDetails) { backStackEntry ->
+//          val parentEntry = remember(backStackEntry) {
+//            navController.getBackStackEntry(Screen.Items.route)
+//          }
+//          val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
+//
+//          val item = itemViewModel.selectedItem.collectAsState().value
+//          if (item != null) {
+//            ItemDetails(item, modifier = Modifier.fillMaxSize())
+//          }
+//        }
       }
     }
   }

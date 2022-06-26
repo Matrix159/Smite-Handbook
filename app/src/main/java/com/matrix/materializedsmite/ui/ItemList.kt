@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.matrix.api.models.Item
 import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
@@ -39,17 +38,22 @@ import com.matrix.materializedsmite.viewmodels.ItemViewModel
 fun ItemList(
   itemViewModel: ItemViewModel,
   modifier: Modifier = Modifier,
-  itemClicked: (item: Item) -> Unit,
 ) {
+    LaunchedEffect(true) {
+      itemViewModel.loadItems()
+    }
+
     Column(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = modifier
     ) {
+
       val items by itemViewModel.items.collectAsState()
+      val selectedItem by itemViewModel.selectedItem.collectAsState()
+
       var searchValue by rememberSaveable { mutableStateOf("") }
       var selectedTier by rememberSaveable { mutableStateOf<Int?>(null) }
-      var selectedItem: Item? by remember { mutableStateOf(null) }
       val filteredItems = remember(items, searchValue, selectedTier) {
         items
           .filter { item ->
@@ -100,8 +104,7 @@ fun ItemList(
                   .clip(MaterialTheme.shapes.extraLarge)
                   .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
                   .clickable {
-                    // itemClicked(item)
-                    selectedItem = item
+                    itemViewModel.setItem(item)
                   }
               ) {
                 AsyncImage(
@@ -139,13 +142,15 @@ fun ItemList(
         }
         this@Column.AnimatedVisibility(selectedItem != null) {
           selectedItem?.let {
-            ItemDetails(selectedItem!!,
+            ItemDetails(
+              selectedItem!!,
+              itemViewModel.itemIdMap.value,
               Modifier
                 //.border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
                 .fillMaxSize()
-                .clickable { selectedItem = null }
+                .clickable { itemViewModel.setItem(null) }
             )
           }
         }

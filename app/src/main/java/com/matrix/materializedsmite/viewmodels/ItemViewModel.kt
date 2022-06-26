@@ -3,6 +3,9 @@ package com.matrix.materializedsmite.viewmodels
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,8 +17,7 @@ import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -57,17 +59,22 @@ class ItemViewModel @Inject constructor(
   private val _items = MutableStateFlow<List<Item>>(listOf())
   val items: StateFlow<List<Item>> = _items
 
+  private val _itemIdMap: MutableState<Map<Long, Item>?> = mutableStateOf(null)
+  val itemIdMap: State<Map<Long, Item>?> = _itemIdMap
+
   private val _selectedItem = MutableStateFlow<Item?>(savedStateHandle[ITEM_STATE])
   val selectedItem: StateFlow<Item?> = _selectedItem
 
-  init {
-    Timber.d("Init of ItemViewModel")
-    viewModelScope.launch(Dispatchers.IO) {
+  suspend fun loadItems() {
+    Timber.d("loadItems in ItemViewModel")
+    viewModelScope.launch {
       try {
-        val itemList = itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
-          val newResults = smiteRepo.getItems()
-          itemListCache.setAsync(ITEM_LIST_CACHE_KEY, newResults)
-          newResults
+        val itemList = withContext(Dispatchers.IO) {
+           itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
+            val newResults = smiteRepo.getItems()
+            itemListCache.setAsync(ITEM_LIST_CACHE_KEY, newResults)
+            newResults
+          }
         }
         _items.value = itemList
         error = null
@@ -75,14 +82,17 @@ class ItemViewModel @Inject constructor(
         error = ex
         Timber.e(ex.toString())
       }
+
+      items.onEach { itemList ->
+        _itemIdMap.value = itemList.associateBy { item -> item.itemID }
+      }.collect()
     }
   }
 
-  fun setItem(item: Item) {
+  fun setItem(item: Item?) {
     _selectedItem.value = item
     savedStateHandle[ITEM_STATE] = item
   }
 
   override var error: Exception? = null
-
 }
