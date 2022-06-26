@@ -39,7 +39,7 @@ fun ItemList(
   itemViewModel: ItemViewModel,
   modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
       itemViewModel.loadItems()
     }
 
@@ -151,7 +151,9 @@ fun ItemList(
                 .padding(16.dp)
                 .fillMaxSize()
                 .clickable { itemViewModel.setItem(null) }
-            )
+            ) {
+              itemViewModel.setItem(it)
+            }
           }
         }
       }

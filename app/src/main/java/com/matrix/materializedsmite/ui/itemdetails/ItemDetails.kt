@@ -1,6 +1,7 @@
 package com.matrix.materializedsmite.ui.itemdetails
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +22,8 @@ import timber.log.Timber
 fun ItemDetails(
   item: Item,
   itemIdMap: Map<Long, Item>?,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  itemClicked: (item: Item) -> Unit
 ) {
   Column(
     horizontalAlignment = Alignment.Start,
@@ -84,18 +86,26 @@ fun ItemDetails(
     }
 
     itemIdMap?.let {
-      if (itemIdMap.containsKey(item.rootItemID)) {
-        AsyncImage(
-          model = itemIdMap[item.rootItemID]!!.itemIconURL,
-          contentDescription = item.deviceName,
-          modifier = Modifier.size(64.dp)
-        )
-      }
-      if (itemIdMap.containsKey(item.childItemID)) {
+      if (item.childItemID != item.rootItemID && itemIdMap.containsKey(item.childItemID)) {
         AsyncImage(
           model = itemIdMap[item.childItemID]!!.itemIconURL,
           contentDescription = item.deviceName,
-          modifier = Modifier.size(64.dp)
+          modifier = Modifier
+            .size(64.dp)
+            .clickable {
+              itemClicked(itemIdMap[item.childItemID]!!)
+            }
+        )
+      }
+      if (item.itemID != item.rootItemID && itemIdMap.containsKey(item.rootItemID)) {
+        AsyncImage(
+          model = itemIdMap[item.rootItemID]!!.itemIconURL,
+          contentDescription = item.deviceName,
+          modifier = Modifier
+            .size(64.dp)
+            .clickable {
+              itemClicked(itemIdMap[item.rootItemID]!!)
+            }
         )
       }
     }
