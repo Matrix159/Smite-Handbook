@@ -85,7 +85,8 @@ fun ItemDetails(
       ItemTree(
         item,
         itemIdMap,
-        itemClicked = { itemClicked(it) }
+        itemClicked = { itemClicked(it) },
+        modifier = Modifier.fillMaxWidth()
       )
     }
   }

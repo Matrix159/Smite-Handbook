@@ -1,6 +1,7 @@
 package com.matrix.materializedsmite.ui.itemdetails
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -21,8 +22,8 @@ fun ItemTree(
   itemClicked: (item: Item) -> Unit,
 ) {
   Row(
+    horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
-    modifier = modifier
   )
   {
     val iconSize = remember { 64.dp }
@@ -92,7 +93,10 @@ fun ItemTree(
     if (parents.isNotEmpty()) {
       Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.height(IntrinsicSize.Min)
+        modifier = modifier
+          .height(IntrinsicSize.Min)
+          .width(80.dp)
+          .border(1.dp, Color.Blue)
       ) {
         Canvas(modifier = Modifier.fillMaxHeight().width(32.dp)) {
           val canvasWidth = size.width
@@ -114,10 +118,10 @@ fun ItemTree(
             strokeWidth = 5F
           )
           // Draw lines pointing to middle of each item
-          for (counter in 0..parents.size) {
+          for (counter in parents.indices) {
             drawLine(
-              start = Offset(x = canvasWidth / 2, y = realCanvasHeight * (counter / parents.size)),
-              end = Offset(x = canvasWidth, y = realCanvasHeight * (counter / parents.size)),
+              start = Offset(x = canvasWidth / 2, y = (iconSize.toPx() / 2) + (iconSize.toPx() * counter)),//(realCanvasHeight * (counter / parents.size)) + iconSize.toPx()),
+              end = Offset(x = canvasWidth, y = (iconSize.toPx() / 2) + (iconSize.toPx() * counter)),//(realCanvasHeight * (counter / parents.size)) + iconSize.toPx()),
               color = Color.Red,
               strokeWidth = 5F
             )
@@ -125,6 +129,7 @@ fun ItemTree(
         }
         Column(
           verticalArrangement = Arrangement.SpaceBetween,
+          modifier = Modifier.width(iconSize)
         ) {
           parents.forEach {
             AsyncImage(
