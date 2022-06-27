@@ -148,9 +148,9 @@ fun ItemList(
               Modifier
                 //.border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
                 .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
                 .fillMaxSize()
                 .clickable { itemViewModel.setItem(null) }
+                .padding(16.dp)
             ) {
               itemViewModel.setItem(it)
             }

@@ -1,8 +1,6 @@
 package com.matrix.materializedsmite
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,7 +28,6 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.matrix.materializedsmite.ui.GodList
 import com.matrix.materializedsmite.ui.ItemList
 import com.matrix.materializedsmite.ui.goddetails.GodScreen
-import com.matrix.materializedsmite.ui.itemdetails.ItemDetails
 import com.matrix.materializedsmite.viewmodels.GodViewModel
 import com.matrix.materializedsmite.viewmodels.ItemViewModel
 

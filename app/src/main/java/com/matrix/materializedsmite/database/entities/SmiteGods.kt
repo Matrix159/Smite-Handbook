@@ -1,13 +1,7 @@
 package com.matrix.materializedsmite.database.entities
 
-import android.os.Parcelable
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.matrix.api.models.Ability
-import com.matrix.api.models.AbilityDescription
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
 const val SMITE_GODS_TABLE_NAME = "smite_gods"
 

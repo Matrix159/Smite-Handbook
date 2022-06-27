@@ -2,22 +2,22 @@ package com.matrix.materializedsmite.viewmodels
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.api.models.GodInformation
 import com.matrix.api.models.Item
 import com.matrix.materializedsmite.SmiteApplication
 import com.matrix.materializedsmite.cache.Cache
 import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -76,7 +76,7 @@ class ItemViewModel @Inject constructor(
             newResults
           }
         }
-        _items.value = itemList
+        _items.value = itemList.filter { it.activeFlag == "y" }
         error = null
       } catch (ex: Exception) {
         error = ex

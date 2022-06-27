@@ -1,14 +1,5 @@
 package com.matrix.materializedsmite.cache
 
-import android.content.SharedPreferences
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlin.reflect.KClass
-
 interface Cache<Key : Any, Value : Any> {
   suspend fun getAsync(key: Key): Value?
   suspend fun setAsync(key: Key, value: Value): Unit

@@ -1,13 +1,11 @@
 package com.matrix.materializedsmite.ui.itemdetails
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -15,8 +13,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.api.models.Item
 import com.matrix.materializedsmite.R
-import com.matrix.materializedsmite.utils.getRoleResourceId
-import timber.log.Timber
 
 @Composable
 fun ItemDetails(
@@ -81,33 +77,16 @@ fun ItemDetails(
         Text(
           "${menuItem.value} ${menuItem.description}",
           style = MaterialTheme.typography.bodyMedium,
-          modifier = Modifier.padding(4.dp))
+          modifier = Modifier.padding(4.dp)
+        )
       }
     }
-
     itemIdMap?.let {
-      if (item.childItemID != item.rootItemID && itemIdMap.containsKey(item.childItemID)) {
-        AsyncImage(
-          model = itemIdMap[item.childItemID]!!.itemIconURL,
-          contentDescription = item.deviceName,
-          modifier = Modifier
-            .size(64.dp)
-            .clickable {
-              itemClicked(itemIdMap[item.childItemID]!!)
-            }
-        )
-      }
-      if (item.itemID != item.rootItemID && itemIdMap.containsKey(item.rootItemID)) {
-        AsyncImage(
-          model = itemIdMap[item.rootItemID]!!.itemIconURL,
-          contentDescription = item.deviceName,
-          modifier = Modifier
-            .size(64.dp)
-            .clickable {
-              itemClicked(itemIdMap[item.rootItemID]!!)
-            }
-        )
-      }
+      ItemTree(
+        item,
+        itemIdMap,
+        itemClicked = { itemClicked(it) }
+      )
     }
   }
 }
