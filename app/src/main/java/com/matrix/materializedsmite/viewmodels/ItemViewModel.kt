@@ -49,6 +49,12 @@ class ItemListCache(private val sharedPreferences: SharedPreferences) :
 const val ITEM_LIST_CACHE_KEY = "item_list_cache"
 const val ITEM_STATE = "ItemViewModel_Item"
 
+data class ItemUiState(
+  val items: List<Item>,
+  val itemIdMap: Map<Long, Item>,
+  val errorMessages: List<String>
+)
+
 @HiltViewModel
 class ItemViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
