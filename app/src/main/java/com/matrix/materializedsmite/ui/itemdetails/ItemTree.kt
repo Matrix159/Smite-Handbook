@@ -1,8 +1,6 @@
 package com.matrix.materializedsmite.ui.itemdetails
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,12 +22,15 @@ fun ItemTree(
   Row(
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+      .height(IntrinsicSize.Min)
   )
   {
-    val iconSize = remember { 64.dp }
-    val showRootItem = item.itemID != item.rootItemID && itemIdMap.containsKey(item.rootItemID)
-    val showChildItem = item.childItemID != item.rootItemID && itemIdMap.containsKey(item.childItemID)
-    val parents = itemIdMap.values.filter { it.childItemID == item.itemID }
+    val iconSize = 64.dp
+    val lineColor = Color.Red
+    val showRootItem = remember(item, itemIdMap) { item.itemID != item.rootItemID && itemIdMap.containsKey(item.rootItemID) }
+    val showChildItem = remember(item, itemIdMap) { item.childItemID != item.rootItemID && itemIdMap.containsKey(item.childItemID) }
+    val parents = remember(item, itemIdMap) { itemIdMap.values.filter { it.childItemID == item.itemID } }
 
     // Root item
     if (showRootItem) {
@@ -44,13 +45,15 @@ fun ItemTree(
       )
     }
     if (showRootItem) {
-      Canvas(modifier = Modifier.width(24.dp).height(1.dp)) {
+      Canvas(modifier = Modifier
+        .width(24.dp)
+        .height(1.dp)) {
         val canvasWidth = size.width
         val canvasHeight = size.height
         drawLine(
           start = Offset(x = 0f, y = 0f),
           end = Offset(x = canvasWidth, y = 0f),
-          color = Color.Red,
+          color = lineColor,
           strokeWidth = 5F
         )
       }
@@ -70,13 +73,15 @@ fun ItemTree(
     }
 
     if (showChildItem) {
-      Canvas(modifier = Modifier.width(24.dp).height(1.dp)) {
+      Canvas(modifier = Modifier
+        .width(24.dp)
+        .height(1.dp)) {
         val canvasWidth = size.width
         val canvasHeight = size.height
         drawLine(
           start = Offset(x = 0f, y = 0f),
           end = Offset(x = canvasWidth, y = 0f),
-          color = Color.Red,
+          color = lineColor,
           strokeWidth = 5F
         )
       }
@@ -91,57 +96,52 @@ fun ItemTree(
 
     // Any parent items
     if (parents.isNotEmpty()) {
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-          .height(IntrinsicSize.Min)
-          .width(80.dp)
-          .border(1.dp, Color.Blue)
-      ) {
-        Canvas(modifier = Modifier.fillMaxHeight().width(32.dp)) {
-          val canvasWidth = size.width
-          val canvasHeight = size.height
+      Canvas(modifier = Modifier
+        .fillMaxHeight()
+        .width(32.dp)) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
 
-          val realCanvasHeight = canvasHeight - (iconSize.toPx() * 2)
-          // Draw starting line
+        val heightOfItem = iconSize.toPx() + 16.dp.toPx()
+        // Draw starting line
+        drawLine(
+          start = Offset(x = 0f, y = canvasHeight / 2),
+          end = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+          color = lineColor,
+          strokeWidth = 5F
+        )
+        // Draw vertical line
+        drawLine(
+          start = Offset(x = canvasWidth / 2, y = 0f + (heightOfItem / 2)),
+          end = Offset(x = canvasWidth / 2, y = canvasHeight - (heightOfItem / 2)),
+          color = lineColor,
+          strokeWidth = 5F
+        )
+        // Draw lines pointing to middle of each item
+        for (counter in parents.indices) {
           drawLine(
-            start = Offset(x = 0f, y = canvasHeight / 2),
-            end = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
-            color = Color.Red,
+            start = Offset(x = canvasWidth / 2, y = (heightOfItem / 2) + (heightOfItem * counter)),//(realCanvasHeight * (counter / parents.size)) + iconSize.toPx()),
+            end = Offset(x = canvasWidth, y = (heightOfItem / 2) + (heightOfItem * counter)),//(realCanvasHeight * (counter / parents.size)) + iconSize.toPx()),
+            color = lineColor,
             strokeWidth = 5F
           )
-          // Draw vertical line
-          drawLine(
-            start = Offset(x = canvasWidth / 2, y = 0f + (iconSize.toPx() / 2)),
-            end = Offset(x = canvasWidth / 2, y = canvasHeight - (iconSize.toPx() / 2)),
-            color = Color.Red,
-            strokeWidth = 5F
-          )
-          // Draw lines pointing to middle of each item
-          for (counter in parents.indices) {
-            drawLine(
-              start = Offset(x = canvasWidth / 2, y = (iconSize.toPx() / 2) + (iconSize.toPx() * counter)),//(realCanvasHeight * (counter / parents.size)) + iconSize.toPx()),
-              end = Offset(x = canvasWidth, y = (iconSize.toPx() / 2) + (iconSize.toPx() * counter)),//(realCanvasHeight * (counter / parents.size)) + iconSize.toPx()),
-              color = Color.Red,
-              strokeWidth = 5F
-            )
-          }
         }
-        Column(
-          verticalArrangement = Arrangement.SpaceBetween,
-          modifier = Modifier.width(iconSize)
-        ) {
-          parents.forEach {
-            AsyncImage(
-              model = itemIdMap[it.itemID]!!.itemIconURL,
-              contentDescription = it.deviceName,
-              modifier = Modifier
-                .size(iconSize)
-                .clickable {
-                  itemClicked(itemIdMap[it.itemID]!!)
-                }
-            )
-          }
+      }
+      Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.width(iconSize)
+      ) {
+        parents.forEach {
+          AsyncImage(
+            model = itemIdMap[it.itemID]!!.itemIconURL,
+            contentDescription = it.deviceName,
+            modifier = Modifier
+              .padding(8.dp)
+              .requiredSize(iconSize)
+              .clickable {
+                itemClicked(itemIdMap[it.itemID]!!)
+              }
+          )
         }
       }
     }

@@ -2,6 +2,8 @@ package com.matrix.materializedsmite.ui.itemdetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,7 +26,7 @@ fun ItemDetails(
   Column(
     horizontalAlignment = Alignment.Start,
     verticalArrangement = Arrangement.Top,
-    modifier = modifier
+    modifier = modifier.verticalScroll(rememberScrollState())
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
