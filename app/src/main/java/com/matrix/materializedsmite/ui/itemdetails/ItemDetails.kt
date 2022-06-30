@@ -8,6 +8,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,6 +24,19 @@ fun ItemDetails(
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit
 ) {
+  val tierMap: Map<Long, List<Item>> = remember(item, itemIdMap) {
+    itemIdMap?.let {
+      it.values.filter {
+        it.childItemID == item.itemID // If I'm the child item ID of another item
+          || it.rootItemID == item.itemID // If I'm the root item ID of another item
+          || it.itemID == item.itemID // If this item is me
+          || it.itemID == item.childItemID // If this item is one of my children items
+          || it.itemID == item.rootItemID // If this item is my root item
+      }
+        .groupBy { it.itemTier }
+        .toSortedMap()
+    } ?: mapOf()
+  }
   Column(
     horizontalAlignment = Alignment.Start,
     verticalArrangement = Arrangement.Top,
@@ -35,6 +49,15 @@ fun ItemDetails(
     ) {
       Text(item.deviceName)
       Row(verticalAlignment = Alignment.CenterVertically) {
+        val totalCost: Long = remember(item, tierMap) {
+          var cost = item.price
+          for (tier in 1 until item.itemTier) {
+            tierMap[tier]?.let {
+              cost += if (it.isNotEmpty()) it[0].price else 0
+            }
+          }
+          cost
+        }
         Image(
           painterResource(R.drawable.coins),
           "Gold",
@@ -43,14 +66,16 @@ fun ItemDetails(
             .padding(4.dp)
         )
         Text(
-          "${item.price}",
+          "${item.price}" + if (totalCost > 0) "($totalCost)" else "" ,
           modifier = Modifier.padding(4.dp)
         )
       }
     }
     Divider(thickness = 1.dp)
 
-    Row(modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()) {
+    Row(modifier = Modifier
+      .padding(vertical = 8.dp)
+      .fillMaxWidth()) {
       AsyncImage(
         model = item.itemIconURL,
         contentDescription = item.deviceName,
@@ -86,7 +111,7 @@ fun ItemDetails(
     itemIdMap?.let {
       ItemTree(
         item,
-        itemIdMap,
+        tierMap,
         itemClicked = { itemClicked(it) },
         modifier = Modifier.fillMaxWidth()
       )

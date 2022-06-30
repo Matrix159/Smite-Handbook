@@ -39,19 +39,18 @@ fun ItemList(
   itemViewModel: ItemViewModel,
   modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(Unit) {
-      itemViewModel.loadItems()
-    }
+  LaunchedEffect(Unit) {
+    itemViewModel.loadItems()
+  }
 
+  Box(contentAlignment = Alignment.Center) {
+    val selectedItem by itemViewModel.selectedItem.collectAsState()
     Column(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = modifier
     ) {
-
       val items by itemViewModel.items.collectAsState()
-      val selectedItem by itemViewModel.selectedItem.collectAsState()
-
       var searchValue by rememberSaveable { mutableStateOf("") }
       var selectedTier by rememberSaveable { mutableStateOf<Int?>(null) }
       val filteredItems = remember(items, searchValue, selectedTier) {
@@ -80,82 +79,80 @@ fun ItemList(
         }),
         modifier = Modifier.padding(4.dp)
       )
-      ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3"), unselectable = true) {
+      ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3", "Tier 4"), unselectable = true) {
         selectedTier = it?.let { it + 1 }
       }
 
-      Box(contentAlignment = Alignment.Center) {
-        if (itemViewModel.error != null) {
-          ErrorText(itemViewModel.error?.message ?: "An error occurred, please try reloading.")
-        } else if (items.isEmpty()) {
-          Loader()
-        } else {
-          LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = Modifier.fillMaxSize()
-          ) {
-            items(items = filteredItems) { item ->
-              Box(
-                contentAlignment = Alignment.BottomCenter,
-                modifier = Modifier
-                  //.height(128.dp)
-                  //.fillMaxWidth()
-                  .padding(8.dp)
-                  .clip(MaterialTheme.shapes.extraLarge)
-                  .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
-                  .clickable {
-                    itemViewModel.setItem(item)
-                  }
-              ) {
-                AsyncImage(
-                  model = item.itemIconURL,
-                  contentDescription = item.deviceName,
-                  contentScale = ContentScale.FillWidth,
-                  alignment = Alignment.Center,
-                  modifier = Modifier
-                    //.height(80.dp)
-                    .fillMaxWidth()
-                )
-                Box(
-                  modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                      brush = Brush.verticalGradient(
-                        0F to Color.Transparent,
-                        .5F to Color(0x40000000),
-                        .75f to Color(0x80000000),
-                        1f to Color(0xFF000000)
-                      )
-                    )
-                )
-                Text(
-                  text = item.deviceName,
-                  fontWeight = FontWeight.Bold,
-                  fontSize = 14.sp,
-                  color = Color.White,
-                  textAlign = TextAlign.Center,
-                  modifier = Modifier.padding(8.dp)
-                )
-              }
-            }
-          }
-        }
-        this@Column.AnimatedVisibility(selectedItem != null) {
-          selectedItem?.let {
-            ItemDetails(
-              selectedItem!!,
-              itemViewModel.itemIdMap.value,
-              Modifier
-                //.border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize()
-                .clickable { itemViewModel.setItem(null) }
-                .padding(16.dp)
+      if (itemViewModel.error != null) {
+        ErrorText(itemViewModel.error?.message ?: "An error occurred, please try reloading.")
+      } else if (items.isEmpty()) {
+        Loader()
+      } else {
+        LazyVerticalGrid(
+          columns = GridCells.Fixed(3),
+          modifier = Modifier.fillMaxSize()
+        ) {
+          items(items = filteredItems) { item ->
+            Box(
+              contentAlignment = Alignment.BottomCenter,
+              modifier = Modifier
+                //.height(128.dp)
+                //.fillMaxWidth()
+                .padding(8.dp)
+                .clip(MaterialTheme.shapes.extraLarge)
+                .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.extraLarge)
+                .clickable {
+                  itemViewModel.setItem(item)
+                }
             ) {
-              itemViewModel.setItem(it)
+              AsyncImage(
+                model = item.itemIconURL,
+                contentDescription = item.deviceName,
+                contentScale = ContentScale.FillWidth,
+                alignment = Alignment.Center,
+                modifier = Modifier
+                  //.height(80.dp)
+                  .fillMaxWidth()
+              )
+              Box(
+                modifier = Modifier
+                  .matchParentSize()
+                  .background(
+                    brush = Brush.verticalGradient(
+                      0F to Color.Transparent,
+                      .5F to Color(0x40000000),
+                      .75f to Color(0x80000000),
+                      1f to Color(0xFF000000)
+                    )
+                  )
+              )
+              Text(
+                text = item.deviceName,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(8.dp)
+              )
             }
           }
         }
       }
     }
+    AnimatedVisibility(selectedItem != null) {
+      selectedItem?.let {
+        ItemDetails(
+          selectedItem!!,
+          itemViewModel.itemIdMap.value,
+          Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
+            .clickable { itemViewModel.setItem(null) }
+            .padding(16.dp)
+        ) {
+          itemViewModel.setItem(it)
+        }
+      }
+    }
   }
+}
