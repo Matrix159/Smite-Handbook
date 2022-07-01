@@ -12,9 +12,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.api.models.Item
+import com.matrix.materializedsmite.viewmodels.ItemNode
 
 @Composable
 fun ItemTree(
+  //itemNode: ItemNode,
   tierMap: Map<Long, List<Item>>,
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit,

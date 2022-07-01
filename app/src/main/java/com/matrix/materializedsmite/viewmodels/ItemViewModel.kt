@@ -61,7 +61,12 @@ class ItemViewModel @Inject constructor(
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(), CanError {
 
-  private val itemListCache = ItemListCache(SmiteApplication.instance.getSharedPreferences(ITEM_LIST_CACHE_KEY, Context.MODE_PRIVATE))
+  private val itemListCache = ItemListCache(
+    SmiteApplication.instance.getSharedPreferences(
+      ITEM_LIST_CACHE_KEY,
+      Context.MODE_PRIVATE
+    )
+  )
   private val _items = MutableStateFlow<List<Item>>(listOf())
   val items: StateFlow<List<Item>> = _items
 
@@ -76,7 +81,7 @@ class ItemViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         val itemList = withContext(Dispatchers.IO) {
-           itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
+          itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
             val newResults = smiteRepo.getItems()
             itemListCache.setAsync(ITEM_LIST_CACHE_KEY, newResults)
             newResults
@@ -94,11 +99,18 @@ class ItemViewModel @Inject constructor(
         _itemIdMap.value = itemList.associateBy { item -> item.itemID }
         // base nodes
         val itemsGroupedByTier = itemList.groupBy { it.itemTier }
-        var baseNodes = mutableListOf<TreeNode<Item>>()
-        itemsGroupedByTier[1]?.forEach {
-          baseNodes.add(TreeNode(it))
+        // Take items grouped by tier and turn each root item into its own map of tiers
+        val itemTrees = mutableListOf<Map<Long, List<Item>>>()
+        var baseNodes = mutableListOf<ItemNode>()
+        itemsGroupedByTier[1]?.forEach { tierOneItem ->
+          //itemTrees.add(itemList.filter { it.rootItemID == tierOneItem.itemID }.groupBy { it.itemTier }.toSortedMap())
+          baseNodes.add(ItemNode(tierOneItem))
         }
 
+        baseNodes.forEach { node ->
+          node.findChildren(itemsGroupedByTier)
+        }
+        Timber.d(baseNodes.joinToString(", "))
         _itemIdMap.value
       }.collect()
     }
@@ -112,14 +124,88 @@ class ItemViewModel @Inject constructor(
   override var error: Exception? = null
 }
 
-class TreeNode<T>(value: T){
-  var value: T = value
-  var parent: TreeNode<T>? = null
+class ItemNode(value: Item) {
+  var value: Item = value
+  var parent: ItemNode? = null
 
-  var children: MutableList<TreeNode<T>> = mutableListOf()
+  var children: MutableList<ItemNode> = mutableListOf()
 
-  fun addChild(node:TreeNode<T>){
+  fun addChild(node: ItemNode) {
     children.add(node)
     node.parent = this
+  }
+
+  fun findChildren(itemsGroupedByTier: Map<Long, List<Item>>): ItemNode {
+    val currentTier = this.value.itemTier
+
+    if (itemsGroupedByTier.containsKey(currentTier + 1)) {
+      itemsGroupedByTier[currentTier + 1]!!.filter { it.childItemID == this.value.itemID }.forEach {
+        addChild(ItemNode(it).findChildren(itemsGroupedByTier))
+      }
+    }
+    return this
+  }
+
+  /**
+   * Should be called on the root node of the tree
+   */
+  fun itemExistsInThisTree(item: Item): Boolean {
+    if (this.parent != null) {
+      throw UnsupportedOperationException()
+    }
+    var itemFound = false
+    // Search up
+    var parentSearchDone = false
+    var nextNode: ItemNode? = null
+    while (!parentSearchDone) {
+      if (nextNode != null) {
+        if (nextNode.value.itemID == item.itemID) {
+          itemFound = true
+          break
+        }
+      }
+      if (this.parent != null) {
+        nextNode = this.parent
+      } else {
+        parentSearchDone = true
+      }
+    }
+
+    // Search down through children
+    var childrenSearchDone = false
+    var nextNode: ItemNode? = null
+    while (!childrenSearchDone) {
+      if (nextNode != null) {
+        if (nextNode.value.itemID == item.itemID) {
+          itemFound = true
+          break
+        }
+      }
+      if (this.parent != null) {
+        nextNode = this.parent
+      } else {
+        parentSearchDone = true
+      }
+    }
+
+    return itemFound
+  }
+
+  fun dfs(nodes: List<List<Int>>) {
+    val visited = BooleanArray(nodes.size) { false }
+    helper(nodes, 0, visited)
+  }
+
+  fun helper(nodes: List<List<Int>>, node: Int, visited: BooleanArray){
+    visited[node] = true
+    nodes[node].forEach {
+      if (!visited[it]) {
+        helper(nodes, it, visited)
+      }
+    }
+  }
+
+  override fun toString(): String {
+    return this.value.deviceName + "\n" + this.children.joinToString(", ")
   }
 }
