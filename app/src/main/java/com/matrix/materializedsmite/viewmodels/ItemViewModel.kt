@@ -89,8 +89,17 @@ class ItemViewModel @Inject constructor(
         Timber.e(ex.toString())
       }
 
+      // TODO: Experiment here
       items.onEach { itemList ->
         _itemIdMap.value = itemList.associateBy { item -> item.itemID }
+        // base nodes
+        val itemsGroupedByTier = itemList.groupBy { it.itemTier }
+        var baseNodes = mutableListOf<TreeNode<Item>>()
+        itemsGroupedByTier[1]?.forEach {
+          baseNodes.add(TreeNode(it))
+        }
+
+        _itemIdMap.value
       }.collect()
     }
   }
@@ -101,4 +110,16 @@ class ItemViewModel @Inject constructor(
   }
 
   override var error: Exception? = null
+}
+
+class TreeNode<T>(value: T){
+  var value: T = value
+  var parent: TreeNode<T>? = null
+
+  var children: MutableList<TreeNode<T>> = mutableListOf()
+
+  fun addChild(node:TreeNode<T>){
+    children.add(node)
+    node.parent = this
+  }
 }

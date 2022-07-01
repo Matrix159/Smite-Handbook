@@ -25,17 +25,20 @@ fun ItemDetails(
   itemClicked: (item: Item) -> Unit
 ) {
   val tierMap: Map<Long, List<Item>> = remember(item, itemIdMap) {
-    itemIdMap?.let {
-      it.values.filter {
-        it.childItemID == item.itemID // If I'm the child item ID of another item
-          || it.rootItemID == item.itemID // If I'm the root item ID of another item
-          || it.itemID == item.itemID // If this item is me
-          || it.itemID == item.childItemID // If this item is one of my children items
-          || it.itemID == item.rootItemID // If this item is my root item
-      }
-        .groupBy { it.itemTier }
-        .toSortedMap()
-    } ?: mapOf()
+    val returnMap = itemIdMap?.values?.filter { filterItem ->
+      filterItem.childItemID == item.itemID // If I'm the child item ID of another item
+        || filterItem.rootItemID == item.itemID // If I'm the root item ID of another item
+        || filterItem.itemID == item.itemID // If this item is me
+        || filterItem.itemID == item.childItemID // If this item is one of my children items
+        || filterItem.itemID == item.rootItemID // If this item is my root item
+    }?.groupBy { it.itemTier }?.toMutableMap() ?: mutableMapOf<Long, List<Item>>()
+    // API doesn't provide a way to see past 2 levels so when an outer tier is selected
+    // need to do a manual lookup for the opposing tier (tier 1 & 4)
+    if (returnMap.containsKey(2) && returnMap[2]!!.isNotEmpty()) {
+      returnMap[1] = listOf(itemIdMap?.get(returnMap[2]!![0].childItemID)!!)
+    }
+
+    returnMap.toSortedMap()
   }
   Column(
     horizontalAlignment = Alignment.Start,
@@ -110,7 +113,6 @@ fun ItemDetails(
     }
     itemIdMap?.let {
       ItemTree(
-        item,
         tierMap,
         itemClicked = { itemClicked(it) },
         modifier = Modifier.fillMaxWidth()
