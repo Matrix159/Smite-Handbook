@@ -70,8 +70,11 @@ class ItemViewModel @Inject constructor(
   private val _items = MutableStateFlow<List<Item>>(listOf())
   val items: StateFlow<List<Item>> = _items
 
-  private val _itemIdMap: MutableState<Map<Long, Item>?> = mutableStateOf(null)
-  val itemIdMap: State<Map<Long, Item>?> = _itemIdMap
+//  private val _itemIdMap: MutableState<Map<Long, Item>?> = mutableStateOf(null)
+//  val itemIdMap: State<Map<Long, Item>?> = _itemIdMap
+
+  private val _baseItemTreeNodes: MutableState<List<ItemNode>> = mutableStateOf(listOf())
+  val baseItemTreeNodes: State<List<ItemNode>> = _baseItemTreeNodes
 
   private val _selectedItem = MutableStateFlow<Item?>(savedStateHandle[ITEM_STATE])
   val selectedItem: StateFlow<Item?> = _selectedItem
@@ -94,24 +97,19 @@ class ItemViewModel @Inject constructor(
         Timber.e(ex.toString())
       }
 
-      // TODO: Experiment here
+      // Set up the item tree's via a node structure
       items.onEach { itemList ->
-        _itemIdMap.value = itemList.associateBy { item -> item.itemID }
-        // base nodes
+        //_itemIdMap.value = itemList.associateBy { item -> item.itemID }
         val itemsGroupedByTier = itemList.groupBy { it.itemTier }
-        // Take items grouped by tier and turn each root item into its own map of tiers
-        val itemTrees = mutableListOf<Map<Long, List<Item>>>()
-        var baseNodes = mutableListOf<ItemNode>()
-        itemsGroupedByTier[1]?.forEach { tierOneItem ->
-          //itemTrees.add(itemList.filter { it.rootItemID == tierOneItem.itemID }.groupBy { it.itemTier }.toSortedMap())
-          baseNodes.add(ItemNode(tierOneItem))
+        val baseNodes = mutableListOf<ItemNode>()
+        itemList.filter { item -> item.itemTier == 1L}.forEach {
+          baseNodes.add(ItemNode(it))
         }
-
         baseNodes.forEach { node ->
           node.findChildren(itemsGroupedByTier)
         }
-        Timber.d(baseNodes.joinToString(", "))
-        _itemIdMap.value
+        _baseItemTreeNodes.value = baseNodes
+        //Timber.d(_baseItemTreeNodes.value.joinToString(", "))
       }.collect()
     }
   }
@@ -124,8 +122,7 @@ class ItemViewModel @Inject constructor(
   override var error: Exception? = null
 }
 
-class ItemNode(value: Item) {
-  var value: Item = value
+class ItemNode(var value: Item) {
   var parent: ItemNode? = null
 
   var children: MutableList<ItemNode> = mutableListOf()
@@ -154,55 +151,43 @@ class ItemNode(value: Item) {
       throw UnsupportedOperationException()
     }
     var itemFound = false
-    // Search up
-    var parentSearchDone = false
-    var nextNode: ItemNode? = null
-    while (!parentSearchDone) {
-      if (nextNode != null) {
-        if (nextNode.value.itemID == item.itemID) {
-          itemFound = true
-          break
-        }
-      }
-      if (this.parent != null) {
-        nextNode = this.parent
-      } else {
-        parentSearchDone = true
-      }
-    }
 
-    // Search down through children
-    var childrenSearchDone = false
-    var nextNode: ItemNode? = null
-    while (!childrenSearchDone) {
-      if (nextNode != null) {
-        if (nextNode.value.itemID == item.itemID) {
-          itemFound = true
-          break
-        }
-      }
-      if (this.parent != null) {
-        nextNode = this.parent
-      } else {
-        parentSearchDone = true
-      }
-    }
 
     return itemFound
   }
 
-  fun dfs(nodes: List<List<Int>>) {
-    val visited = BooleanArray(nodes.size) { false }
-    helper(nodes, 0, visited)
-  }
+  /**
+   * Call on the root node of the tree, this finds the item within the tree if it exits and returns it.
+   * @param item The item node you want to find
+   * @return The found item node
+   */
+  fun findItem(item: Item): ItemNode? {
+//    if (this.parent != null) {
+//      throw UnsupportedOperationException()
+//    }
 
-  fun helper(nodes: List<List<Int>>, node: Int, visited: BooleanArray){
-    visited[node] = true
-    nodes[node].forEach {
-      if (!visited[it]) {
-        helper(nodes, it, visited)
+    if (this.value.itemID == item.itemID) {
+      return this
+    } else {
+      this.children.forEach {
+        val itemNode = it.findItem(item)
+        if (itemNode != null) {
+          return itemNode
+        }
       }
     }
+    return null
+  }
+
+  fun totalCost(): Long {
+    var currentNode: ItemNode? = this
+    var cost = value.price
+
+    while (currentNode?.parent != null) {
+      cost += currentNode.parent!!.value.price
+      currentNode = currentNode.parent
+    }
+    return cost
   }
 
   override fun toString(): String {

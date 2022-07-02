@@ -16,8 +16,8 @@ import com.matrix.materializedsmite.viewmodels.ItemNode
 
 @Composable
 fun ItemTree(
-  //itemNode: ItemNode,
-  tierMap: Map<Long, List<Item>>,
+  baseNode: ItemNode,
+  //tierMap: Map<Long, List<Item>>,
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit,
 ) {
@@ -31,6 +31,7 @@ fun ItemTree(
     val iconSize = 64.dp
     val lineColor = MaterialTheme.colorScheme.outline
 
+    // TODO: Utilize the baseNode here and construct a new tree graphic
 
     tierMap.forEach { (tier, list) ->
       val itemPadding = 8.dp

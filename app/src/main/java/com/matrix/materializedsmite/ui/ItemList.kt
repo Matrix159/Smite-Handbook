@@ -143,7 +143,7 @@ fun ItemList(
       selectedItem?.let {
         ItemDetails(
           selectedItem!!,
-          itemViewModel.itemIdMap.value,
+          itemViewModel.baseItemTreeNodes.value,
           Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
