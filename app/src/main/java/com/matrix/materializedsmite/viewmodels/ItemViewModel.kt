@@ -12,6 +12,7 @@ import com.matrix.api.models.Item
 import com.matrix.materializedsmite.SmiteApplication
 import com.matrix.materializedsmite.cache.Cache
 import com.matrix.materializedsmite.repositories.smite.SmiteRepository
+import com.matrix.materializedsmite.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,8 +71,8 @@ class ItemViewModel @Inject constructor(
   private val _items = MutableStateFlow<List<Item>>(listOf())
   val items: StateFlow<List<Item>> = _items
 
-//  private val _itemIdMap: MutableState<Map<Long, Item>?> = mutableStateOf(null)
-//  val itemIdMap: State<Map<Long, Item>?> = _itemIdMap
+  private val _itemIdMap: MutableState<Map<Long, Item>?> = mutableStateOf(null)
+  val itemIdMap: State<Map<Long, Item>?> = _itemIdMap
 
   private val _baseItemTreeNodes: MutableState<List<ItemNode>> = mutableStateOf(listOf())
   val baseItemTreeNodes: State<List<ItemNode>> = _baseItemTreeNodes
@@ -99,7 +100,7 @@ class ItemViewModel @Inject constructor(
 
       // Set up the item tree's via a node structure
       items.onEach { itemList ->
-        //_itemIdMap.value = itemList.associateBy { item -> item.itemID }
+        _itemIdMap.value = itemList.associateBy { item -> item.itemID }
         val itemsGroupedByTier = itemList.groupBy { it.itemTier }
         val baseNodes = mutableListOf<ItemNode>()
         itemList.filter { item -> item.itemTier == 1L}.forEach {
@@ -120,77 +121,4 @@ class ItemViewModel @Inject constructor(
   }
 
   override var error: Exception? = null
-}
-
-class ItemNode(var value: Item) {
-  var parent: ItemNode? = null
-
-  var children: MutableList<ItemNode> = mutableListOf()
-
-  fun addChild(node: ItemNode) {
-    children.add(node)
-    node.parent = this
-  }
-
-  fun findChildren(itemsGroupedByTier: Map<Long, List<Item>>): ItemNode {
-    val currentTier = this.value.itemTier
-
-    if (itemsGroupedByTier.containsKey(currentTier + 1)) {
-      itemsGroupedByTier[currentTier + 1]!!.filter { it.childItemID == this.value.itemID }.forEach {
-        addChild(ItemNode(it).findChildren(itemsGroupedByTier))
-      }
-    }
-    return this
-  }
-
-  /**
-   * Should be called on the root node of the tree
-   */
-  fun itemExistsInThisTree(item: Item): Boolean {
-    if (this.parent != null) {
-      throw UnsupportedOperationException()
-    }
-    var itemFound = false
-
-
-    return itemFound
-  }
-
-  /**
-   * Call on the root node of the tree, this finds the item within the tree if it exits and returns it.
-   * @param item The item node you want to find
-   * @return The found item node
-   */
-  fun findItem(item: Item): ItemNode? {
-//    if (this.parent != null) {
-//      throw UnsupportedOperationException()
-//    }
-
-    if (this.value.itemID == item.itemID) {
-      return this
-    } else {
-      this.children.forEach {
-        val itemNode = it.findItem(item)
-        if (itemNode != null) {
-          return itemNode
-        }
-      }
-    }
-    return null
-  }
-
-  fun totalCost(): Long {
-    var currentNode: ItemNode? = this
-    var cost = value.price
-
-    while (currentNode?.parent != null) {
-      cost += currentNode.parent!!.value.price
-      currentNode = currentNode.parent
-    }
-    return cost
-  }
-
-  override fun toString(): String {
-    return this.value.deviceName + "\n" + this.children.joinToString(", ")
-  }
 }

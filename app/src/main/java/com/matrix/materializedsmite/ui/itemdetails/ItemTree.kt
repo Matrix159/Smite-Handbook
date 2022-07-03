@@ -12,15 +12,17 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.api.models.Item
-import com.matrix.materializedsmite.viewmodels.ItemNode
 
 @Composable
 fun ItemTree(
-  baseNode: ItemNode,
-  //tierMap: Map<Long, List<Item>>,
+  //baseNode: ItemNode,
+  tierMap: Map<Long, List<Item>>,
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit,
 ) {
+  val iconSize = 64.dp
+  val lineColor = MaterialTheme.colorScheme.outline
+
   Row(
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
@@ -28,11 +30,6 @@ fun ItemTree(
       .height(IntrinsicSize.Min)
   )
   {
-    val iconSize = 64.dp
-    val lineColor = MaterialTheme.colorScheme.outline
-
-    // TODO: Utilize the baseNode here and construct a new tree graphic
-
     tierMap.forEach { (tier, list) ->
       val itemPadding = 8.dp
       val heightOfItemInDp = iconSize + (itemPadding * 2)
@@ -57,7 +54,7 @@ fun ItemTree(
           )
         }
       }
-      // Check if their is a next tier
+      // Check if there is a next tier
       if (tierMap.containsKey(tier + 1)) {
         val lengthOfNextTier = tierMap[tier + 1]!!.size
 
@@ -115,3 +112,69 @@ fun ItemTree(
     }
   }
 }
+
+
+//  val constraintSet = remember {
+//    ConstraintSet {
+//      val tier1 = createRefFor("tier1")
+//      val tier2 = createRefFor("tier2")
+//      val tier3 = createRefFor("tier3")
+//      val tier4 = createRefFor("tier4")
+//
+//      constrain(tier1) {
+//        bottom.linkTo(parent.bottom)
+//      }
+//      constrain(tier2) {
+//        bottom.linkTo(tier1.top)
+//      }
+//      constrain(tier3) {
+//        bottom.linkTo(tier2.top)
+//      }
+//      constrain(tier4) {
+//        bottom.linkTo(tier3.top)
+//      }
+//    }
+//  }
+//  ConstraintLayout(
+//    constraintSet = constraintSet,
+//    modifier = Modifier
+//    .fillMaxSize()
+//    .border(1.dp, Color.Red)
+//  ) {
+//    val itemPadding = 8.dp
+//
+//    AsyncImage(
+//      model = baseNode.value.itemIconURL,
+//      contentDescription = baseNode.value.deviceName,
+//      modifier = Modifier
+//        .layoutId("tier1")
+//        .padding(itemPadding)
+//        .requiredSize(iconSize)
+//        .clickable {
+//          itemClicked(baseNode.value)
+//        }
+//    )
+//
+//    var currentNode: ItemNode? = baseNode
+//    while (currentNode != null) {
+//      Row(
+//        modifier = Modifier
+//          .layoutId("tier2")
+//          .height(iconSize)
+//      ) {
+//        currentNode?.children?.forEach {
+//          AsyncImage(
+//            model = it.value.itemIconURL,
+//            contentDescription = it.value.deviceName,
+//            modifier = Modifier
+//              .padding(itemPadding)
+//              .requiredSize(iconSize)
+//              .clickable {
+//                itemClicked(it.value)
+//              }
+//          )
+//        }
+//      }
+//      currentNode = null
+//    }
+//  }

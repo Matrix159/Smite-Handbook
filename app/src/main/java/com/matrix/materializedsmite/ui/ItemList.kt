@@ -10,9 +10,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -43,12 +43,14 @@ fun ItemList(
     itemViewModel.loadItems()
   }
 
-  Box(contentAlignment = Alignment.Center) {
+  Box(
+    contentAlignment = Alignment.Center,
+    modifier = modifier
+  ) {
     val selectedItem by itemViewModel.selectedItem.collectAsState()
     Column(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = modifier
     ) {
       val items by itemViewModel.items.collectAsState()
       var searchValue by rememberSaveable { mutableStateOf("") }
@@ -66,22 +68,39 @@ fun ItemList(
           }
       }
       val focusManager = LocalFocusManager.current
-      OutlinedTextField(
-        value = searchValue,
-        onValueChange = { searchValue = it },
-        label = {
-          Text("Search for an item")
-        },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = {
-          focusManager.clearFocus()
-        }),
-        modifier = Modifier.padding(4.dp)
-      )
-      ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3", "Tier 4"), unselectable = true) {
-        selectedTier = it?.let { it + 1 }
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+      ) {
+        OutlinedTextField(
+          value = searchValue,
+          onValueChange = { searchValue = it },
+          label = {
+            Text("Search for an item")
+          },
+          singleLine = true,
+          keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+          keyboardActions = KeyboardActions(onDone = {
+            focusManager.clearFocus()
+          }),
+        )
+        IconButton(
+          onClick = {
+            focusManager.clearFocus()
+          },
+        ) {
+          Icon(
+            Icons.Default.List,
+            "Filter items",
+            modifier = Modifier.size(48.dp)
+          )
+        }
       }
+
+//      ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3", "Tier 4"), unselectable = true) {
+//        selectedTier = it?.let { it + 1 }
+//      }
 
       if (itemViewModel.error != null) {
         ErrorText(itemViewModel.error?.message ?: "An error occurred, please try reloading.")
@@ -143,6 +162,7 @@ fun ItemList(
       selectedItem?.let {
         ItemDetails(
           selectedItem!!,
+          itemViewModel.itemIdMap.value,
           itemViewModel.baseItemTreeNodes.value,
           Modifier
             .background(MaterialTheme.colorScheme.background)

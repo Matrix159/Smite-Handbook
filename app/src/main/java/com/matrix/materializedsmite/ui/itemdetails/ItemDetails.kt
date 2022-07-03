@@ -16,32 +16,32 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.api.models.Item
 import com.matrix.materializedsmite.R
-import com.matrix.materializedsmite.viewmodels.ItemNode
-import timber.log.Timber
+import com.matrix.materializedsmite.utils.ItemNode
 
 @Composable
 fun ItemDetails(
   item: Item,
+  itemIdMap: Map<Long, Item>?,
   itemTreeNodes: List<ItemNode>,
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit
 ) {
-//  val tierMap: Map<Long, List<Item>> = remember(item, itemIdMap) {
-//    val returnMap = itemIdMap?.values?.filter { filterItem ->
-//      filterItem.childItemID == item.itemID // If I'm the child item ID of another item
-//        || filterItem.rootItemID == item.itemID // If I'm the root item ID of another item
-//        || filterItem.itemID == item.itemID // If this item is me
-//        || filterItem.itemID == item.childItemID // If this item is one of my children items
-//        || filterItem.itemID == item.rootItemID // If this item is my root item
-//    }?.groupBy { it.itemTier }?.toMutableMap() ?: mutableMapOf<Long, List<Item>>()
-//    // API doesn't provide a way to see past 2 levels so when an outer tier is selected
-//    // need to do a manual lookup for the opposing tier (tier 1 & 4)
-//    if (returnMap.containsKey(2) && returnMap[2]!!.isNotEmpty()) {
-//      returnMap[1] = listOf(itemIdMap?.get(returnMap[2]!![0].childItemID)!!)
-//    }
-//
-//    returnMap.toSortedMap()
-//  }
+  val tierMap: Map<Long, List<Item>> = remember(item, itemIdMap) {
+    val returnMap = itemIdMap?.values?.filter { filterItem ->
+      filterItem.childItemID == item.itemID // If I'm the child item ID of another item
+        || filterItem.rootItemID == item.itemID // If I'm the root item ID of another item
+        || filterItem.itemID == item.itemID // If this item is me
+        || filterItem.itemID == item.childItemID // If this item is one of my children items
+        || filterItem.itemID == item.rootItemID // If this item is my root item
+    }?.groupBy { it.itemTier }?.toMutableMap() ?: mutableMapOf<Long, List<Item>>()
+    // API doesn't provide a way to see past 2 levels so when an outer tier is selected
+    // need to do a manual lookup for the opposing tier (tier 1 & 4)
+    if (returnMap.containsKey(2) && returnMap[2]!!.isNotEmpty()) {
+      returnMap[1] = listOf(itemIdMap?.get(returnMap[2]!![0].childItemID)!!)
+    }
+
+    returnMap.toSortedMap()
+  }
 
   /**
    * <baseNode, currentNode>
@@ -121,7 +121,7 @@ fun ItemDetails(
     }
     baseNode?.let {
       ItemTree(
-        baseNode,
+        tierMap,
         itemClicked = { itemClicked(it) },
         modifier = Modifier.fillMaxWidth()
       )
