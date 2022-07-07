@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.matrix.materializedsmite.ui.components.ChipRow
 import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.ui.itemdetails.ItemDetails
 import com.matrix.materializedsmite.viewmodels.ItemViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun ItemList(
@@ -42,7 +42,6 @@ fun ItemList(
   LaunchedEffect(Unit) {
     itemViewModel.loadItems()
   }
-
   Box(
     contentAlignment = Alignment.Center,
     modifier = modifier
@@ -71,7 +70,9 @@ fun ItemList(
       Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(vertical = 8.dp)
       ) {
         OutlinedTextField(
           value = searchValue,
@@ -85,9 +86,12 @@ fun ItemList(
             focusManager.clearFocus()
           }),
         )
+        val coroutineScope = rememberCoroutineScope()
         IconButton(
           onClick = {
-            focusManager.clearFocus()
+            coroutineScope.launch {
+              focusManager.clearFocus()
+            }
           },
         ) {
           Icon(
