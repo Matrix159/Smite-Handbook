@@ -1,12 +1,10 @@
-package com.matrix.api.models
+package com.matrix.domain.models
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 // TODO: make a parceable version in the app layer instead of the api layer that we convert to
-@Parcelize
 @Serializable
 data class GodInformation(
   @SerialName("Ability1")
@@ -174,15 +172,13 @@ data class GodInformation(
 
   @SerialName("ret_msg")
   val retMsg: String?
-) : Parcelable
+)
 
-@Parcelize
 @Serializable
 data class AbilityDescription(
   val itemDescription: AbilityItemDescription
-) : Parcelable
+)
 
-@Parcelize
 @Serializable
 data class AbilityItemDescription(
   val cooldown: String,
@@ -190,9 +186,8 @@ data class AbilityItemDescription(
   val description: String,
   val menuitems: List<LowerDescriptionValue>,
   val rankitems: List<LowerDescriptionValue>
-) : Parcelable
+)
 
-@Parcelize
 @Serializable
 data class Ability(
   @SerialName("Description")
@@ -206,8 +201,4 @@ data class Ability(
 
   @SerialName("URL")
   val url: String
-) : Parcelable
-
-//val mockedGodInformation = GodInformation(
-//
-//)
+)

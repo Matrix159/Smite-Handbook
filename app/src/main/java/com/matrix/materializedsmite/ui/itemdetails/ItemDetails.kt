@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.api.models.Item
+import com.matrix.domain.models.Item
 import com.matrix.materializedsmite.R
 import com.matrix.materializedsmite.utils.ItemNode
 

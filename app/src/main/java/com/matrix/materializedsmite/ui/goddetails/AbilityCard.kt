@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.matrix.api.models.Ability
-import com.matrix.api.models.AbilityDescription
-import com.matrix.api.models.AbilityItemDescription
+import com.matrix.domain.models.Ability
+import com.matrix.domain.models.AbilityDescription
+import com.matrix.domain.models.AbilityItemDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,14 +1,14 @@
-package com.matrix.materializedsmite.repositories.smite.impl
+package com.matrix.api.impl
 
-import com.matrix.api.SmiteApi
-import com.matrix.api.models.GodInformation
-import com.matrix.api.models.GodSkin
-import com.matrix.api.models.Item
-import com.matrix.materializedsmite.repositories.smite.SmiteRepository
+import com.matrix.api.SmiteApiDataSource
+import com.matrix.domain.contracts.SmiteRepository
+import com.matrix.domain.models.GodInformation
+import com.matrix.domain.models.GodSkin
+import com.matrix.domain.models.Item
 import javax.inject.Inject
 
 class SmiteRepositoryImpl @Inject constructor(
-  private val smiteApi: SmiteApi
+  private val smiteApi: SmiteApiDataSource
 ): SmiteRepository {
 
   override suspend fun getGods(): List<GodInformation> {

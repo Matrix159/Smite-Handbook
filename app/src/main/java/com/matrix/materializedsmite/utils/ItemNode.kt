@@ -1,6 +1,7 @@
 package com.matrix.materializedsmite.utils
 
-import com.matrix.api.models.Item
+import com.matrix.domain.models.Item
+
 
 class ItemNode(var value: Item) {
   var parent: ItemNode? = null

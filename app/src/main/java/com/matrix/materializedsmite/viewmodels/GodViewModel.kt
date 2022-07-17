@@ -6,11 +6,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.api.models.GodInformation
-import com.matrix.api.models.GodSkin
+import com.matrix.domain.contracts.SmiteRepository
+import com.matrix.domain.models.GodInformation
+import com.matrix.domain.models.GodSkin
 import com.matrix.materializedsmite.SmiteApplication
 import com.matrix.materializedsmite.cache.Cache
-import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

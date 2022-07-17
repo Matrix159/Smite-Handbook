@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.api.models.Ability
+import com.matrix.domain.models.Ability
 
 @Composable
 fun AbilityImage(

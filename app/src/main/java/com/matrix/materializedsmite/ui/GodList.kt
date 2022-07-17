@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.matrix.api.models.GodInformation
+import com.matrix.domain.models.GodInformation
 import com.matrix.materializedsmite.ui.components.ErrorText
 import com.matrix.materializedsmite.ui.components.Loader
 import com.matrix.materializedsmite.viewmodels.GodViewModel

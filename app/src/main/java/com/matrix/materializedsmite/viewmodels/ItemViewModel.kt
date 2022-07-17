@@ -8,10 +8,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.api.models.Item
+import com.matrix.domain.contracts.SmiteRepository
+import com.matrix.domain.models.Item
 import com.matrix.materializedsmite.SmiteApplication
 import com.matrix.materializedsmite.cache.Cache
-import com.matrix.materializedsmite.repositories.smite.SmiteRepository
 import com.matrix.materializedsmite.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

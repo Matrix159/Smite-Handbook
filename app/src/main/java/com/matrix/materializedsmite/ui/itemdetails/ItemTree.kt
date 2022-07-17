@@ -11,7 +11,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.api.models.Item
+import com.matrix.domain.models.Item
 
 @Composable
 fun ItemTree(
