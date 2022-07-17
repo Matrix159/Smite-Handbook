@@ -76,12 +76,13 @@ class GodViewModel @Inject constructor(
   init {
     viewModelScope.launch(Dispatchers.IO) {
       try {
-        val godsApiResult = godListCache.getAsync(GOD_LIST_CACHE_KEY).ifEmpty {
-          val newResults = smiteRepo.getGods()
-          godListCache.setAsync(GOD_LIST_CACHE_KEY, newResults)
-          newResults
-        }
-        _godListUiState.value = GodListUiState(gods = godsApiResult)
+//        val godsApiResult = godListCache.getAsync(GOD_LIST_CACHE_KEY).ifEmpty {
+//          val newResults = smiteRepo.getGods()
+//          godListCache.setAsync(GOD_LIST_CACHE_KEY, newResults)
+//          newResults
+//        }
+        val gods = smiteRepo.getGods()
+        _godListUiState.value = GodListUiState(gods = gods)
         error = null
       } catch (ex: Exception) {
         error = ex

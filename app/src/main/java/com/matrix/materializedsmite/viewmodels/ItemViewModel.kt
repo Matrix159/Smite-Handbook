@@ -77,7 +77,7 @@ class ItemViewModel @Inject constructor(
   private val _baseItemTreeNodes: MutableState<List<ItemNode>> = mutableStateOf(listOf())
   val baseItemTreeNodes: State<List<ItemNode>> = _baseItemTreeNodes
 
-  private val _selectedItem = MutableStateFlow<Item?>(savedStateHandle[ITEM_STATE])
+  private val _selectedItem = MutableStateFlow<Item?>(null) // TODO: Bring back saved state after clean rework
   val selectedItem: StateFlow<Item?> = _selectedItem
 
   suspend fun loadItems() {
@@ -85,11 +85,11 @@ class ItemViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         val itemList = withContext(Dispatchers.IO) {
-          itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
-            val newResults = smiteRepo.getItems()
-            itemListCache.setAsync(ITEM_LIST_CACHE_KEY, newResults)
-            newResults
-          }
+//          itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
+//            val newResults = smiteRepo.getItems()
+//            itemListCache.setAsync(ITEM_LIST_CACHE_KEY, newResults)
+//            newResults
+            smiteRepo.getItems()
         }
         _items.value = itemList.filter { it.activeFlag == "y" }
         error = null
@@ -117,7 +117,8 @@ class ItemViewModel @Inject constructor(
 
   fun setItem(item: Item?) {
     _selectedItem.value = item
-    savedStateHandle[ITEM_STATE] = item
+    // TODO: Bring back saved state after clean arch rework
+    //savedStateHandle[ITEM_STATE] = item
   }
 
   override var error: Exception? = null

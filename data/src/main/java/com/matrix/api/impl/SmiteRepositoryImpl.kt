@@ -1,19 +1,34 @@
 package com.matrix.api.impl
 
-import com.matrix.api.SmiteApiDataSource
+import com.matrix.api.SmiteRemoteDataSource
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.domain.models.Item
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class SmiteRepositoryImpl @Inject constructor(
-  private val smiteApi: SmiteApiDataSource
+  // TODO: Make a cached local storage data source
+  private val smiteApi: SmiteRemoteDataSource
 ): SmiteRepository {
 
-  override suspend fun getGods(): List<GodInformation> {
+  private val cachedGodsMutex = Mutex()
+  private var cachedGods = listOf<GodInformation>()
+
+  private val cachedItemMutex = Mutex()
+  private var cachedItems = listOf<Item>()
+
+  override suspend fun getGods(refresh: Boolean): List<GodInformation> {
     try {
-      return smiteApi.getGods()
+      if (refresh || cachedGods.isEmpty()) {
+        cachedGodsMutex.withLock {
+          this.cachedGods = smiteApi.getGods()
+        }
+      }
+
+      return cachedGodsMutex.withLock { this.cachedGods }
     } catch (ex: Exception) {
       throw ex
     }
@@ -27,9 +42,15 @@ class SmiteRepositoryImpl @Inject constructor(
     }
   }
 
-  override suspend fun getItems(): List<Item> {
+  override suspend fun getItems(refresh: Boolean): List<Item> {
     try {
-      return smiteApi.getItems()
+      if (refresh || cachedItems.isEmpty()) {
+        cachedItemMutex.withLock {
+          this.cachedItems = smiteApi.getItems()
+        }
+      }
+
+      return cachedItemMutex.withLock { this.cachedItems }
     } catch (ex: Exception) {
       throw ex
     }
