@@ -1,6 +1,5 @@
 package com.matrix.domain.models
 
-import android.os.Parcelable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -8,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GodInformation(
   @SerialName("Ability1")
-  val ability1: String,
+  val ability1: String? = null,
 
   @SerialName("Ability2")
   val ability2: String,

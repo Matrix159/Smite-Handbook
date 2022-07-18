@@ -1,8 +1,8 @@
 package com.matrix.api.injection
 
 import com.matrix.api.SmiteRemoteDataSource
-import com.matrix.api.impl.SmiteRepositoryImpl
 import com.matrix.api.impl.SmiteRemoteDataSourceImpl
+import com.matrix.api.impl.SmiteRepositoryImpl
 import com.matrix.domain.contracts.SmiteRepository
 import dagger.Binds
 import dagger.Module
