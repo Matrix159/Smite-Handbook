@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GodInformation(
   @SerialName("Ability1")
-  val ability1: String? = null,
+  val ability1: String,
 
   @SerialName("Ability2")
   val ability2: String,

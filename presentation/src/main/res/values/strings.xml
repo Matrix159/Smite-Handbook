@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MaterializedSmite</string>
+    <string name="god_screen">Gods</string>
+    <string name="item_screen">Items</string>
+</resources>
