@@ -59,7 +59,7 @@ class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
 ) : ViewModel(), CanError {
 
-  //private val godListCache = GodListCache(SmiteApplication.instance.getSharedPreferences(GOD_LIST_CACHE_KEY, Context.MODE_PRIVATE))
+  //private val godListCache = GodListCache(appContext.getSharedPreferences(GOD_LIST_CACHE_KEY, Context.MODE_PRIVATE))
   private val _godListUiState = mutableStateOf(GodListUiState())
   val godListUiState: State<GodListUiState> = _godListUiState
 

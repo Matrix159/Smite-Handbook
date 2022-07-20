@@ -7,10 +7,12 @@ import com.matrix.domain.models.GodSkin
 import com.matrix.domain.models.Item
 import io.ktor.client.*
 import io.ktor.client.request.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
 private const val baseUrl = "https://materialized-smite.herokuapp.com"
 
+@OptIn(ExperimentalSerializationApi::class)
 class SmiteRemoteDataSourceImpl @Inject constructor(): SmiteRemoteDataSource {
 
   private val client: HttpClient = ktorHttpClient

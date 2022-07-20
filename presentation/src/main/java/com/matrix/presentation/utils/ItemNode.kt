@@ -24,18 +24,18 @@ class ItemNode(var value: Item) {
     return this
   }
 
-  /**
-   * Should be called on the root node of the tree
-   */
-  fun itemExistsInThisTree(item: Item): Boolean {
-    if (this.parent != null) {
-      throw UnsupportedOperationException()
-    }
-    var itemFound = false
-
-
-    return itemFound
-  }
+//  /**
+//   * Should be called on the root node of the tree
+//   */
+//  fun itemExistsInThisTree(item: Item): Boolean {
+//    if (this.parent != null) {
+//      throw UnsupportedOperationException()
+//    }
+//    var itemFound = false
+//
+//
+//    return itemFound
+//  }
 
   /**
    * Call on the root node of the tree, this finds the item within the tree if it exits and returns it.
