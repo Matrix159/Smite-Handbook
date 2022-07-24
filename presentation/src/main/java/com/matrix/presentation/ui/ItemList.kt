@@ -50,6 +50,7 @@ fun ItemList(
     Column(
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier.fillMaxSize()
     ) {
       val items by itemViewModel.items.collectAsState()
       var searchValue by rememberSaveable { mutableStateOf("") }
