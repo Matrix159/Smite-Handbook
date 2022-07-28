@@ -1,7 +1,6 @@
 package com.matrix.presentation.ui.itemdetails
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -9,11 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.domain.models.Item
 import com.matrix.presentation.utils.ItemNode
+
+val itemPadding = 8.dp
+val iconSize = 48.dp
 
 @Composable
 fun ItemTree(
@@ -22,9 +23,9 @@ fun ItemTree(
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit,
 ) {
-  val iconSize = 48.dp
+//  val iconSize = 48.dp
   val lineColor = MaterialTheme.colorScheme.outline
-  val itemPadding = 8.dp
+  //val itemPadding = 8.dp
 
   val composablesToRender: MutableList<@Composable () -> Unit> = mutableListOf()
 
@@ -45,63 +46,18 @@ fun ItemTree(
                     // Tier 4
                     val tier4Length = it.children.size
                     it.children.forEachIndexed { index, it ->
-                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        AsyncImage(
-                          model = it.value.itemIconURL,
-                          contentDescription = it.value.deviceName,
-                          modifier = Modifier
-                            .padding(horizontal = itemPadding)
-                            .requiredSize(iconSize)
-                            .clickable {
-                              itemClicked(it.value)
-                            }
-                        )
-                        Canvas(modifier = Modifier
-                          .width(IntrinsicSize.Max)
-                          .height(8.dp)
-                          .border(1.dp, Color.Red)
-                        ) {
-                          drawLine(
-                            start = Offset(x = size.width / 2, y = 0f),
-                            end = Offset(x = size.width / 2, y = size.height),
-                            color = lineColor,
-                            strokeWidth = 5F
-                          )
-                          if (tier4Length > 1) {
-                            when (index) {
-                              0 -> {
-                                drawLine(
-                                  start = Offset(x = size.width / 2, y = size.height),
-                                  end = Offset(x = size.width, y = size.height),
-                                  color = lineColor,
-                                  strokeWidth = 5F
-                                )
-                              }
-                              tier4Length - 1 -> {
-                                drawLine(
-                                  start = Offset(x = size.width / 2, y = size.height),
-                                  end = Offset(x = 0f, y = size.height),
-                                  color = lineColor,
-                                  strokeWidth = 5F
-                                )
-                              }
-                              else -> {
-                                drawLine(
-                                  start = Offset(x = 0f, y = size.height),
-                                  end = Offset(x = size.width, y = size.height),
-                                  color = lineColor,
-                                  strokeWidth = 5F
-                                )
-                              }
-                            }
-                          }
-                        }
-                      }
+                      ItemInTree(
+                        itemNode = it,
+                        lengthOfTier = tier4Length,
+                        indexInRow = index,
+                        itemClicked = itemClicked
+                      )
                     }
                   }
-                  Canvas(modifier = Modifier
-                    .width(IntrinsicSize.Max)
-                    .height(8.dp)
+                  Canvas(
+                    modifier = Modifier
+                      .width(IntrinsicSize.Max)
+                      .height(8.dp)
                   ) {
                     drawLine(
                       start = Offset(x = size.width / 2, y = 0f),
@@ -120,9 +76,10 @@ fun ItemTree(
                         itemClicked(it.value)
                       }
                   )
-                  Canvas(modifier = Modifier
-                    .width(IntrinsicSize.Max)
-                    .height(8.dp)
+                  Canvas(
+                    modifier = Modifier
+                      .width(IntrinsicSize.Max)
+                      .height(8.dp)
                   ) {
                     drawLine(
                       start = Offset(x = size.width / 2, y = 0f),
@@ -134,9 +91,10 @@ fun ItemTree(
                 }
               }
             }
-            Canvas(modifier = Modifier
-              .width(IntrinsicSize.Max)
-              .height(8.dp)
+            Canvas(
+              modifier = Modifier
+                .width(IntrinsicSize.Max)
+                .height(8.dp)
             ) {
               drawLine(
                 start = Offset(x = size.width / 2, y = 0f),
@@ -155,9 +113,10 @@ fun ItemTree(
                   itemClicked(it.value)
                 }
             )
-            Canvas(modifier = Modifier
-              .width(IntrinsicSize.Max)
-              .height(8.dp)
+            Canvas(
+              modifier = Modifier
+                .width(IntrinsicSize.Max)
+                .height(8.dp)
             ) {
               drawLine(
                 start = Offset(x = size.width / 2, y = 0f),
@@ -169,9 +128,10 @@ fun ItemTree(
           }
         }
       }
-      Canvas(modifier = Modifier
-        .width(IntrinsicSize.Max)
-        .height(8.dp)
+      Canvas(
+        modifier = Modifier
+          .width(IntrinsicSize.Max)
+          .height(8.dp)
       ) {
         drawLine(
           start = Offset(x = size.width / 2, y = 0f),
@@ -352,3 +312,69 @@ fun ItemTree(
 //      currentNode = null
 //    }
 //  }
+
+@Composable
+fun ItemInTree(
+  itemNode: ItemNode,
+  lengthOfTier: Int,
+  indexInRow: Int,
+  itemClicked: (item: Item) -> Unit
+) {
+  val lineColor = MaterialTheme.colorScheme.outline
+
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier.width(IntrinsicSize.Min)
+  ) {
+    AsyncImage(
+      model = itemNode.value.itemIconURL,
+      contentDescription = itemNode.value.deviceName,
+      modifier = Modifier
+        .padding(horizontal = itemPadding)
+        .requiredSize(iconSize)
+        .clickable {
+          itemClicked(itemNode.value)
+        }
+    )
+    Canvas(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(8.dp)
+    ) {
+      drawLine(
+        start = Offset(x = size.width / 2, y = 0f),
+        end = Offset(x = size.width / 2, y = size.height),
+        color = lineColor,
+        strokeWidth = 5F
+      )
+      if (lengthOfTier > 1) {
+        when (indexInRow) {
+          0 -> {
+            drawLine(
+              start = Offset(x = size.width / 2, y = size.height),
+              end = Offset(x = size.width, y = size.height),
+              color = lineColor,
+              strokeWidth = 5F
+            )
+          }
+          lengthOfTier - 1 -> {
+            drawLine(
+              start = Offset(x = size.width / 2, y = size.height),
+              end = Offset(x = 0f, y = size.height),
+              color = lineColor,
+              strokeWidth = 5F
+            )
+          }
+          else -> {
+            drawLine(
+              start = Offset(x = 0f, y = size.height),
+              end = Offset(x = size.width, y = size.height),
+              color = lineColor,
+              strokeWidth = 5F
+            )
+          }
+        }
+      }
+    }
+  }
+}
