@@ -43,62 +43,148 @@ fun ItemTree(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                   Row(verticalAlignment = Alignment.Bottom) {
                     // Tier 4
-                    it.children.forEach {
-                      AsyncImage(
-                        model = it.value.itemIconURL,
-                        contentDescription = it.value.deviceName,
-                        modifier = Modifier
-                          .padding(itemPadding)
-                          .requiredSize(iconSize)
-                          .clickable {
-                            itemClicked(it.value)
+                    val tier4Length = it.children.size
+                    it.children.forEachIndexed { index, it ->
+                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        AsyncImage(
+                          model = it.value.itemIconURL,
+                          contentDescription = it.value.deviceName,
+                          modifier = Modifier
+                            .padding(horizontal = itemPadding)
+                            .requiredSize(iconSize)
+                            .clickable {
+                              itemClicked(it.value)
+                            }
+                        )
+                        Canvas(modifier = Modifier
+                          .width(IntrinsicSize.Max)
+                          .height(8.dp)
+                          .border(1.dp, Color.Red)
+                        ) {
+                          drawLine(
+                            start = Offset(x = size.width / 2, y = 0f),
+                            end = Offset(x = size.width / 2, y = size.height),
+                            color = lineColor,
+                            strokeWidth = 5F
+                          )
+                          if (tier4Length > 1) {
+                            when (index) {
+                              0 -> {
+                                drawLine(
+                                  start = Offset(x = size.width / 2, y = size.height),
+                                  end = Offset(x = size.width, y = size.height),
+                                  color = lineColor,
+                                  strokeWidth = 5F
+                                )
+                              }
+                              tier4Length - 1 -> {
+                                drawLine(
+                                  start = Offset(x = size.width / 2, y = size.height),
+                                  end = Offset(x = 0f, y = size.height),
+                                  color = lineColor,
+                                  strokeWidth = 5F
+                                )
+                              }
+                              else -> {
+                                drawLine(
+                                  start = Offset(x = 0f, y = size.height),
+                                  end = Offset(x = size.width, y = size.height),
+                                  color = lineColor,
+                                  strokeWidth = 5F
+                                )
+                              }
+                            }
                           }
-                      )
+                        }
+                      }
                     }
+                  }
+                  Canvas(modifier = Modifier
+                    .width(IntrinsicSize.Max)
+                    .height(8.dp)
+                  ) {
+                    drawLine(
+                      start = Offset(x = size.width / 2, y = 0f),
+                      end = Offset(x = size.width / 2, y = size.height),
+                      color = lineColor,
+                      strokeWidth = 5F
+                    )
                   }
                   AsyncImage(
                     model = it.value.itemIconURL,
                     contentDescription = it.value.deviceName,
                     modifier = Modifier
-                      .padding(itemPadding)
+                      .padding(horizontal = itemPadding)
                       .requiredSize(iconSize)
                       .clickable {
                         itemClicked(it.value)
                       }
                   )
+                  Canvas(modifier = Modifier
+                    .width(IntrinsicSize.Max)
+                    .height(8.dp)
+                  ) {
+                    drawLine(
+                      start = Offset(x = size.width / 2, y = 0f),
+                      end = Offset(x = size.width / 2, y = size.height),
+                      color = lineColor,
+                      strokeWidth = 5F
+                    )
+                  }
                 }
               }
+            }
+            Canvas(modifier = Modifier
+              .width(IntrinsicSize.Max)
+              .height(8.dp)
+            ) {
+              drawLine(
+                start = Offset(x = size.width / 2, y = 0f),
+                end = Offset(x = size.width / 2, y = size.height),
+                color = lineColor,
+                strokeWidth = 5F
+              )
             }
             AsyncImage(
               model = it.value.itemIconURL,
               contentDescription = it.value.deviceName,
               modifier = Modifier
-                .padding(itemPadding)
+                .padding(horizontal = itemPadding)
                 .requiredSize(iconSize)
                 .clickable {
                   itemClicked(it.value)
                 }
             )
-          }
-        }
-      }
-      Canvas(
-          modifier = Modifier
-            //.height(heightOfItemInDp * lengthOfNextTier)
-            .width(32.dp)
-        ) {
+            Canvas(modifier = Modifier
+              .width(IntrinsicSize.Max)
+              .height(8.dp)
+            ) {
               drawLine(
                 start = Offset(x = size.width / 2, y = 0f),
-                end = Offset(x = size.width / 2, y = 5f),
+                end = Offset(x = size.width / 2, y = size.height),
                 color = lineColor,
                 strokeWidth = 5F
               )
+            }
+          }
+        }
+      }
+      Canvas(modifier = Modifier
+        .width(IntrinsicSize.Max)
+        .height(8.dp)
+      ) {
+        drawLine(
+          start = Offset(x = size.width / 2, y = 0f),
+          end = Offset(x = size.width / 2, y = size.height),
+          color = lineColor,
+          strokeWidth = 5F
+        )
       }
       AsyncImage(
         model = baseNode.value.itemIconURL,
         contentDescription = baseNode.value.deviceName,
         modifier = Modifier
-          .padding(itemPadding)
+          .padding(horizontal = itemPadding)
           .requiredSize(iconSize)
           .clickable {
             itemClicked(baseNode.value)
