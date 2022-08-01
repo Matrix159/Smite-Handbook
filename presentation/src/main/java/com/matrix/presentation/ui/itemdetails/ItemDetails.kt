@@ -122,7 +122,7 @@ fun ItemDetails(
     baseNode?.let {
       ItemTree(
         baseNode,
-        tierMap,
+        selectedItem = item,
         itemClicked = { itemClicked(it) },
         modifier = Modifier.fillMaxWidth()
       )
