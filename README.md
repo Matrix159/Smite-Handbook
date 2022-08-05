@@ -3,6 +3,8 @@
 Materialized Smite is my experimentation with creating a new Jetpack Compose application from scratch and applying the topics I learn along the way.
 It uses Hi-Rez's Smite API to provide data. 
 
+It is available as a beta application in the Play Store [here](https://play.google.com/store/apps/details?id=com.matrix.materializedsmite).
+
 <p float="left">
   <img src='https://user-images.githubusercontent.com/5334090/164605568-e3abd4eb-e23f-4c5e-a90b-7df1979cb798.png' width='300'>
   <span>&nbsp;</span>
