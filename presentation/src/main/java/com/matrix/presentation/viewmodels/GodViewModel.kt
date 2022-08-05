@@ -59,18 +59,11 @@ class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
 ) : ViewModel() {
 
-  //private val godListCache = GodListCache(appContext.getSharedPreferences(GOD_LIST_CACHE_KEY, Context.MODE_PRIVATE))
   var godListUiState by mutableStateOf(GodListUiState())
     private set
 
   var godDetailsUiState by mutableStateOf(GodDetailsUiState())
     private set
-
-  //private val _gods = MutableStateFlow<List<GodInformation>>(listOf())
-  //val gods: StateFlow<List<GodInformation>> = _gods.asStateFlow()
-
-  private val _selectedGod = MutableStateFlow<GodInformation?>(null)
-  //val selectedGod: StateFlow<GodInformation?> = _selectedGod.asStateFlow()
 
   init {
     viewModelScope.launch {
@@ -91,10 +84,6 @@ class GodViewModel @Inject constructor(
           )
         Timber.e(ex.toString())
       }
-
-//            _selectedGod.onEach { godInformation ->
-//
-//            }.launchIn(this)
     }
   }
 
