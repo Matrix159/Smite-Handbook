@@ -10,9 +10,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,17 +28,32 @@ fun Chip(
   var localModifier = modifier
     .clip(CircleShape)
     .background(MaterialTheme.colorScheme.background)
-  localModifier =
-    if (selected) localModifier.border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
-    else localModifier.border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+  val primaryColor = MaterialTheme.colorScheme.primary
+  val outlineColor = MaterialTheme.colorScheme.outline
+
+  localModifier = remember(selected) {
+    if (selected) localModifier.border(1.dp, primaryColor, CircleShape)
+    else localModifier.border(1.dp, outlineColor, CircleShape)
+  }
+
   Box(modifier = localModifier.clickable(onClick = onClick)) {
     Text(
       text = text,
       textAlign = TextAlign.Center,
-      style = MaterialTheme.typography.labelLarge,
+      style = MaterialTheme.typography.bodySmall,
+      maxLines = 1,
       modifier = Modifier
-        .padding(30.dp, 8.dp)
+        .padding(8.dp)
         .fillMaxWidth()
     )
+  }
+}
+
+
+@Preview
+@Composable
+fun ChipPreview() {
+  Chip("Test") {
+
   }
 }

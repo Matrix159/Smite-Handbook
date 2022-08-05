@@ -1,22 +1,19 @@
 package com.matrix.presentation.viewmodels
 
 import android.content.SharedPreferences
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.presentation.cache.Cache
+import com.matrix.presentation.models.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -44,12 +41,15 @@ class GodListCache(private val sharedPreferences: SharedPreferences) :
 }
 
 data class GodListUiState(
-  val gods: List<GodInformation> = listOf()
+  val loadingState: LoadingState = LoadingState.LOADING,
+  val gods: List<GodInformation> = listOf(),
+  val errors: List<String> = listOf(),
 )
 
 data class GodDetailsUiState(
   val selectedGod: GodInformation? = null,
-  val godSkins: List<GodSkin> = listOf()
+  val godSkins: List<GodSkin> = listOf(),
+  val errors: List<String> = listOf(),
 )
 
 const val GOD_LIST_CACHE_KEY = "god_list_cache"
@@ -57,14 +57,14 @@ const val GOD_LIST_CACHE_KEY = "god_list_cache"
 @HiltViewModel
 class GodViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
-) : ViewModel(), CanError {
+) : ViewModel() {
 
   //private val godListCache = GodListCache(appContext.getSharedPreferences(GOD_LIST_CACHE_KEY, Context.MODE_PRIVATE))
-  private val _godListUiState = mutableStateOf(GodListUiState())
-  val godListUiState: State<GodListUiState> = _godListUiState
+  var godListUiState by mutableStateOf(GodListUiState())
+    private set
 
-  private val _godDetailsUiState = mutableStateOf(GodDetailsUiState())
-  val godDetailsUiState: State<GodDetailsUiState> = _godDetailsUiState
+  var godDetailsUiState by mutableStateOf(GodDetailsUiState())
+    private set
 
   //private val _gods = MutableStateFlow<List<GodInformation>>(listOf())
   //val gods: StateFlow<List<GodInformation>> = _gods.asStateFlow()
@@ -74,57 +74,53 @@ class GodViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
+      Timber.d("loadState")
+      godListUiState = godListUiState.copy(loadingState = LoadingState.LOADING)
       try {
-//        val godsApiResult = godListCache.getAsync(GOD_LIST_CACHE_KEY).ifEmpty {
-//          val newResults = smiteRepo.getGods()
-//          godListCache.setAsync(GOD_LIST_CACHE_KEY, newResults)
-//          newResults
-//        }
         var gods: List<GodInformation>
         withContext(Dispatchers.IO) {
           gods = smiteRepo.getGods()
         }
-        
-        _godListUiState.value = GodListUiState(gods = gods)
-        error = null
+
+        godListUiState = godListUiState.copy(gods = gods, loadingState = LoadingState.DONE)
       } catch (ex: Exception) {
-        error = ex
+        godListUiState =
+          godListUiState.copy(
+            errors = listOf(ex.toString()),
+            loadingState = LoadingState.ERROR
+          )
         Timber.e(ex.toString())
       }
 
+//            _selectedGod.onEach { godInformation ->
+//
+//            }.launchIn(this)
     }
-    Timber.d("init")
-    _selectedGod.onEach { godInformation ->
-      try {
-        when (godInformation) {
-          null -> {
-            _godDetailsUiState.value = GodDetailsUiState(selectedGod = null, godSkins = listOf())
-          }
-          else -> {
-            _godDetailsUiState.value =
-              GodDetailsUiState(selectedGod = godInformation, godSkins = listOf())
-            var godSkins: List<GodSkin>
-            withContext(Dispatchers.IO) {
-              godSkins = smiteRepo.getGodSkins(godInformation.id)
-              _godDetailsUiState.value = _godDetailsUiState.value.copy(godSkins = godSkins)
-            }
+  }
+
+  suspend fun setGod(godInformation: GodInformation?) {
+    try {
+      when (godInformation) {
+        null -> {
+          godDetailsUiState = GodDetailsUiState()
+        }
+        else -> {
+          godDetailsUiState = godDetailsUiState.copy(
+            selectedGod = godInformation,
+            godSkins = listOf()
+          )
+          var godSkins: List<GodSkin>
+          // Load the skins asynchronously
+          withContext(Dispatchers.IO) {
+            godSkins = smiteRepo.getGodSkins(godInformation.id)
+            godDetailsUiState =
+              godDetailsUiState.copy(godSkins = godSkins)
           }
         }
-        error = null
-      } catch (ex: Exception) {
-        error = ex
-        Timber.e(ex.toString())
       }
-    }.launchIn(viewModelScope)
+    } catch (ex: Exception) {
+      godDetailsUiState = godDetailsUiState.copy(errors = listOf(ex.toString()))
+      Timber.e(ex.toString())
+    }
   }
-
-  fun setGod(godInformation: GodInformation) {
-    _selectedGod.update { godInformation }
-  }
-
-  fun clearSelectedGod() {
-    _selectedGod.update { null }
-  }
-
-  override var error: Exception? = null
 }

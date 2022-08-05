@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,6 +31,7 @@ import com.matrix.presentation.ui.ItemList
 import com.matrix.presentation.ui.goddetails.GodScreen
 import com.matrix.presentation.viewmodels.GodViewModel
 import com.matrix.presentation.viewmodels.ItemViewModel
+import kotlinx.coroutines.launch
 
 
 object NavigationRoutes {
@@ -106,9 +108,16 @@ fun SmiteApp() {
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
+          val coroutineScope = rememberCoroutineScope()
           GodList(godViewModel, modifier = Modifier.fillMaxSize()) { selectedGod ->
-            godViewModel.setGod(selectedGod)
+            // Clear the god, navigate, and then load the god as it navigates
+            coroutineScope.launch {
+              godViewModel.setGod(null)
+            }
             navController.navigate(NavigationRoutes.GodDetails)
+            coroutineScope.launch {
+              godViewModel.setGod(selectedGod)
+            }
           }
         }
         composable(NavigationRoutes.GodDetails,
@@ -148,6 +157,8 @@ fun SmiteApp() {
             navController.getBackStackEntry(Screen.Items.route)
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
+          // TODO: Need to evaluate if I want the god list/details as routes or one view, and synch up
+          // with the item list / details for consistency
           ItemList(viewModel = itemViewModel, modifier = Modifier.fillMaxSize())
 //          {
 //            itemViewModel.setItem(it)

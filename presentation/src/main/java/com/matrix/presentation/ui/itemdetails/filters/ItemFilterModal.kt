@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.itemdetails
+package com.matrix.presentation.ui.itemdetails.filters
 
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme

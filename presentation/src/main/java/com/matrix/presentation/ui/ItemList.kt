@@ -8,17 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,22 +20,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.itemdetails.ItemDetails
-import com.matrix.presentation.ui.itemdetails.ItemFilterModal
+import com.matrix.presentation.ui.itemdetails.filters.FilterPanel
+import com.matrix.presentation.ui.itemdetails.filters.ItemFilterModal
 import com.matrix.presentation.viewmodels.ItemViewModel
-import com.matrix.presentation.viewmodels.LoadingState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemList(
     viewModel: ItemViewModel,
@@ -86,45 +77,17 @@ fun ItemList(
                                     selectedTier?.let { item.itemTier.toInt() == it } ?: true
                                 }
                         }
-                        val focusManager = LocalFocusManager.current
-                        // Search field and filter action
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        ) {
-                            TextField(
-                                value = searchValue,
-                                onValueChange = { searchValue = it },
-                                label = {
-                                    Text("Search for an item")
-                                },
-                                singleLine = false,
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                keyboardActions = KeyboardActions(onDone = {
-                                    focusManager.clearFocus()
-                                }),
-                                modifier = Modifier.weight(1f)
-                            )
-                            val coroutineScope = rememberCoroutineScope()
-                            IconButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        focusManager.clearFocus()
-                                        bottomSheetState.show()
-                                    }
-                                },
-                            ) {
-                                Icon(
-                                    Icons.Default.List,
-                                    "Filter items",
-                                    modifier = Modifier.size(48.dp)
-                                )
-                            }
-                        }
 
+                        val coroutineScope = rememberCoroutineScope()
+                        FilterPanel(
+                            searchValue = searchValue,
+                            searchValueChange = { searchValue = it },
+                            filterIconTap = {
+                                coroutineScope.launch {
+                                    bottomSheetState.show()
+                                }
+                            }
+                        )
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3),
                             modifier = Modifier.fillMaxSize()

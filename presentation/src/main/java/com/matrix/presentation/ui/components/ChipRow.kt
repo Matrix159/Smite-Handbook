@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -42,5 +43,13 @@ fun ChipRow(
           .padding(4.dp)
       )
     }
+  }
+}
+
+@Preview
+@Composable
+fun ChipRowPreview() {
+  ChipRow(listOf("Tier 1", "Tier 2", "Tier 3", "Tier 4")) {
+
   }
 }

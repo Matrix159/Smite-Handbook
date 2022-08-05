@@ -44,7 +44,7 @@ val ktorHttpClient = HttpClient(Android) {
   install(ResponseObserver) {
     onResponse { response ->
       Log.d("HTTP status:", "${response.status.value}")
-      Log.d("HTTP data:", response.body())
+      //Log.d("HTTP data:", response.body())
     }
   }
 

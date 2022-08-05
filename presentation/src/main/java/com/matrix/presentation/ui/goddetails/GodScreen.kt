@@ -30,7 +30,7 @@ fun GodScreen(
   smiteAppViewModel: GodViewModel,
   modifier: Modifier = Modifier
 ) {
-  val godDetailsUiState by smiteAppViewModel.godDetailsUiState
+  val godDetailsUiState = smiteAppViewModel.godDetailsUiState
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
 

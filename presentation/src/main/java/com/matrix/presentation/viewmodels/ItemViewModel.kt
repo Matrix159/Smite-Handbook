@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.Item
 import com.matrix.presentation.cache.Cache
+import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,12 +48,6 @@ class ItemListCache(private val sharedPreferences: SharedPreferences) :
 const val ITEM_LIST_CACHE_KEY = "item_list_cache"
 const val SELECTED_ITEM_STATE = "ItemViewModel_SelectedViewModel"
 
-enum class LoadingState {
-  LOADING,
-  ERROR,
-  DONE
-}
-
 data class ItemUiState(
   val loadingState: LoadingState = LoadingState.LOADING,
   val items: List<Item> = listOf(),
@@ -76,7 +71,7 @@ class ItemViewModel @Inject constructor(
 
   var uiState by mutableStateOf(
     ItemUiState(
-    selectedItem = savedStateHandle[SELECTED_ITEM_STATE]
+      selectedItem = savedStateHandle[SELECTED_ITEM_STATE]
     )
   )
     private set
@@ -111,7 +106,8 @@ class ItemViewModel @Inject constructor(
       baseNodes.forEach { node ->
         node.findChildren(itemsGroupedByTier)
       }
-      newState = newState.copy(baseItemTreeNodes = baseNodes, loadingState = LoadingState.DONE)
+      newState =
+        newState.copy(baseItemTreeNodes = baseNodes, loadingState = LoadingState.DONE)
 
       // Finalize changes to the new state
       uiState = newState
