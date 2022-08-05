@@ -1,6 +1,6 @@
 package com.matrix.presentation.utils
 
-import com.matrix.materializedsmite.R
+import com.matrix.presentation.R
 
 /**
  * Returns the resource id associated with the input role, else 0 if none maps

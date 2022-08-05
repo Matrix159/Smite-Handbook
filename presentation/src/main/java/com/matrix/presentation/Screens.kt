@@ -1,7 +1,7 @@
 package com.matrix.presentation
 
 import androidx.annotation.StringRes
-import com.matrix.materializedsmite.R
+import com.matrix.presentation.R
 
 sealed class Screen(val route: String, @StringRes val resourceId: Int, val iconResourceId: Int) {
   object Gods : Screen("gods", R.string.god_screen, R.drawable.gods)

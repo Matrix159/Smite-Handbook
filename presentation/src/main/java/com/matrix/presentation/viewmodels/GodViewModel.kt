@@ -73,14 +73,18 @@ class GodViewModel @Inject constructor(
   //val selectedGod: StateFlow<GodInformation?> = _selectedGod.asStateFlow()
 
   init {
-    viewModelScope.launch(Dispatchers.IO) {
+    viewModelScope.launch {
       try {
 //        val godsApiResult = godListCache.getAsync(GOD_LIST_CACHE_KEY).ifEmpty {
 //          val newResults = smiteRepo.getGods()
 //          godListCache.setAsync(GOD_LIST_CACHE_KEY, newResults)
 //          newResults
 //        }
-        val gods = smiteRepo.getGods()
+        var gods: List<GodInformation>
+        withContext(Dispatchers.IO) {
+          gods = smiteRepo.getGods()
+        }
+        
         _godListUiState.value = GodListUiState(gods = gods)
         error = null
       } catch (ex: Exception) {

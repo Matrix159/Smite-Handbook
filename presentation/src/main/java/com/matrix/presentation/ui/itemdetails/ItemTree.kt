@@ -1,15 +1,12 @@
 package com.matrix.presentation.ui.itemdetails
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.domain.models.Item
@@ -26,8 +23,17 @@ fun ItemTree(
   itemClicked: (item: Item) -> Unit,
 ) {
   // Wrap this is an outer column to have a parent that fills the max width
-  Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-    RecursiveItemTree(itemNode = baseNode, selectedItem = selectedItem, lengthOfTier = 1, indexInRow = 0, itemClicked = itemClicked)
+  Column(
+    modifier = modifier.horizontalScroll(rememberScrollState()),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    RecursiveItemTree(
+      itemNode = baseNode,
+      selectedItem = selectedItem,
+      lengthOfTier = 1,
+      indexInRow = 0,
+      itemClicked = itemClicked
+    )
   }
 }
 
@@ -39,8 +45,6 @@ private fun RecursiveItemTree(
   indexInRow: Int,
   itemClicked: (item: Item) -> Unit
 ) {
-  val lineColor = MaterialTheme.colorScheme.outline
-
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.width(IntrinsicSize.Min)
@@ -62,6 +66,7 @@ private fun RecursiveItemTree(
       modifier = Modifier
         .fillMaxSize()
     ) {
+      val lineColor = MaterialTheme.colorScheme.outline
       if (itemNode.children.isNotEmpty()) {
         Canvas(
           modifier = Modifier

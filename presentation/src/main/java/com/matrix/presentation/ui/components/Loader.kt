@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.airbnb.lottie.compose.*
-import com.matrix.materializedsmite.R
+import com.matrix.presentation.R
 
 
 @Composable

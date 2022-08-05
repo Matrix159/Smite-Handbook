@@ -1,12 +1,13 @@
-package com.matrix.api
+package com.matrix.data
 
-import com.matrix.api.impl.SmiteRepositoryImpl
+import com.matrix.data.impl.SmiteRepositoryImpl
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.domain.models.Item
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -33,20 +34,20 @@ class SmiteRepositoryTest {
   }
 
   @Test
-  fun test_getGods_isEmpty() = runBlockingTest {
+  fun test_getGods_isEmpty() = runTest {
     val emptyGodList: List<GodInformation> = mutableListOf()
 
     assertEquals(emptyGodList, repository.getGods())
   }
 
   @Test
-  fun test_getGodSkins_isEmpty() = runBlockingTest {
+  fun test_getGodSkins_isEmpty() = runTest {
     val emptyGodSkins: List<GodSkin> = mutableListOf()
     assertEquals(emptyGodSkins, repository.getGodSkins(0))
   }
 
   @Test
-  fun test_getItems_isEmpty() = runBlockingTest {
+  fun test_getItems_isEmpty() = runTest {
     val emptyItems: List<Item> = mutableListOf()
     assertEquals(emptyItems, repository.getItems())
   }

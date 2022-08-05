@@ -1,6 +1,6 @@
-package com.matrix.api.impl
+package com.matrix.data.impl
 
-import com.matrix.api.SmiteRemoteDataSource
+import com.matrix.data.SmiteRemoteDataSource
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin

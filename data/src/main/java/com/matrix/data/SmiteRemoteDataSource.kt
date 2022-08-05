@@ -1,4 +1,4 @@
-package com.matrix.api
+package com.matrix.data
 
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin

@@ -1,9 +1,7 @@
 package com.matrix.presentation.viewmodels
 
 import android.content.SharedPreferences
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +11,7 @@ import com.matrix.presentation.cache.Cache
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -46,19 +45,27 @@ class ItemListCache(private val sharedPreferences: SharedPreferences) :
 }
 
 const val ITEM_LIST_CACHE_KEY = "item_list_cache"
-const val ITEM_STATE = "ItemViewModel_Item"
+const val SELECTED_ITEM_STATE = "ItemViewModel_SelectedViewModel"
+
+enum class LoadingState {
+  LOADING,
+  ERROR,
+  DONE
+}
 
 data class ItemUiState(
-  val items: List<Item>,
-  val itemIdMap: Map<Long, Item>,
-  val errorMessages: List<String>
+  val loadingState: LoadingState = LoadingState.LOADING,
+  val items: List<Item> = listOf(),
+  val baseItemTreeNodes: List<ItemNode> = listOf(),
+  val selectedItem: Item? = null,
+  val errorMessages: List<String> = listOf()
 )
 
 @HiltViewModel
 class ItemViewModel @Inject constructor(
   private val smiteRepo: SmiteRepository,
   private val savedStateHandle: SavedStateHandle,
-) : ViewModel(), CanError {
+) : ViewModel() {
 
 //  private val itemListCache = ItemListCache(
 //    SmiteApplication.instance.getSharedPreferences(
@@ -66,58 +73,55 @@ class ItemViewModel @Inject constructor(
 //      Context.MODE_PRIVATE
 //    )
 //  )
-  private val _items = MutableStateFlow<List<Item>>(listOf())
-  val items: StateFlow<List<Item>> = _items
 
-  private val _itemIdMap: MutableState<Map<Long, Item>?> = mutableStateOf(null)
-  val itemIdMap: State<Map<Long, Item>?> = _itemIdMap
+  var uiState by mutableStateOf(
+    ItemUiState(
+    selectedItem = savedStateHandle[SELECTED_ITEM_STATE]
+    )
+  )
+    private set
 
-  private val _baseItemTreeNodes: MutableState<List<ItemNode>> = mutableStateOf(listOf())
-  val baseItemTreeNodes: State<List<ItemNode>> = _baseItemTreeNodes
+  private var _stateJob: Job? = null
 
-  private val _selectedItem = MutableStateFlow<Item?>(null) // TODO: Bring back saved state after clean rework
-  val selectedItem: StateFlow<Item?> = _selectedItem
+  suspend fun loadState() {
+    Timber.d("loadState")
+    var newState = uiState.copy()
+    _stateJob?.cancel()
+    withContext(Dispatchers.IO) {
 
-  suspend fun loadItems() {
-    Timber.d("loadItems in ItemViewModel")
-    viewModelScope.launch {
+    }
+    _stateJob = viewModelScope.launch {
       try {
         val itemList = withContext(Dispatchers.IO) {
-//          itemListCache.getAsync(ITEM_LIST_CACHE_KEY).ifEmpty {
-//            val newResults = smiteRepo.getItems()
-//            itemListCache.setAsync(ITEM_LIST_CACHE_KEY, newResults)
-//            newResults
-            smiteRepo.getItems()
+          smiteRepo.getItems()
         }
-        _items.value = itemList.filter { it.activeFlag == "y" }
-        error = null
+        newState = newState.copy(items = itemList.filter { it.activeFlag == "y" })
       } catch (ex: Exception) {
-        error = ex
+        newState = newState.copy(errorMessages = listOf(ex.toString()))
         Timber.e(ex.toString())
       }
 
       // Set up the item tree's via a node structure
-      items.onEach { itemList ->
-        _itemIdMap.value = itemList.associateBy { item -> item.itemID }
-        val itemsGroupedByTier = itemList.groupBy { it.itemTier }
-        val baseNodes = mutableListOf<ItemNode>()
-        itemList.filter { item -> item.itemTier == 1L}.forEach {
-          baseNodes.add(ItemNode(it))
-        }
-        baseNodes.forEach { node ->
-          node.findChildren(itemsGroupedByTier)
-        }
-        _baseItemTreeNodes.value = baseNodes
-        //Timber.d(_baseItemTreeNodes.value.joinToString(", "))
-      }.collect()
+      //_itemIdMap.value = itemList.associateBy { item -> item.itemID }
+      val itemsGroupedByTier = newState.items.groupBy { it.itemTier }
+      val baseNodes = mutableListOf<ItemNode>()
+      newState.items.filter { item -> item.itemTier == 1L }.forEach {
+        baseNodes.add(ItemNode(it))
+      }
+      baseNodes.forEach { node ->
+        node.findChildren(itemsGroupedByTier)
+      }
+      newState = newState.copy(baseItemTreeNodes = baseNodes, loadingState = LoadingState.DONE)
+
+      // Finalize changes to the new state
+      uiState = newState
+      Timber.d("End loadState")
     }
   }
 
   fun setItem(item: Item?) {
-    _selectedItem.value = item
-    // TODO: Bring back saved state after clean arch rework
-    //savedStateHandle[ITEM_STATE] = item
+    uiState = uiState.copy(selectedItem = item)
+    // TODO: The item class needs to be parcelable
+    //savedStateHandle[SELECTED_ITEM_STATE] = item
   }
-
-  override var error: Exception? = null
 }

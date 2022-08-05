@@ -1,4 +1,4 @@
-package com.matrix.api.models
+package com.matrix.data.models
 
 /**
  * A generic class that holds a value or an exception
