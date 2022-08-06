@@ -40,9 +40,6 @@ fun ItemList(
     viewModel: ItemViewModel,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.loadState()
-    }
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier

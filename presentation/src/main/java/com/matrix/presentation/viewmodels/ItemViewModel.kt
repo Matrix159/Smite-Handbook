@@ -1,24 +1,26 @@
 package com.matrix.presentation.viewmodels
 
 import android.content.SharedPreferences
-import androidx.compose.runtime.*
+import android.os.Parcelable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.Item
+import com.matrix.domain.usecases.GetLatestItemsUseCase
 import com.matrix.presentation.cache.Cache
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -45,50 +47,38 @@ class ItemListCache(private val sharedPreferences: SharedPreferences) :
   }
 }
 
-const val ITEM_LIST_CACHE_KEY = "item_list_cache"
-const val SELECTED_ITEM_STATE = "ItemViewModel_SelectedViewModel"
+const val SAVED_STATE_KEY = "ItemViewModel_uiState"
 
+@Parcelize
 data class ItemUiState(
   val loadingState: LoadingState = LoadingState.LOADING,
-  val items: List<Item> = listOf(),
-  val baseItemTreeNodes: List<ItemNode> = listOf(),
-  val selectedItem: Item? = null,
+  val items: @RawValue List<Item> = listOf(),
+  val baseItemTreeNodes: @RawValue List<ItemNode> = listOf(),
+  val selectedItem: @RawValue Item? = null,
   val errorMessages: List<String> = listOf()
-)
+) : Parcelable
+
 
 @HiltViewModel
 class ItemViewModel @Inject constructor(
-  private val smiteRepo: SmiteRepository,
+  private val getLatestItemsUseCase: GetLatestItemsUseCase,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-//  private val itemListCache = ItemListCache(
-//    SmiteApplication.instance.getSharedPreferences(
-//      ITEM_LIST_CACHE_KEY,
-//      Context.MODE_PRIVATE
-//    )
-//  )
-
   var uiState by mutableStateOf(
-    ItemUiState(
-      selectedItem = savedStateHandle[SELECTED_ITEM_STATE]
-    )
+    // TODO Need to make presentation specific models that can all be parcelable, to avoid errors
+    // savedStateHandle[SAVED_STATE_KEY] ?: ItemUiState()
+    ItemUiState()
   )
     private set
 
-  private var _stateJob: Job? = null
-
-  suspend fun loadState() {
+  init {
     Timber.d("loadState")
     var newState = uiState.copy()
-    _stateJob?.cancel()
-    withContext(Dispatchers.IO) {
-
-    }
-    _stateJob = viewModelScope.launch {
+    viewModelScope.launch {
       try {
         val itemList = withContext(Dispatchers.IO) {
-          smiteRepo.getItems()
+          getLatestItemsUseCase()
         }
         newState = newState.copy(items = itemList.filter { it.activeFlag == "y" })
       } catch (ex: Exception) {
@@ -111,13 +101,13 @@ class ItemViewModel @Inject constructor(
 
       // Finalize changes to the new state
       uiState = newState
+      //savedStateHandle[SAVED_STATE_KEY] = uiState
       Timber.d("End loadState")
     }
   }
 
   fun setItem(item: Item?) {
     uiState = uiState.copy(selectedItem = item)
-    // TODO: The item class needs to be parcelable
-    //savedStateHandle[SELECTED_ITEM_STATE] = item
+    //savedStateHandle[SAVED_STATE_KEY] = uiState
   }
 }

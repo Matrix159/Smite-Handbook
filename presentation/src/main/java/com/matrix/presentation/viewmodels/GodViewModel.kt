@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
+import com.matrix.domain.usecases.GetGodSkinsUseCase
+import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.presentation.cache.Cache
 import com.matrix.presentation.models.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +58,8 @@ const val GOD_LIST_CACHE_KEY = "god_list_cache"
 
 @HiltViewModel
 class GodViewModel @Inject constructor(
-  private val smiteRepo: SmiteRepository,
+  private val getLatestGodsUseCase: GetLatestGodsUseCase,
+  private val getGodSkinsUseCase: GetGodSkinsUseCase
 ) : ViewModel() {
 
   var godListUiState by mutableStateOf(GodListUiState())
@@ -65,6 +68,7 @@ class GodViewModel @Inject constructor(
   var godDetailsUiState by mutableStateOf(GodDetailsUiState())
     private set
 
+
   init {
     viewModelScope.launch {
       Timber.d("loadState")
@@ -72,7 +76,7 @@ class GodViewModel @Inject constructor(
       try {
         var gods: List<GodInformation>
         withContext(Dispatchers.IO) {
-          gods = smiteRepo.getGods()
+          gods = getLatestGodsUseCase()
         }
 
         godListUiState = godListUiState.copy(gods = gods, loadingState = LoadingState.DONE)
@@ -101,7 +105,7 @@ class GodViewModel @Inject constructor(
           var godSkins: List<GodSkin>
           // Load the skins asynchronously
           withContext(Dispatchers.IO) {
-            godSkins = smiteRepo.getGodSkins(godInformation.id)
+            godSkins = getGodSkinsUseCase(godInformation.id)
             godDetailsUiState =
               godDetailsUiState.copy(godSkins = godSkins)
           }
