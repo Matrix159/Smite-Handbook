@@ -139,6 +139,34 @@ fun ItemFilters(
       ) {
         Text("Magical Power")
       }
+      FilterChip(
+        selected = appliedFilters.magicalLifeSteal,
+        onClick = { filtersChanged(appliedFilters.copy(magicalLifeSteal = !appliedFilters.magicalLifeSteal)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Magical Lifesteal")
+      }
+      FilterChip(
+        selected = appliedFilters.magicalFlatPen,
+        onClick = { filtersChanged(appliedFilters.copy(magicalFlatPen = !appliedFilters.magicalFlatPen)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Magical Flat Penetration")
+      }
+      FilterChip(
+        selected = appliedFilters.magicalPercentPen,
+        onClick = { filtersChanged(appliedFilters.copy(magicalPercentPen = !appliedFilters.magicalPercentPen)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Magical Percent Penetration")
+      }
+      FilterChip(
+        selected = appliedFilters.physicalPower,
+        onClick = { filtersChanged(appliedFilters.copy(physicalPower = !appliedFilters.physicalPower)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Physical Power")
+      }
     }
 //    ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3", "Tier 4"), unselectable = true) {
 //      selectedTier(it?.let { it + 1 })
