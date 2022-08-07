@@ -2,9 +2,8 @@ package com.matrix.presentation.viewmodels
 
 import android.content.SharedPreferences
 import android.os.Parcelable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -58,6 +57,10 @@ data class ItemUiState(
   val errorMessages: List<String> = listOf()
 ) : Parcelable
 
+data class AppliedFilters(
+  val searchText: String = "",
+  val tier: Int? = null
+)
 
 @HiltViewModel
 class ItemViewModel @Inject constructor(
@@ -71,6 +74,18 @@ class ItemViewModel @Inject constructor(
     ItemUiState()
   )
     private set
+
+  var filters by mutableStateOf(
+    AppliedFilters()
+  )
+    private set
+
+  val visibleItems by derivedStateOf {
+    uiState.items.filter {
+      it.deviceName == filters.searchText &&
+      it.itemTier == filters.tier
+    }
+  }
 
   init {
     Timber.d("loadState")
@@ -90,7 +105,7 @@ class ItemViewModel @Inject constructor(
       //_itemIdMap.value = itemList.associateBy { item -> item.itemID }
       val itemsGroupedByTier = newState.items.groupBy { it.itemTier }
       val baseNodes = mutableListOf<ItemNode>()
-      newState.items.filter { item -> item.itemTier == 1L }.forEach {
+      newState.items.filter { item -> item.itemTier == 1 }.forEach {
         baseNodes.add(ItemNode(it))
       }
       baseNodes.forEach { node ->

@@ -30,7 +30,7 @@ data class Item(
   val itemID: Long,
 
   @SerialName("ItemTier")
-  val itemTier: Long,
+  val itemTier: Int,
 
   @SerialName("Price")
   val price: Long,
