@@ -75,8 +75,7 @@ fun ItemList(
                 Box(
                   contentAlignment = Alignment.BottomCenter,
                   modifier = Modifier
-                    //.height(128.dp)
-                    //.fillMaxWidth()
+                    .requiredSize(128.dp)
                     .padding(8.dp)
                     .clip(MaterialTheme.shapes.extraLarge)
                     .border(
@@ -95,7 +94,7 @@ fun ItemList(
                     alignment = Alignment.Center,
                     modifier = Modifier
                       //.height(80.dp)
-                      .fillMaxWidth()
+                      .matchParentSize()
                   )
                   Box(
                     modifier = Modifier

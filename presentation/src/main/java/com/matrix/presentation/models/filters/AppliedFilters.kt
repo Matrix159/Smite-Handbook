@@ -1,16 +1,23 @@
 package com.matrix.presentation.models.filters
 
+enum class ItemType {
+  Consumable,
+  Item,
+  Active
+}
+
+enum class ItemTier {
+  One,
+  Two,
+  Three,
+  Four
+}
 data class AppliedFilters(
   val searchText: String = "",
   // Type
-  val consumable: Boolean = false,
-  val item: Boolean = false,
-  val active: Boolean = false,
+  val type: ItemType? = null,
   // Tier
-  val tier1: Boolean = false,
-  val tier2: Boolean = false,
-  val tier3: Boolean = false,
-  val tier4: Boolean = false,
+  val tier: ItemTier? = null,
   // Offense
   val magicalPower: Boolean = false,
   val magicalLifeSteal: Boolean = false,
