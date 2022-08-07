@@ -77,16 +77,18 @@ fun ItemDetails(
             .padding(4.dp)
         )
         Text(
-          "${item.price}" + if (totalCost > 0) "($totalCost)" else "" ,
+          "${item.price}" + if (totalCost > 0) "($totalCost)" else "",
           modifier = Modifier.padding(4.dp)
         )
       }
     }
     Divider(thickness = 1.dp)
 
-    Row(modifier = Modifier
-      .padding(vertical = 8.dp)
-      .fillMaxWidth()) {
+    Row(
+      modifier = Modifier
+        .padding(vertical = 8.dp)
+        .fillMaxWidth()
+    ) {
       AsyncImage(
         model = item.itemIconURL,
         contentDescription = item.deviceName,

@@ -2,16 +2,18 @@ package com.matrix.presentation.viewmodels
 
 import android.content.SharedPreferences
 import android.os.Parcelable
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.Item
 import com.matrix.domain.usecases.GetLatestItemsUseCase
 import com.matrix.presentation.cache.Cache
 import com.matrix.presentation.models.LoadingState
+import com.matrix.presentation.models.filters.AppliedFilters
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,15 +21,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
 
-class ItemListCache(private val sharedPreferences: SharedPreferences) :
-  Cache<String, List<Item>> {
+class ItemListCache(private val sharedPreferences: SharedPreferences) : Cache<String, List<Item>> {
   override suspend fun getAsync(key: String): List<Item> {
     return withContext(Dispatchers.IO) {
       sharedPreferences.getString(key, null)?.let {
@@ -57,11 +57,6 @@ data class ItemUiState(
   val errorMessages: List<String> = listOf()
 ) : Parcelable
 
-data class AppliedFilters(
-  val searchText: String = "",
-  val tier: Int? = null
-)
-
 @HiltViewModel
 class ItemViewModel @Inject constructor(
   private val getLatestItemsUseCase: GetLatestItemsUseCase,
@@ -81,10 +76,25 @@ class ItemViewModel @Inject constructor(
     private set
 
   val visibleItems by derivedStateOf {
-    uiState.items.filter {
-      it.deviceName == filters.searchText &&
-      it.itemTier == filters.tier
-    }
+    uiState.items.filter { item ->
+      item.activeFlag == "y" &&
+        (if (filters.searchText.isNotBlank())
+          item.deviceName.contains(filters.searchText, true)
+        else true) &&
+        // Type
+        ((if (filters.consumable) item.type == "Consumable" else true) &&
+          (if (filters.item) item.type == "Item" else true) &&
+          (if (filters.active) item.type == "Active" else true)) &&
+        // Tier
+        ((if (filters.tier1) item.itemTier == 1 else true) ||
+          (if (filters.tier2) item.itemTier == 2 else true) ||
+          (if (filters.tier3) item.itemTier == 3 else true) ||
+          (if (filters.tier4) item.itemTier == 4 else true)) &&
+        // Offense
+        // Defense
+        // Utility
+        (if (filters.health) item.itemDescription.menuItems.any { it.description == "Health" } else true)
+    }.sortedBy { it.deviceName }
   }
 
   init {
@@ -111,14 +121,21 @@ class ItemViewModel @Inject constructor(
       baseNodes.forEach { node ->
         node.findChildren(itemsGroupedByTier)
       }
-      newState =
-        newState.copy(baseItemTreeNodes = baseNodes, loadingState = LoadingState.DONE)
+      newState = newState.copy(baseItemTreeNodes = baseNodes, loadingState = LoadingState.DONE)
 
       // Finalize changes to the new state
       uiState = newState
       //savedStateHandle[SAVED_STATE_KEY] = uiState
       Timber.d("End loadState")
     }
+  }
+
+  fun updateAppliedFilters(newFilters: AppliedFilters) {
+    filters = newFilters.copy()
+  }
+
+  fun updateSearchText(text: String) {
+    filters = filters.copy(searchText = text)
   }
 
   fun setItem(item: Item?) {

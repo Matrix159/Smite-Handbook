@@ -2,4 +2,5 @@
     <string name="app_name">MaterializedSmite</string>
     <string name="god_screen">Gods</string>
     <string name="item_screen">Items</string>
+    <string name="applied_filter">Applied Filter</string>
 </resources>

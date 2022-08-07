@@ -6,7 +6,8 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ErrorText(errorMessage: String) {
-  Text(text = errorMessage,
+  Text(
+    text = errorMessage,
     style = MaterialTheme.typography.bodyLarge,
     color = MaterialTheme.colorScheme.error
   )

@@ -104,10 +104,10 @@ fun GodDetails(
               )
             }
             1 -> {
-             Lore(
-               god = selectedGod,
-               modifier = Modifier.fillMaxSize()
-             )
+              Lore(
+                god = selectedGod,
+                modifier = Modifier.fillMaxSize()
+              )
             }
             2 -> GodSkins(godDetailsUiState.godSkins, Modifier.fillMaxSize())
           }
