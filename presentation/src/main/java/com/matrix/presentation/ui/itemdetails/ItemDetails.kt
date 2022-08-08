@@ -21,7 +21,6 @@ import com.matrix.presentation.utils.ItemNode
 @Composable
 fun ItemDetails(
   item: Item,
-  //itemIdMap: Map<Long, Item>?,
   itemTreeNodes: List<ItemNode>,
   modifier: Modifier = Modifier,
   itemClicked: (item: Item) -> Unit
@@ -46,7 +45,7 @@ fun ItemDetails(
   /**
    * <baseNode, currentNode>
    */
-  val (baseNode, currentNode) = remember(itemTreeNodes) {
+  val (baseNode, currentNode) = remember(itemTreeNodes, item) {
     itemTreeNodes.forEach {
       val foundItemNode = it.findItem(item)
       if (foundItemNode != null) {
@@ -68,7 +67,7 @@ fun ItemDetails(
     ) {
       Text(item.deviceName)
       Row(verticalAlignment = Alignment.CenterVertically) {
-        val totalCost = currentNode?.totalCost() ?: 0L
+        val totalCost = remember(currentNode) { currentNode?.totalCost() ?: 0L }
         Image(
           painterResource(R.drawable.coins),
           "Gold",
@@ -100,10 +99,14 @@ fun ItemDetails(
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp)
       )
     }
-
-    item.itemDescription.secondaryDescription?.let {
+    val description = remember(item.itemDescription.secondaryDescription) {
+      item.itemDescription.secondaryDescription
+        ?.replace("<n>", "\n")
+        ?.replace("<.+>".toRegex(), "")
+    }
+    description?.let { it ->
       Text(
-        item.itemDescription.secondaryDescription!!,
+        it,
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(vertical = 8.dp)
       )
@@ -126,7 +129,7 @@ fun ItemDetails(
         baseNode,
         selectedItem = item,
         itemClicked = { itemClicked(it) },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(8.dp)
       )
     }
   }

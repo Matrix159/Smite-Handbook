@@ -2,11 +2,14 @@ package com.matrix.presentation.ui.itemdetails.filters
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -26,7 +29,10 @@ fun ItemFilterModal(
   content: @Composable (bottomSheetState: ModalBottomSheetState) -> Unit,
 ) {
   val bottomSheetState: ModalBottomSheetState =
-    rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    rememberModalBottomSheetState(
+      initialValue = ModalBottomSheetValue.Hidden,
+      skipHalfExpanded = true
+    )
   ModalBottomSheetLayout(sheetState = bottomSheetState,
     sheetBackgroundColor = MaterialTheme.colorScheme.surface,
     sheetContentColor = MaterialTheme.colorScheme.onSurface,
@@ -49,7 +55,8 @@ fun ItemFilters(
   appliedFilters: AppliedFilters,
   filtersChanged: (filters: AppliedFilters) -> Unit,
 ) {
-  Column(modifier = modifier) {
+  Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    val localTextStyleOverride = MaterialTheme.typography.bodySmall
     FilterGroup(title = "Type") {
       FilterChip(
         selected = appliedFilters.type == ItemType.Consumable,
@@ -137,40 +144,146 @@ fun ItemFilters(
         onClick = { filtersChanged(appliedFilters.copy(magicalPower = !appliedFilters.magicalPower)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Magical Power")
+        Text("Magical Power", style = localTextStyleOverride)
       }
       FilterChip(
         selected = appliedFilters.magicalLifeSteal,
         onClick = { filtersChanged(appliedFilters.copy(magicalLifeSteal = !appliedFilters.magicalLifeSteal)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Magical Lifesteal")
+        Text("Magical Lifesteal", style = localTextStyleOverride)
       }
       FilterChip(
         selected = appliedFilters.magicalFlatPen,
         onClick = { filtersChanged(appliedFilters.copy(magicalFlatPen = !appliedFilters.magicalFlatPen)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Magical Flat Penetration")
+        Text("Magical Flat Penetration", style = localTextStyleOverride)
       }
       FilterChip(
         selected = appliedFilters.magicalPercentPen,
         onClick = { filtersChanged(appliedFilters.copy(magicalPercentPen = !appliedFilters.magicalPercentPen)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Magical Percent Penetration")
+        Text("Magical Percent Penetration", style = localTextStyleOverride)
       }
       FilterChip(
         selected = appliedFilters.physicalPower,
         onClick = { filtersChanged(appliedFilters.copy(physicalPower = !appliedFilters.physicalPower)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Physical Power")
+        Text("Physical Power", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.physicalLifeSteal,
+        onClick = { filtersChanged(appliedFilters.copy(physicalLifeSteal = !appliedFilters.physicalLifeSteal)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Physical Lifesteal", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.physicalFlatPen,
+        onClick = { filtersChanged(appliedFilters.copy(physicalFlatPen = !appliedFilters.physicalFlatPen)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Physical Flat Penetration", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.physicalPercentPen,
+        onClick = { filtersChanged(appliedFilters.copy(physicalPercentPen = !appliedFilters.physicalPercentPen)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Physical Percent Penetration", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.attackSpeed,
+        onClick = { filtersChanged(appliedFilters.copy(attackSpeed = !appliedFilters.attackSpeed)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Attack Speed", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.critChance,
+        onClick = { filtersChanged(appliedFilters.copy(critChance = !appliedFilters.critChance)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Critical Strike Chance", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.basicAttackDamage,
+        onClick = { filtersChanged(appliedFilters.copy(basicAttackDamage = !appliedFilters.basicAttackDamage)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Basic Attack Damage", style = localTextStyleOverride)
       }
     }
-//    ChipRow(values = listOf("Tier 1", "Tier 2", "Tier 3", "Tier 4"), unselectable = true) {
-//      selectedTier(it?.let { it + 1 })
-//    }
+    FilterGroup(title = "Defense") {
+      FilterChip(
+        selected = appliedFilters.magicalProtection,
+        onClick = { filtersChanged(appliedFilters.copy(magicalProtection = !appliedFilters.magicalProtection)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Magical Protection", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.physicalProtection,
+        onClick = { filtersChanged(appliedFilters.copy(physicalProtection = !appliedFilters.physicalProtection)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Physical Protection", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.health,
+        onClick = { filtersChanged(appliedFilters.copy(health = !appliedFilters.health)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Health", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.hp5,
+        onClick = { filtersChanged(appliedFilters.copy(hp5 = !appliedFilters.hp5)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("HP5", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.ccr,
+        onClick = { filtersChanged(appliedFilters.copy(ccr = !appliedFilters.ccr)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Crowd Control Reduction", style = localTextStyleOverride)
+      }
+    }
+    FilterGroup(title = "Utility") {
+      FilterChip(
+        selected = appliedFilters.cdr,
+        onClick = { filtersChanged(appliedFilters.copy(cdr = !appliedFilters.cdr)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Cooldown Reduction", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.mana,
+        onClick = { filtersChanged(appliedFilters.copy(mana = !appliedFilters.mana)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Mana", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.mp5,
+        onClick = { filtersChanged(appliedFilters.copy(mp5 = !appliedFilters.mp5)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("MP5", style = localTextStyleOverride)
+      }
+      FilterChip(
+        selected = appliedFilters.movementSpeed,
+        onClick = { filtersChanged(appliedFilters.copy(movementSpeed = !appliedFilters.movementSpeed)) },
+        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+      ) {
+        Text("Movement Speed", style = localTextStyleOverride)
+      }
+    }
   }
 }
 

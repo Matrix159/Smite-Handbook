@@ -6,6 +6,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -17,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -26,9 +29,11 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.matrix.presentation.NavigationRoutes.ItemDetails
 import com.matrix.presentation.ui.GodList
 import com.matrix.presentation.ui.ItemList
 import com.matrix.presentation.ui.goddetails.GodScreen
+import com.matrix.presentation.ui.itemdetails.ItemDetails
 import com.matrix.presentation.viewmodels.GodViewModel
 import com.matrix.presentation.viewmodels.ItemViewModel
 import kotlinx.coroutines.launch
@@ -159,23 +164,29 @@ fun SmiteApp() {
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
           // TODO: Need to evaluate if I want the god list/details as routes or one view, and synch up
           // with the item list / details for consistency
-          ItemList(viewModel = itemViewModel, modifier = Modifier.fillMaxSize())
-//          {
-//            itemViewModel.setItem(it)
-//            navController.navigate(NavigationRoutes.ItemDetails)
-//          }
+          ItemList(viewModel = itemViewModel, navController = navController, modifier = Modifier.fillMaxSize())
         }
-//        composable(NavigationRoutes.ItemDetails) { backStackEntry ->
-//          val parentEntry = remember(backStackEntry) {
-//            navController.getBackStackEntry(Screen.Items.route)
-//          }
-//          val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-//
-//          val item = itemViewModel.selectedItem.collectAsState().value
-//          if (item != null) {
-//            ItemDetails(item, modifier = Modifier.fillMaxSize())
-//          }
-//        }
+        composable(NavigationRoutes.ItemDetails) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Items.route)
+          }
+          val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
+
+          val state = itemViewModel.uiState
+          if (state.selectedItem != null) {
+            ItemDetails(
+              state.selectedItem,
+              state.baseItemTreeNodes,
+              Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                //.clickable { itemViewModel.setItem(null) }
+                .padding(16.dp)
+            ) {
+              itemViewModel.setItem(it)
+            }
+          }
+        }
       }
     }
   }
