@@ -1,5 +1,6 @@
 package com.matrix.presentation
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -37,6 +38,7 @@ import com.matrix.presentation.ui.itemdetails.ItemDetails
 import com.matrix.presentation.viewmodels.GodViewModel
 import com.matrix.presentation.viewmodels.ItemViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 object NavigationRoutes {
@@ -67,18 +69,21 @@ fun SmiteApp() {
           label = { Text(stringResource(screen.resourceId)) },
           selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
           onClick = {
-            navController.navigate(screen.route) {
-              // Pop up to the start destination of the graph to
-              // avoid building up a large stack of destinations
-              // on the back stack as users select items
-              popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
+            val currentTab = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+            // If we're not already in this navigation graph
+            if (!currentTab) {
+              navController.navigate(screen.route) {
+                // Pop up to the start destination of the graph to
+                // avoid building up a large stack of destinations
+                // on the back stack as users select items
+                popUpTo(navController.graph.findStartDestination().id) {
+                  //saveState = true
+                  // Do this to avoid double starting destinations on the stack
+                  if (navController.graph.findStartDestination().hierarchy.any { it.route == screen.route }) {
+                   inclusive = true
+                  }
+                }
               }
-              // Avoid multiple copies of the same destination when
-              // reselecting the same item
-              launchSingleTop = true
-              // Restore state when reselecting a previously selected item
-              restoreState = true
             }
           }
         )
@@ -148,10 +153,10 @@ fun SmiteApp() {
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
-          BackHandler {
-            //godViewModel.clearSelectedGod()
-            navController.popBackStack()
-          }
+//          BackHandler {
+//            //godViewModel.clearSelectedGod()
+//            navController.popBackStack()
+//          }
 
           GodScreen(godViewModel, modifier = Modifier.fillMaxSize())
         }
@@ -162,8 +167,6 @@ fun SmiteApp() {
             navController.getBackStackEntry(Screen.Items.route)
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-          // TODO: Need to evaluate if I want the god list/details as routes or one view, and synch up
-          // with the item list / details for consistency
           ItemList(viewModel = itemViewModel, navController = navController, modifier = Modifier.fillMaxSize())
         }
         composable(NavigationRoutes.ItemDetails) { backStackEntry ->
