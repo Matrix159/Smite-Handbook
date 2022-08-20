@@ -10,7 +10,7 @@ import io.ktor.client.request.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
-private const val baseUrl = "https://materialized-smite.herokuapp.com"
+private const val baseUrl = "https://smite-session-tracker-ktor.herokuapp.com"
 
 @OptIn(ExperimentalSerializationApi::class)
 class SmiteRemoteDataSourceImpl @Inject constructor(): SmiteRemoteDataSource {
