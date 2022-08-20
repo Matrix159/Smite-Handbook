@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColorScheme(
@@ -60,11 +61,18 @@ fun MaterializedSmiteTheme(
     systemUiController.setSystemBarsColor(
       color = colorScheme.background
     )
+
   } else {
     systemUiController.setSystemBarsColor(
-      color = Color.White
+      color = colorScheme.background
     )
   }
+
+  // This is to match the navigation bar used in the app, it matches the elevation of the bar
+  systemUiController.setNavigationBarColor(
+    color = colorScheme.surfaceColorAtElevation(3.dp),
+  )
+
   MaterialTheme(
     colorScheme = colorScheme,
     typography = Typography,
