@@ -11,9 +11,7 @@ import com.matrix.domain.usecases.GetGodSkinsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.presentation.models.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -66,29 +64,32 @@ class GodViewModel @Inject constructor(
     }
   }
 
-  suspend fun setGod(godInformation: GodInformation?) {
-    try {
-      when (godInformation) {
-        null -> {
-          godDetailsUiState = GodDetailsUiState()
-        }
-        else -> {
-          godDetailsUiState = godDetailsUiState.copy(
-            selectedGod = godInformation,
-            godSkins = listOf()
-          )
-          var godSkins: List<GodSkin>
-          // Load the skins asynchronously
-          withContext(Dispatchers.IO) {
-            godSkins = getGodSkinsUseCase(godInformation.id)
-            godDetailsUiState =
-              godDetailsUiState.copy(godSkins = godSkins)
+  fun setGod(godInformation: GodInformation?) {
+    viewModelScope.launch {
+      try {
+        when (godInformation) {
+          null -> {
+            godDetailsUiState = GodDetailsUiState()
+          }
+          else -> {
+            godDetailsUiState = godDetailsUiState.copy(
+              selectedGod = godInformation,
+              godSkins = listOf()
+            )
+            var godSkins: List<GodSkin>
+            // Load the skins asynchronously
+            withContext(Dispatchers.IO) {
+              godSkins = getGodSkinsUseCase(godInformation.id)
+              godDetailsUiState =
+                godDetailsUiState.copy(godSkins = godSkins)
+            }
           }
         }
+      } catch (ex: Exception) {
+        godDetailsUiState = godDetailsUiState.copy(errors = listOf(ex.toString()))
+        Timber.e(ex.toString())
+        throw ex
       }
-    } catch (ex: Exception) {
-      godDetailsUiState = godDetailsUiState.copy(errors = listOf(ex.toString()))
-      Timber.e(ex.toString())
     }
   }
 }

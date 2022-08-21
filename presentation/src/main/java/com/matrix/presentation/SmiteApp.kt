@@ -2,11 +2,8 @@ package com.matrix.presentation
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -99,16 +96,13 @@ fun SmiteApp() {
         composable(NavigationRoutes.GodList,
           enterTransition = {
             when (initialState.destination.route) {
-              NavigationRoutes.GodDetails -> slideIntoContainer(
-                AnimatedContentScope.SlideDirection.Right,
-                animationSpec = tween(500)
-              )
+              NavigationRoutes.GodDetails -> fadeIn()
               else -> null
             }
           },
           exitTransition = {
             when (targetState.destination.route) {
-              NavigationRoutes.GodDetails -> fadeOut(animationSpec = tween(500))
+              NavigationRoutes.GodDetails -> fadeOut()
               else -> null
             }
           }
@@ -118,16 +112,11 @@ fun SmiteApp() {
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
-          val coroutineScope = rememberCoroutineScope()
           GodList(godViewModel, modifier = Modifier.fillMaxSize()) { selectedGod ->
             // Clear the god, navigate, and then load the god as it navigates
-            coroutineScope.launch {
-              godViewModel.setGod(null)
-            }
+            godViewModel.setGod(null)
             navController.navigate(NavigationRoutes.GodDetails)
-            coroutineScope.launch {
-              godViewModel.setGod(selectedGod)
-            }
+            godViewModel.setGod(selectedGod)
           }
         }
         composable(NavigationRoutes.GodDetails,
@@ -135,14 +124,13 @@ fun SmiteApp() {
             when (initialState.destination.route) {
               NavigationRoutes.GodList -> expandIn(
                 expandFrom = Alignment.Center,
-                animationSpec = tween(500)
               )
               else -> null
             }
           },
           exitTransition = {
             when (targetState.destination.route) {
-              NavigationRoutes.GodList -> fadeOut(animationSpec = tween(500))
+              NavigationRoutes.GodList -> scaleOut()
               else -> null
             }
           }
@@ -152,11 +140,6 @@ fun SmiteApp() {
             navController.getBackStackEntry(Screen.Gods.route)
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
-
-//          BackHandler {
-//            //godViewModel.clearSelectedGod()
-//            navController.popBackStack()
-//          }
 
           GodScreen(godViewModel, modifier = Modifier.fillMaxSize())
         }

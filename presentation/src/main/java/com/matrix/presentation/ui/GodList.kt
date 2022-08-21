@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +49,10 @@ fun GodList(
           modifier = Modifier.fillMaxSize()
         ) {
           items(items = godListUiState.gods) { god ->
+            val configuration = LocalConfiguration.current
+
+            val screenHeight = configuration.screenHeightDp.dp
+            val screenWidth = configuration.screenWidthDp.dp
             Box(
               contentAlignment = Alignment.BottomCenter,
               modifier = Modifier

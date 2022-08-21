@@ -20,8 +20,6 @@ class SmiteLocalDatasourceImpl @Inject constructor(@ApplicationContext context: 
   SmiteLocalDataSource {
   private val godListFileMutex = Mutex()
   private val godListFile = File(context.filesDir, "god-list.json")
-  private val godSkinFileMutex = Mutex()
-  private val godSkinFile = File(context.filesDir, "god-skins.json")
   private val itemListFileMutex = Mutex()
   private val itemListFile = File(context.filesDir, "item-list.json")
 
@@ -41,28 +39,6 @@ class SmiteLocalDatasourceImpl @Inject constructor(@ApplicationContext context: 
           } catch (ex: Exception) {
             emptyList()
           }
-        }
-        false -> emptyList()
-      }
-    } else {
-      emptyList()
-    }
-  }
-
-  override suspend fun saveGodSkins(godSkins: List<GodSkin>) {
-    godSkinFileMutex.withLock {
-      godSkinFile.writeText(Json.encodeToString(godSkins))
-    }
-  }
-
-  override suspend fun readGodSkins(): List<GodSkin> {
-    return if (godSkinFile.exists() && godSkinFile.canRead()) {
-      val textFromFile = godSkinFile.readText()
-      when (textFromFile.isNotBlank()) {
-        true -> try {
-          Json.decodeFromString(textFromFile)
-        } catch (ex: Exception) {
-          emptyList()
         }
         false -> emptyList()
       }

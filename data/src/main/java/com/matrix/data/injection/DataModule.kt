@@ -16,11 +16,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
   @Binds
+  @Singleton
   abstract fun bindsSmiteLocalDataSource(
     smiteLocalDataSourceImpl: SmiteLocalDatasourceImpl
   ): SmiteLocalDataSource
 
   @Binds
+  @Singleton
   abstract fun bindsSmiteRemoteDataSource(
     smiteApiDataSourceImpl: SmiteRemoteDataSourceImpl
   ): SmiteRemoteDataSource

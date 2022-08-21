@@ -6,6 +6,7 @@ import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.domain.models.Item
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -33,8 +34,11 @@ class SmiteRepositoryImpl @Inject constructor(
     try {
       return networkDataSource.getGodSkins(godId)
     } catch (ex: Exception) {
-      throw ex
+      if (ex !is CancellationException) {
+        throw ex
+      }
     }
+    return emptyList()
   }
 
   override suspend fun getItems(refresh: Boolean): List<Item> {
