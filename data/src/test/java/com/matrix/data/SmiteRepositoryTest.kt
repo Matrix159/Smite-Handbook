@@ -1,12 +1,12 @@
 package com.matrix.data
 
-import com.matrix.data.impl.SmiteRepositoryImpl
+import com.matrix.data.network.interfaces.SmiteRemoteDataSource
+import com.matrix.data.repository.SmiteRepositoryImpl
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.domain.models.Item
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before

@@ -1,6 +1,5 @@
 package com.matrix.presentation.viewmodels
 
-import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,37 +9,13 @@ import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.domain.usecases.GetGodSkinsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
-import com.matrix.presentation.cache.Cache
 import com.matrix.presentation.models.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
-
-class GodListCache(private val sharedPreferences: SharedPreferences) :
-  Cache<String, List<GodInformation>> {
-  override suspend fun getAsync(key: String): List<GodInformation> {
-    return withContext(Dispatchers.IO) {
-      sharedPreferences.getString(key, null)?.let {
-        Json.decodeFromString<List<GodInformation>>(it)
-      } ?: listOf()
-    }
-  }
-
-  override suspend fun setAsync(key: String, value: List<GodInformation>) {
-    return withContext(Dispatchers.IO) {
-      sharedPreferences.edit().let {
-        it.putString(key, Json.encodeToString(value))
-        it.apply()
-      }
-    }
-  }
-}
 
 data class GodListUiState(
   val loadingState: LoadingState = LoadingState.LOADING,

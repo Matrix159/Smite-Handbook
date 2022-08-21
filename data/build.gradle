@@ -45,8 +45,10 @@ dependencies {
 
     // hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
-
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    // timber for logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 
 
     testImplementation "junit:junit:$junit_version"

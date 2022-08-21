@@ -22,7 +22,6 @@ import com.matrix.domain.models.Ability
 import com.matrix.domain.models.AbilityDescription
 import com.matrix.domain.models.AbilityItemDescription
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AbilityCard(
   abilityDetails: Ability,
@@ -38,10 +37,7 @@ fun AbilityCard(
     Column {
       Row(verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
-          model = ImageRequest
-            .Builder(LocalContext.current)
-            .data(abilityDetails.url)
-            .build(),
+          model = abilityDetails.url,
           contentDescription = abilityDetails.summary,
           contentScale = ContentScale.Crop,
           alignment = Alignment.Center,

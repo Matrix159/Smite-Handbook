@@ -1,6 +1,5 @@
 package com.matrix.presentation.viewmodels
 
-import android.content.SharedPreferences
 import android.os.Parcelable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.domain.models.Item
 import com.matrix.domain.usecases.GetLatestItemsUseCase
-import com.matrix.presentation.cache.Cache
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.models.filters.AppliedFilters
 import com.matrix.presentation.models.filters.ItemTier
@@ -23,32 +21,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import timber.log.Timber
 import javax.inject.Inject
-
-class ItemListCache(private val sharedPreferences: SharedPreferences) : Cache<String, List<Item>> {
-  override suspend fun getAsync(key: String): List<Item> {
-    return withContext(Dispatchers.IO) {
-      sharedPreferences.getString(key, null)?.let {
-        Json.decodeFromString<List<Item>>(it)
-      } ?: listOf()
-    }
-  }
-
-  override suspend fun setAsync(key: String, value: List<Item>) {
-    return withContext(Dispatchers.IO) {
-      sharedPreferences.edit().let {
-        it.putString(key, Json.encodeToString(value))
-        it.apply()
-      }
-    }
-  }
-}
-
-const val SAVED_STATE_KEY = "ItemViewModel_uiState"
 
 @Parcelize
 data class ItemUiState(

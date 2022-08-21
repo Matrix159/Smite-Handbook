@@ -1,8 +1,10 @@
 package com.matrix.data.injection
 
-import com.matrix.data.SmiteRemoteDataSource
-import com.matrix.data.impl.SmiteRemoteDataSourceImpl
-import com.matrix.data.impl.SmiteRepositoryImpl
+import com.matrix.data.local.SmiteLocalDatasourceImpl
+import com.matrix.data.local.interfaces.SmiteLocalDataSource
+import com.matrix.data.network.SmiteRemoteDataSourceImpl
+import com.matrix.data.network.interfaces.SmiteRemoteDataSource
+import com.matrix.data.repository.SmiteRepositoryImpl
 import com.matrix.domain.contracts.SmiteRepository
 import dagger.Binds
 import dagger.Module
@@ -13,9 +15,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
+  @Binds
+  abstract fun bindsSmiteLocalDataSource(
+    smiteLocalDataSourceImpl: SmiteLocalDatasourceImpl
+  ): SmiteLocalDataSource
 
   @Binds
-  abstract fun bindsSmiteDataSource(
+  abstract fun bindsSmiteRemoteDataSource(
     smiteApiDataSourceImpl: SmiteRemoteDataSourceImpl
   ): SmiteRemoteDataSource
 
