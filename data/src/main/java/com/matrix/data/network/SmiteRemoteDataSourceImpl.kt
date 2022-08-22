@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalSerializationApi::class)
 class SmiteRemoteDataSourceImpl @Inject constructor(): SmiteRemoteDataSource {
-  private val baseUrl = "https://smite-session-tracker-ktor.herokuapp.com"
+  private val baseUrl = "https://smite-handbook.herokuapp.com"
   private val client: HttpClient = ktorHttpClient
 
   override suspend fun getGods(): List<GodInformation> =
