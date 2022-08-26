@@ -1,5 +1,7 @@
 package com.matrix.data.repository
 
+import com.matrix.data.local.LocalGodList
+import com.matrix.data.local.LocalItemList
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.domain.contracts.SmiteRepository
@@ -14,19 +16,22 @@ import javax.inject.Inject
 
 class SmiteRepositoryImpl @Inject constructor(
   private val networkDataSource: SmiteRemoteDataSource,
-  private val localDataSource: SmiteLocalDataSource
+  private val localDataSource: SmiteLocalDataSource,
 ) : SmiteRepository {
 
+  // TODO: Write some tests around these functions and their syncing mechanisms
   override suspend fun getGods(refresh: Boolean): List<GodInformation> {
     return withContext(Dispatchers.IO) {
-      val localGodData: List<GodInformation> = localDataSource.readGods()
-      if (refresh || localGodData.isEmpty()) {
+      val currentPatchVersion: String = networkDataSource.getPatchVersion().version
+      val localGodData: LocalGodList? = localDataSource.readGods()
+      // Determine if we need to fetch from remote, we use patch version as our way of syncing data
+      if (localGodData == null || localGodData.patchVersion != currentPatchVersion || refresh) {
         val newData = networkDataSource.getGods()
-        localDataSource.saveGods(newData)
+        localDataSource.saveGods(newData, currentPatchVersion)
         Timber.d("Saved new god data to local storage")
         return@withContext newData
       }
-      localGodData
+      localGodData.gods
     }
   }
 
@@ -43,14 +48,15 @@ class SmiteRepositoryImpl @Inject constructor(
 
   override suspend fun getItems(refresh: Boolean): List<Item> {
     return withContext(Dispatchers.IO) {
-      val localItemData: List<Item> = localDataSource.readItems()
-      if (refresh || localItemData.isEmpty()) {
+      val currentPatchVersion: String = networkDataSource.getPatchVersion().version
+      val localItemData: LocalItemList? = localDataSource.readItems()
+      if (localItemData == null || localItemData.patchVersion != currentPatchVersion || refresh) {
         val newData = networkDataSource.getItems()
-        localDataSource.saveItems(newData)
+        localDataSource.saveItems(newData, currentPatchVersion)
         Timber.d("Saved new item data to local storage")
         return@withContext newData
       }
-      localItemData
+      localItemData.items
     }
   }
 }
