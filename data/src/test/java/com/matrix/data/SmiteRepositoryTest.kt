@@ -1,54 +1,64 @@
 package com.matrix.data
 
+import com.matrix.data.local.LocalGodList
+import com.matrix.data.local.LocalItemList
+import com.matrix.data.local.interfaces.SmiteLocalDataSource
+import com.matrix.data.model.PatchVersionInfo
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.data.repository.SmiteRepositoryImpl
-import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
 import com.matrix.domain.models.Item
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 
 /**
  * Tests the SmiteRepository implementation in the data layer
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SmiteRepositoryTest {
+  @MockK
+  private lateinit var remoteDataSource: SmiteRemoteDataSource
 
-  private lateinit var repository: SmiteRepository
+  @MockK
+  private lateinit var localDataSource: SmiteLocalDataSource
+
+  @InjectMockKs
+  private lateinit var repository: SmiteRepositoryImpl
 
   @Before
   fun before() {
-    val dataSourceMock = mock<SmiteRemoteDataSource> {
-      onBlocking { getGods() } doReturn mutableListOf()
-      onBlocking { getGodSkins(anyInt()) } doReturn mutableListOf()
-      onBlocking { getItems() } doReturn mutableListOf()
-    }
-    repository = SmiteRepositoryImpl(dataSourceMock)
+    MockKAnnotations.init(this, relaxUnitFun = true)
+    repository = SmiteRepositoryImpl(remoteDataSource, localDataSource)
   }
 
+  // TODO: try a Fake version of this
   @Test
-  fun test_getGods_isEmpty() = runTest {
-    val emptyGodList: List<GodInformation> = mutableListOf()
+  fun `Should return a new god list when patch changes`() = runTest {
+    val firstPatch = "9.7"
+    val secondPatch = "9.8s"
 
-    assertEquals(emptyGodList, repository.getGods())
-  }
+    // Local has first patch data stored and remote is still first patch
+    coEvery { remoteDataSource.getPatchVersion() } returns PatchVersionInfo(firstPatch)
+    coEvery { localDataSource.readGods() } returns LocalGodList(
+      SmiteRepositoryData.firstPatchList,
+      firstPatch
+    )
+    val firstGodList = repository.getGods()
 
-  @Test
-  fun test_getGodSkins_isEmpty() = runTest {
-    val emptyGodSkins: List<GodSkin> = mutableListOf()
-    assertEquals(emptyGodSkins, repository.getGodSkins(0))
-  }
+    // Patch changed from remote, so remote should return new data and we should be overriding the
+    // updating the local source of truth
+    coEvery { remoteDataSource.getPatchVersion() } returns PatchVersionInfo(secondPatch)
+    coEvery { remoteDataSource.getGods() } returns SmiteRepositoryData.secondPatchList
+    val secondGodList = repository.getGods()
 
-  @Test
-  fun test_getItems_isEmpty() = runTest {
-    val emptyItems: List<Item> = mutableListOf()
-    assertEquals(emptyItems, repository.getItems())
+    assertNotEquals(firstGodList.size, secondGodList.size)
   }
 }
