@@ -1,9 +1,12 @@
 package com.matrix.data.repository
 
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.matrix.data.local.LocalGodList
 import com.matrix.data.local.LocalItemList
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
+import com.matrix.data.service.PatchSyncWorker
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
@@ -17,7 +20,14 @@ import javax.inject.Inject
 class SmiteRepositoryImpl @Inject constructor(
   private val networkDataSource: SmiteRemoteDataSource,
   private val localDataSource: SmiteLocalDataSource,
+  private val workManager: WorkManager
 ) : SmiteRepository {
+
+  init {
+    workManager.enqueue(
+      OneTimeWorkRequestBuilder<PatchSyncWorker>().build()
+    )
+  }
 
   // TODO: Write some tests around these functions and their syncing mechanisms
   override suspend fun getGods(refresh: Boolean): List<GodInformation> {

@@ -1,5 +1,7 @@
 package com.matrix.data.injection
 
+import android.content.Context
+import androidx.work.WorkManager
 import com.matrix.data.local.SmiteLocalDatasourceImpl
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.SmiteRemoteDataSourceImpl
@@ -8,7 +10,9 @@ import com.matrix.data.repository.SmiteRepositoryImpl
 import com.matrix.domain.contracts.SmiteRepository
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -32,4 +36,12 @@ abstract class DataModule {
   abstract fun bindsSmiteRepository(
     smiteRepositoryImpl: SmiteRepositoryImpl
   ): SmiteRepository
+
+  companion object {
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+      return WorkManager.getInstance(context)
+    }
+  }
 }
