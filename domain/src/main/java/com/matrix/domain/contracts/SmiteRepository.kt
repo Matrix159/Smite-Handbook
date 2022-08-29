@@ -8,4 +8,5 @@ interface SmiteRepository {
   suspend fun getGods(refresh: Boolean = false): List<GodInformation>
   suspend fun getGodSkins(godId: Int): List<GodSkin>
   suspend fun getItems(refresh: Boolean = false): List<Item>
+  suspend fun syncPatchVersion()
 }

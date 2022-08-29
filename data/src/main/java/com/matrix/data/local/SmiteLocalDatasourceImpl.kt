@@ -18,13 +18,13 @@ import javax.inject.Singleton
 @Serializable
 data class LocalGodList(
   val gods: List<GodInformation>,
-  val patchVersion: String
+  val patchVersion: String?
 )
 
 @Serializable
 data class LocalItemList(
   val items: List<Item>,
-  val patchVersion: String
+  val patchVersion: String?
 )
 
 @Singleton
@@ -37,7 +37,7 @@ class SmiteLocalDatasourceImpl @Inject constructor(
   private val itemListFileMutex = Mutex()
   private val itemListFile = File(context.filesDir, "item-list.json")
 
-  override suspend fun saveGods(godInformation: List<GodInformation>, patchVersion: String) {
+  override suspend fun saveGods(godInformation: List<GodInformation>, patchVersion: String?) {
     godListFileMutex.withLock {
       godListFile.writeText(
         Json.encodeToString(
@@ -68,7 +68,7 @@ class SmiteLocalDatasourceImpl @Inject constructor(
     }
   }
 
-  override suspend fun saveItems(items: List<Item>, patchVersion: String) {
+  override suspend fun saveItems(items: List<Item>, patchVersion: String?) {
     itemListFileMutex.withLock {
       itemListFile.writeText(
         Json.encodeToString(

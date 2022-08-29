@@ -1,12 +1,10 @@
 package com.matrix.data.repository
 
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.matrix.data.local.LocalGodList
 import com.matrix.data.local.LocalItemList
+import com.matrix.data.local.interfaces.SharedPrefsDataSource
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
-import com.matrix.data.service.PatchSyncWorker
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.GodSkin
@@ -20,19 +18,13 @@ import javax.inject.Inject
 class SmiteRepositoryImpl @Inject constructor(
   private val networkDataSource: SmiteRemoteDataSource,
   private val localDataSource: SmiteLocalDataSource,
-  private val workManager: WorkManager
+  private val sharedPrefsDataSource: SharedPrefsDataSource
 ) : SmiteRepository {
-
-  init {
-    workManager.enqueue(
-      OneTimeWorkRequestBuilder<PatchSyncWorker>().build()
-    )
-  }
 
   // TODO: Write some tests around these functions and their syncing mechanisms
   override suspend fun getGods(refresh: Boolean): List<GodInformation> {
     return withContext(Dispatchers.IO) {
-      val currentPatchVersion: String = networkDataSource.getPatchVersion().version
+      val currentPatchVersion: String? = sharedPrefsDataSource.getPatchVersion()
       val localGodData: LocalGodList? = localDataSource.readGods()
       // Determine if we need to fetch from remote, we use patch version as our way of syncing data
       if (localGodData == null || localGodData.patchVersion != currentPatchVersion || refresh) {
@@ -58,7 +50,7 @@ class SmiteRepositoryImpl @Inject constructor(
 
   override suspend fun getItems(refresh: Boolean): List<Item> {
     return withContext(Dispatchers.IO) {
-      val currentPatchVersion: String = networkDataSource.getPatchVersion().version
+      val currentPatchVersion: String? = sharedPrefsDataSource.getPatchVersion()
       val localItemData: LocalItemList? = localDataSource.readItems()
       if (localItemData == null || localItemData.patchVersion != currentPatchVersion || refresh) {
         val newData = networkDataSource.getItems()
@@ -69,4 +61,9 @@ class SmiteRepositoryImpl @Inject constructor(
       localItemData.items
     }
   }
+
+  override suspend fun syncPatchVersion() {
+    sharedPrefsDataSource.setPatchVersion(networkDataSource.getPatchVersion().version)
+  }
+
 }

@@ -11,7 +11,7 @@ interface SmiteLocalDataSource {
    * @param godInformation List of gods to save
    * @param patchVersion Current version of smite
    */
-  suspend fun saveGods(godInformation: List<GodInformation>, patchVersion: String)
+  suspend fun saveGods(godInformation: List<GodInformation>, patchVersion: String?)
 
   /**
    * Retrieves the saved god list with an attach smite patch version
@@ -24,7 +24,7 @@ interface SmiteLocalDataSource {
    * @param items List of gods to save
    * @param patchVersion Current version of smite
    */
-  suspend fun saveItems(items: List<Item>, patchVersion: String)
+  suspend fun saveItems(items: List<Item>, patchVersion: String?)
 
   /**
    * Retrieves the saved item list with an attach smite patch version

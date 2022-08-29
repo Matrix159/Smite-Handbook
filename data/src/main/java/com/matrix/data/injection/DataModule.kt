@@ -2,7 +2,9 @@ package com.matrix.data.injection
 
 import android.content.Context
 import androidx.work.WorkManager
+import com.matrix.data.local.SharedPrefsDataSourceImpl
 import com.matrix.data.local.SmiteLocalDatasourceImpl
+import com.matrix.data.local.interfaces.SharedPrefsDataSource
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.SmiteRemoteDataSourceImpl
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
@@ -24,6 +26,12 @@ abstract class DataModule {
   abstract fun bindsSmiteLocalDataSource(
     smiteLocalDataSourceImpl: SmiteLocalDatasourceImpl
   ): SmiteLocalDataSource
+
+  @Binds
+  @Singleton
+  abstract fun bindsSharedPrefsDataSource(
+    sharedPrefsDataSourceImpl: SharedPrefsDataSourceImpl
+  ): SharedPrefsDataSource
 
   @Binds
   @Singleton
