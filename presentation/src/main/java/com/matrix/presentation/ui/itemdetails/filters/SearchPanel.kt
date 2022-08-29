@@ -17,9 +17,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemSearchPanel(
+fun SearchPanel(
   searchText: String,
   searchTextChanged: (searchText: String) -> Unit,
+  searchLabel: String,
   modifier: Modifier = Modifier,
   filterIconTap: () -> Unit,
 ) {
@@ -29,14 +30,12 @@ fun ItemSearchPanel(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceAround,
     modifier = modifier
-      .padding(16.dp)
-      .fillMaxWidth()
   ) {
     TextField(
       value = searchText,
       onValueChange = searchTextChanged,
       label = {
-        Text("Search for an item")
+        Text(searchLabel)
       },
       singleLine = true,
       keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -57,7 +56,7 @@ fun ItemSearchPanel(
     ) {
       Icon(
         Icons.Default.List,
-        "Filter items",
+        "Filter list",
         modifier = Modifier.size(48.dp)
       )
     }

@@ -1,6 +1,5 @@
 package com.matrix.presentation.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,15 +26,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.matrix.presentation.NavigationRoutes
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.presentation.ui.itemdetails.ItemDetails
 import com.matrix.presentation.ui.itemdetails.filters.ItemFilterModal
-import com.matrix.presentation.ui.itemdetails.filters.ItemSearchPanel
+import com.matrix.presentation.ui.itemdetails.filters.SearchPanel
 import com.matrix.presentation.viewmodels.ItemViewModel
 import kotlinx.coroutines.launch
 
@@ -57,7 +54,8 @@ fun ItemList(
         // Wrapped in ItemFilterModal for a bottom sheet modal for filters
         ItemFilterModal(
           filters = viewModel.filters,
-          filtersChanged = { viewModel.updateAppliedFilters(it) }) { bottomSheetState ->
+          filtersChanged = { viewModel.updateAppliedFilters(it) }
+        ) { bottomSheetState ->
           val selectedItem = viewModel.uiState.selectedItem
           val focusManager = LocalFocusManager.current
           Column(
@@ -73,19 +71,20 @@ fun ItemList(
               }
           ) {
             val coroutineScope = rememberCoroutineScope()
-            ItemSearchPanel(
+            SearchPanel(
               searchText = viewModel.filters.searchText,
+              searchLabel = "Search for an item",
               searchTextChanged = { viewModel.updateSearchText(it) },
               filterIconTap = {
                 coroutineScope.launch {
                   bottomSheetState.show()
                 }
-              }
+              },
+              modifier = Modifier.padding(16.dp).fillMaxWidth()
             )
             if (viewModel.visibleItems.isNotEmpty()) {
               LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = Modifier.fillMaxSize()
+                columns = GridCells.Fixed(3)
               ) {
                 items(items = viewModel.visibleItems, key = { it.itemID }) { item ->
                   Box(

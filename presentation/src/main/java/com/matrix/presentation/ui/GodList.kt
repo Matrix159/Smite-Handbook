@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,7 @@ import com.matrix.domain.models.GodInformation
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
+import com.matrix.presentation.ui.itemdetails.filters.SearchPanel
 import com.matrix.presentation.viewmodels.GodViewModel
 
 @Composable
@@ -44,59 +46,73 @@ fun GodList(
       LoadingState.LOADING -> Loader()
       LoadingState.ERROR -> ErrorText(godListUiState.errors.joinToString(","))
       LoadingState.DONE -> {
-        LazyVerticalGrid(
-          columns = GridCells.Fixed(3),
-          modifier = Modifier.fillMaxSize()
-        ) {
-          items(items = godListUiState.gods) { god ->
-            val configuration = LocalConfiguration.current
+        Column {
+          val coroutineScope = rememberCoroutineScope()
+          SearchPanel(
+            searchText = "",
+            searchLabel = "Search for a god",
+            searchTextChanged = {  },
+            filterIconTap = {
+//              coroutineScope.launch {
+//                bottomSheetState.show()
+//              }
+            },
+            modifier = Modifier.padding(16.dp).fillMaxWidth()
+          )
+          LazyVerticalGrid(
+            columns = GridCells.Fixed(3)
+          ) {
+            items(items = godListUiState.gods) { god ->
+              val configuration = LocalConfiguration.current
 
-            val screenHeight = configuration.screenHeightDp.dp
-            val screenWidth = configuration.screenWidthDp.dp
-            Box(
-              contentAlignment = Alignment.BottomCenter,
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(MaterialTheme.shapes.extraLarge)
-                .border(
-                  1.dp,
-                  MaterialTheme.colorScheme.outline,
-                  MaterialTheme.shapes.extraLarge
-                )
-                .clickable { godClicked(god) }
-            ) {
-              AsyncImage(
-                model = god.godCardURL,
-                contentDescription = god.name,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.TopCenter,
-                modifier = Modifier
-                  .height(180.dp)
-                  .fillMaxWidth()
-              )
+              val screenHeight = configuration.screenHeightDp.dp
+              val screenWidth = configuration.screenWidthDp.dp
               Box(
+                contentAlignment = Alignment.BottomCenter,
                 modifier = Modifier
-                  .matchParentSize()
-                  .background(
-                    brush = Brush.verticalGradient(
-                      0F to Color.Transparent,
-                      .5F to Color(0x40000000),
-                      .75f to Color(0x80000000),
-                      1f to Color(0xFF000000)
-                    )
+                  .fillMaxWidth()
+                  .padding(8.dp)
+                  .clip(MaterialTheme.shapes.extraLarge)
+                  .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.outline,
+                    MaterialTheme.shapes.extraLarge
                   )
-              )
-              Text(
-                text = god.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.White,
-                modifier = Modifier.padding(8.dp)
-              )
+                  .clickable { godClicked(god) }
+              ) {
+                AsyncImage(
+                  model = god.godCardURL,
+                  contentDescription = god.name,
+                  contentScale = ContentScale.Crop,
+                  alignment = Alignment.TopCenter,
+                  modifier = Modifier
+                    .height(180.dp)
+                    .fillMaxWidth()
+                )
+                Box(
+                  modifier = Modifier
+                    .matchParentSize()
+                    .background(
+                      brush = Brush.verticalGradient(
+                        0F to Color.Transparent,
+                        .5F to Color(0x40000000),
+                        .75f to Color(0x80000000),
+                        1f to Color(0xFF000000)
+                      )
+                    )
+                )
+                Text(
+                  text = god.name,
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 16.sp,
+                  color = Color.White,
+                  modifier = Modifier.padding(8.dp)
+                )
+              }
             }
           }
         }
+
       }
     }
   }

@@ -18,10 +18,8 @@ class PatchSyncWorker @AssistedInject constructor(
   @Assisted private val workerParams: WorkerParameters,
   private val smiteRepository: SmiteRepository
 ) : CoroutineWorker(appContext, workerParams) {
-  override suspend fun doWork(): Result {
-    return withContext(Dispatchers.IO) {
-      smiteRepository.syncPatchVersion()
-      return@withContext Result.success()
-    }
+  override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+    smiteRepository.syncPatchVersion()
+    return@withContext Result.success()
   }
 }

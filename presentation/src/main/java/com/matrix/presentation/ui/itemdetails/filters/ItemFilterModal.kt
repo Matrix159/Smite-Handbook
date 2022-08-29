@@ -33,7 +33,8 @@ fun ItemFilterModal(
       initialValue = ModalBottomSheetValue.Hidden,
       skipHalfExpanded = true
     )
-  ModalBottomSheetLayout(sheetState = bottomSheetState,
+  ModalBottomSheetLayout(
+    sheetState = bottomSheetState,
     sheetBackgroundColor = MaterialTheme.colorScheme.surface,
     sheetContentColor = MaterialTheme.colorScheme.onSurface,
     modifier = modifier,
