@@ -19,6 +19,7 @@ class PatchSyncWorker @AssistedInject constructor(
   private val smiteRepository: SmiteRepository
 ) : CoroutineWorker(appContext, workerParams) {
   override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+    Timber.d("PATCH WORKER RUNNING...")
     smiteRepository.syncPatchVersion()
     return@withContext Result.success()
   }

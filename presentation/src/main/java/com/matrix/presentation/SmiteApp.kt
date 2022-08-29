@@ -9,10 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,6 +24,7 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.matrix.domain.models.GodInformation
 import com.matrix.presentation.NavigationRoutes.ItemDetails
 import com.matrix.presentation.ui.GodList
 import com.matrix.presentation.ui.ItemList
@@ -114,9 +112,8 @@ fun SmiteApp() {
 
           GodList(godViewModel, modifier = Modifier.fillMaxSize()) { selectedGod ->
             // Clear the god, navigate, and then load the god as it navigates
-            godViewModel.setGod(null)
-            navController.navigate(NavigationRoutes.GodDetails)
             godViewModel.setGod(selectedGod)
+            navController.navigate(NavigationRoutes.GodDetails)
           }
         }
         composable(NavigationRoutes.GodDetails,

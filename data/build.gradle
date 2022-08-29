@@ -60,6 +60,10 @@ dependencies {
     // optional - Test helpers
     androidTestImplementation "androidx.work:work-testing:$work_version"
 
+    // data store
+    implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
+
     testImplementation "junit:junit:$junit_version"
     testImplementation "io.mockk:mockk:$mockk_version"
     //For runBlockingTest, CoroutineDispatcher etc.
