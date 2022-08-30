@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">MaterializedSmite</string>
+    <string name="applied_filter">Applied Filter</string>
     <string name="god_screen">Gods</string>
     <string name="item_screen">Items</string>
-    <string name="applied_filter">Applied Filter</string>
+
+    <!-- roles -->
+    <string name="assassin">Assassin</string>
+    <string name="guardian">Guardian</string>
+    <string name="hunter">Hunter</string>
+    <string name="mage">Mage</string>
+    <string name="warrior">Warrior</string>
 </resources>

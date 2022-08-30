@@ -12,7 +12,7 @@ import com.matrix.domain.usecases.GetGodSkinsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.models.filters.AppliedGodFilters
-import com.matrix.presentation.models.filters.AppliedItemFilters
+import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -118,9 +118,9 @@ class GodViewModel @Inject constructor(
       god.name.contains(filters.searchText, true)
       else true) &&
       // Role
-      (if (filters.role != null) filters.role.roleName == god.roles else true) &&
+      (if (filters.roles.isNotEmpty()) filters.roles.contains(Role.values().first { it.roleName == god.roles }) else true) &&
       // Pantheon
-      (if (filters.pantheon != null) filters.pantheon.pantheonName == god.pantheon else true)
+      (if (filters.pantheons.isNotEmpty()) filters.pantheons.contains(Pantheon.values().first { it.pantheonName == god.pantheon }) else true)
 
 //      // Type
 //      (if (filters.type != null)

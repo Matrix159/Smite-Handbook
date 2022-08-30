@@ -29,8 +29,8 @@ enum class Pantheon(val pantheonName: String) {
 
 data class AppliedGodFilters(
   val searchText: String = "",
-  val role: Role? = null,
-  val pantheon: Pantheon? = null
+  val roles: Set<Role> = emptySet(),
+  val pantheons: Set<Pantheon> = emptySet()
 //  // Type
 //  val type: ItemType? = null,
 //  // Tier
