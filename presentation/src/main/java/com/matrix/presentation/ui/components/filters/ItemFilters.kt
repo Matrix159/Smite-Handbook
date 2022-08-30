@@ -1,218 +1,187 @@
-package com.matrix.presentation.ui.itemdetails.filters
+package com.matrix.presentation.ui.components.filters
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FilterChip
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.google.accompanist.flowlayout.FlowRow
 import com.matrix.presentation.R
-import com.matrix.presentation.models.filters.AppliedFilters
+import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.presentation.models.filters.ItemTier
 import com.matrix.presentation.models.filters.ItemType
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun ItemFilterModal(
-  modifier: Modifier = Modifier,
-  filters: AppliedFilters,
-  filtersChanged: (filters: AppliedFilters) -> Unit,
-  content: @Composable (bottomSheetState: ModalBottomSheetState) -> Unit,
-) {
-  val bottomSheetState: ModalBottomSheetState =
-    rememberModalBottomSheetState(
-      initialValue = ModalBottomSheetValue.Hidden,
-      skipHalfExpanded = true
-    )
-  ModalBottomSheetLayout(
-    sheetState = bottomSheetState,
-    sheetBackgroundColor = MaterialTheme.colorScheme.surface,
-    sheetContentColor = MaterialTheme.colorScheme.onSurface,
-    modifier = modifier,
-    sheetContent = {
-      ItemFilters(
-        appliedFilters = filters,
-        filtersChanged = filtersChanged,
-        modifier = Modifier.padding(16.dp),
-      )
-    }) {
-    content(bottomSheetState)
-  }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemFilters(
+  appliedItemFilters: AppliedItemFilters,
+  filtersChanged: (filters: AppliedItemFilters) -> Unit,
   modifier: Modifier = Modifier,
-  appliedFilters: AppliedFilters,
-  filtersChanged: (filters: AppliedFilters) -> Unit,
 ) {
   Column(modifier = modifier.verticalScroll(rememberScrollState())) {
     val localTextStyleOverride = MaterialTheme.typography.bodySmall
     FilterGroup(title = "Type") {
       FilterChip(
-        selected = appliedFilters.type == ItemType.Consumable,
+        selected = appliedItemFilters.type == ItemType.Consumable,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(type = if (appliedFilters.type != ItemType.Consumable) ItemType.Consumable else null)
+            appliedItemFilters.copy(type = if (appliedItemFilters.type != ItemType.Consumable) ItemType.Consumable else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Consumable")
+        Text("Consumable", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.type == ItemType.Item,
+        selected = appliedItemFilters.type == ItemType.Item,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(type = if (appliedFilters.type != ItemType.Item) ItemType.Item else null)
+            appliedItemFilters.copy(type = if (appliedItemFilters.type != ItemType.Item) ItemType.Item else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Item")
+        Text("Item", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.type == ItemType.Active,
+        selected = appliedItemFilters.type == ItemType.Active,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(type = if (appliedFilters.type != ItemType.Active) ItemType.Active else null)
+            appliedItemFilters.copy(type = if (appliedItemFilters.type != ItemType.Active) ItemType.Active else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Active")
+        Text("Active", style = localTextStyleOverride)
       }
     }
     FilterGroup(title = "Tier") {
       FilterChip(
-        selected = appliedFilters.tier == ItemTier.One,
+        selected = appliedItemFilters.tier == ItemTier.One,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(tier = if (appliedFilters.tier != ItemTier.One) ItemTier.One else null)
+            appliedItemFilters.copy(tier = if (appliedItemFilters.tier != ItemTier.One) ItemTier.One else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Tier 1")
+        Text("Tier 1", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.tier == ItemTier.Two,
+        selected = appliedItemFilters.tier == ItemTier.Two,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(tier = if (appliedFilters.tier != ItemTier.Two) ItemTier.Two else null)
+            appliedItemFilters.copy(tier = if (appliedItemFilters.tier != ItemTier.Two) ItemTier.Two else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Tier 2")
+        Text("Tier 2", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.tier == ItemTier.Three,
+        selected = appliedItemFilters.tier == ItemTier.Three,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(tier = if (appliedFilters.tier != ItemTier.Three) ItemTier.Three else null)
+            appliedItemFilters.copy(tier = if (appliedItemFilters.tier != ItemTier.Three) ItemTier.Three else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Tier 3")
+        Text("Tier 3", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.tier == ItemTier.Four,
+        selected = appliedItemFilters.tier == ItemTier.Four,
         onClick = {
           filtersChanged(
-            appliedFilters.copy(tier = if (appliedFilters.tier != ItemTier.Four) ItemTier.Four else null)
+            appliedItemFilters.copy(tier = if (appliedItemFilters.tier != ItemTier.Four) ItemTier.Four else null)
           )
         },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
-        Text("Tier 4")
+        Text("Tier 4", style = localTextStyleOverride)
       }
     }
     FilterGroup(title = "Offense") {
       FilterChip(
-        selected = appliedFilters.magicalPower,
-        onClick = { filtersChanged(appliedFilters.copy(magicalPower = !appliedFilters.magicalPower)) },
+        selected = appliedItemFilters.magicalPower,
+        onClick = { filtersChanged(appliedItemFilters.copy(magicalPower = !appliedItemFilters.magicalPower)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Magical Power", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.magicalLifeSteal,
-        onClick = { filtersChanged(appliedFilters.copy(magicalLifeSteal = !appliedFilters.magicalLifeSteal)) },
+        selected = appliedItemFilters.magicalLifeSteal,
+        onClick = { filtersChanged(appliedItemFilters.copy(magicalLifeSteal = !appliedItemFilters.magicalLifeSteal)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Magical Lifesteal", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.magicalFlatPen,
-        onClick = { filtersChanged(appliedFilters.copy(magicalFlatPen = !appliedFilters.magicalFlatPen)) },
+        selected = appliedItemFilters.magicalFlatPen,
+        onClick = { filtersChanged(appliedItemFilters.copy(magicalFlatPen = !appliedItemFilters.magicalFlatPen)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Magical Flat Penetration", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.magicalPercentPen,
-        onClick = { filtersChanged(appliedFilters.copy(magicalPercentPen = !appliedFilters.magicalPercentPen)) },
+        selected = appliedItemFilters.magicalPercentPen,
+        onClick = { filtersChanged(appliedItemFilters.copy(magicalPercentPen = !appliedItemFilters.magicalPercentPen)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Magical Percent Penetration", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.physicalPower,
-        onClick = { filtersChanged(appliedFilters.copy(physicalPower = !appliedFilters.physicalPower)) },
+        selected = appliedItemFilters.physicalPower,
+        onClick = { filtersChanged(appliedItemFilters.copy(physicalPower = !appliedItemFilters.physicalPower)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Physical Power", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.physicalLifeSteal,
-        onClick = { filtersChanged(appliedFilters.copy(physicalLifeSteal = !appliedFilters.physicalLifeSteal)) },
+        selected = appliedItemFilters.physicalLifeSteal,
+        onClick = { filtersChanged(appliedItemFilters.copy(physicalLifeSteal = !appliedItemFilters.physicalLifeSteal)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Physical Lifesteal", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.physicalFlatPen,
-        onClick = { filtersChanged(appliedFilters.copy(physicalFlatPen = !appliedFilters.physicalFlatPen)) },
+        selected = appliedItemFilters.physicalFlatPen,
+        onClick = { filtersChanged(appliedItemFilters.copy(physicalFlatPen = !appliedItemFilters.physicalFlatPen)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Physical Flat Penetration", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.physicalPercentPen,
-        onClick = { filtersChanged(appliedFilters.copy(physicalPercentPen = !appliedFilters.physicalPercentPen)) },
+        selected = appliedItemFilters.physicalPercentPen,
+        onClick = { filtersChanged(appliedItemFilters.copy(physicalPercentPen = !appliedItemFilters.physicalPercentPen)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Physical Percent Penetration", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.attackSpeed,
-        onClick = { filtersChanged(appliedFilters.copy(attackSpeed = !appliedFilters.attackSpeed)) },
+        selected = appliedItemFilters.attackSpeed,
+        onClick = { filtersChanged(appliedItemFilters.copy(attackSpeed = !appliedItemFilters.attackSpeed)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Attack Speed", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.critChance,
-        onClick = { filtersChanged(appliedFilters.copy(critChance = !appliedFilters.critChance)) },
+        selected = appliedItemFilters.critChance,
+        onClick = { filtersChanged(appliedItemFilters.copy(critChance = !appliedItemFilters.critChance)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Critical Strike Chance", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.basicAttackDamage,
-        onClick = { filtersChanged(appliedFilters.copy(basicAttackDamage = !appliedFilters.basicAttackDamage)) },
+        selected = appliedItemFilters.basicAttackDamage,
+        onClick = { filtersChanged(appliedItemFilters.copy(basicAttackDamage = !appliedItemFilters.basicAttackDamage)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Basic Attack Damage", style = localTextStyleOverride)
@@ -220,36 +189,36 @@ fun ItemFilters(
     }
     FilterGroup(title = "Defense") {
       FilterChip(
-        selected = appliedFilters.magicalProtection,
-        onClick = { filtersChanged(appliedFilters.copy(magicalProtection = !appliedFilters.magicalProtection)) },
+        selected = appliedItemFilters.magicalProtection,
+        onClick = { filtersChanged(appliedItemFilters.copy(magicalProtection = !appliedItemFilters.magicalProtection)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Magical Protection", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.physicalProtection,
-        onClick = { filtersChanged(appliedFilters.copy(physicalProtection = !appliedFilters.physicalProtection)) },
+        selected = appliedItemFilters.physicalProtection,
+        onClick = { filtersChanged(appliedItemFilters.copy(physicalProtection = !appliedItemFilters.physicalProtection)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Physical Protection", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.health,
-        onClick = { filtersChanged(appliedFilters.copy(health = !appliedFilters.health)) },
+        selected = appliedItemFilters.health,
+        onClick = { filtersChanged(appliedItemFilters.copy(health = !appliedItemFilters.health)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Health", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.hp5,
-        onClick = { filtersChanged(appliedFilters.copy(hp5 = !appliedFilters.hp5)) },
+        selected = appliedItemFilters.hp5,
+        onClick = { filtersChanged(appliedItemFilters.copy(hp5 = !appliedItemFilters.hp5)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("HP5", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.ccr,
-        onClick = { filtersChanged(appliedFilters.copy(ccr = !appliedFilters.ccr)) },
+        selected = appliedItemFilters.ccr,
+        onClick = { filtersChanged(appliedItemFilters.copy(ccr = !appliedItemFilters.ccr)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Crowd Control Reduction", style = localTextStyleOverride)
@@ -257,45 +226,33 @@ fun ItemFilters(
     }
     FilterGroup(title = "Utility") {
       FilterChip(
-        selected = appliedFilters.cdr,
-        onClick = { filtersChanged(appliedFilters.copy(cdr = !appliedFilters.cdr)) },
+        selected = appliedItemFilters.cdr,
+        onClick = { filtersChanged(appliedItemFilters.copy(cdr = !appliedItemFilters.cdr)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Cooldown Reduction", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.mana,
-        onClick = { filtersChanged(appliedFilters.copy(mana = !appliedFilters.mana)) },
+        selected = appliedItemFilters.mana,
+        onClick = { filtersChanged(appliedItemFilters.copy(mana = !appliedItemFilters.mana)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Mana", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.mp5,
-        onClick = { filtersChanged(appliedFilters.copy(mp5 = !appliedFilters.mp5)) },
+        selected = appliedItemFilters.mp5,
+        onClick = { filtersChanged(appliedItemFilters.copy(mp5 = !appliedItemFilters.mp5)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("MP5", style = localTextStyleOverride)
       }
       FilterChip(
-        selected = appliedFilters.movementSpeed,
-        onClick = { filtersChanged(appliedFilters.copy(movementSpeed = !appliedFilters.movementSpeed)) },
+        selected = appliedItemFilters.movementSpeed,
+        onClick = { filtersChanged(appliedItemFilters.copy(movementSpeed = !appliedItemFilters.movementSpeed)) },
         selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
       ) {
         Text("Movement Speed", style = localTextStyleOverride)
       }
     }
-  }
-}
-
-@Composable
-fun FilterGroup(
-  title: String,
-  content: @Composable () -> Unit
-) {
-  Text(style = MaterialTheme.typography.titleMedium, text = title)
-  Divider(color = MaterialTheme.colorScheme.onSurface)
-  FlowRow(mainAxisSpacing = 8.dp) {
-    content()
   }
 }

@@ -12,7 +12,7 @@ enum class ItemTier {
   Three,
   Four
 }
-data class AppliedFilters(
+data class AppliedItemFilters(
   val searchText: String = "",
   // Type
   val type: ItemType? = null,

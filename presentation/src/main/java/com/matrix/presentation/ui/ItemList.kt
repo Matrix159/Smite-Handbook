@@ -31,8 +31,9 @@ import com.matrix.presentation.NavigationRoutes
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.presentation.ui.itemdetails.filters.ItemFilterModal
-import com.matrix.presentation.ui.itemdetails.filters.SearchPanel
+import com.matrix.presentation.ui.components.filters.FilterModal
+import com.matrix.presentation.ui.components.filters.ItemFilters
+import com.matrix.presentation.ui.components.filters.SearchPanel
 import com.matrix.presentation.viewmodels.ItemViewModel
 import kotlinx.coroutines.launch
 
@@ -52,11 +53,15 @@ fun ItemList(
       LoadingState.ERROR -> ErrorText(viewModel.uiState.errorMessages.joinToString(", "))
       LoadingState.DONE -> {
         // Wrapped in ItemFilterModal for a bottom sheet modal for filters
-        ItemFilterModal(
-          filters = viewModel.filters,
-          filtersChanged = { viewModel.updateAppliedFilters(it) }
+        FilterModal(
+          sheetContent = {
+            ItemFilters(
+              appliedItemFilters = viewModel.filters,
+              filtersChanged = viewModel::updateAppliedFilters,
+              modifier = Modifier.padding(16.dp),
+            )
+          }
         ) { bottomSheetState ->
-          val selectedItem = viewModel.uiState.selectedItem
           val focusManager = LocalFocusManager.current
           Column(
             verticalArrangement = Arrangement.Top,
@@ -74,7 +79,7 @@ fun ItemList(
             SearchPanel(
               searchText = viewModel.filters.searchText,
               searchLabel = "Search for an item",
-              searchTextChanged = { viewModel.updateSearchText(it) },
+              searchTextChanged = viewModel::updateSearchText,
               filterIconTap = {
                 coroutineScope.launch {
                   bottomSheetState.show()

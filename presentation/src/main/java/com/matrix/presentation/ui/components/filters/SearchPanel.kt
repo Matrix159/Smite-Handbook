@@ -1,9 +1,10 @@
-package com.matrix.presentation.ui.itemdetails.filters
+package com.matrix.presentation.ui.components.filters
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -55,9 +56,9 @@ fun SearchPanel(
       modifier = Modifier.padding(start = 16.dp)
     ) {
       Icon(
-        Icons.Default.List,
+        Icons.Default.FilterList,
         "Filter list",
-        modifier = Modifier.size(48.dp)
+        modifier = Modifier.size(36.dp)
       )
     }
   }
