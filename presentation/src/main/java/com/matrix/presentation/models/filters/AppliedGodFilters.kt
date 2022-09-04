@@ -1,11 +1,11 @@
 package com.matrix.presentation.models.filters
 
 enum class Role(val roleName: String) {
-  WARRIOR("Warrior"),
-  MAGE("Mage"),
   ASSASSIN("Assassin"),
+  GUARDIAN("Guardian"),
   HUNTER("Hunter"),
-  GUARDIAN("Guardian")
+  MAGE("Mage"),
+  WARRIOR("Warrior"),
 }
 
 enum class Pantheon(val pantheonName: String) {

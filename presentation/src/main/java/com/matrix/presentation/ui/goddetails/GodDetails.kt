@@ -18,8 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.matrix.presentation.ui.components.ChipRow
-import com.matrix.presentation.utils.getPantheonResourceId
-import com.matrix.presentation.utils.getRoleResourceId
+import com.matrix.presentation.utils.getPantheonDrawableResourceId
+import com.matrix.presentation.utils.getRoleDrawableResourceId
 import com.matrix.presentation.viewmodels.GodDetailsUiState
 
 @Composable
@@ -43,7 +43,7 @@ fun GodDetails(
               modifier = Modifier.weight(1f)
             ) {
               Image(
-                painterResource(getRoleResourceId(selectedGod.roles)),
+                painterResource(getRoleDrawableResourceId(selectedGod.roles)),
                 selectedGod.roles,
                 modifier = Modifier.size(42.dp)
               )
@@ -60,7 +60,7 @@ fun GodDetails(
               modifier = Modifier.weight(1f)
             ) {
               Image(
-                painterResource(getPantheonResourceId(selectedGod.pantheon)),
+                painterResource(getPantheonDrawableResourceId(selectedGod.pantheon)),
                 "Pantheon",
                 modifier = Modifier.size(42.dp)
               )

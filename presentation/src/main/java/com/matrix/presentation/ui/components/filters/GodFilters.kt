@@ -21,6 +21,10 @@ import com.matrix.presentation.R
 import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
+import com.matrix.presentation.utils.getPantheonDrawableResourceId
+import com.matrix.presentation.utils.getPantheonStringResourceId
+import com.matrix.presentation.utils.getRoleDrawableResourceId
+import com.matrix.presentation.utils.getRoleStringResourceId
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -31,114 +35,64 @@ fun GodFilters(
 ) {
   Column(modifier = modifier.verticalScroll(rememberScrollState())) {
     val localTextStyleOverride = MaterialTheme.typography.bodySmall
-    FilterGroup(title = "Role") {
-      FilterChip(
-        selected = appliedFilters.roles.contains(Role.ASSASSIN),
-        onClick = {
-          filtersChanged(
-            appliedFiltersForRole(appliedFilters, Role.ASSASSIN)
+    FilterGroup(title = stringResource(R.string.role)) {
+      for (role in Role.values()) {
+        FilterChip(
+          selected = appliedFilters.roles.contains(role),
+          onClick = {
+            filtersChanged(
+              getNewAppliedFiltersForRole(appliedFilters, role)
+            )
+          },
+          leadingIcon = getLeadingIcon(
+            appliedFilters.roles.contains(role),
+            getRoleDrawableResourceId(role.roleName),
+            stringResource(getRoleStringResourceId(role.roleName))
+          ),
+          selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+        ) {
+          Text(
+            stringResource(getRoleStringResourceId(role.roleName)),
+            style = localTextStyleOverride
           )
-        },
-        leadingIcon = getLeadingIcon(
-          appliedFilters.roles.contains(Role.ASSASSIN),
-          R.drawable.assassin,
-          stringResource(R.string.assassin)
-        ),
-        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
-      ) {
-        Text(stringResource(R.string.assassin), style = localTextStyleOverride)
+        }
       }
-      FilterChip(
-        selected = appliedFilters.roles.contains(Role.GUARDIAN),
-        onClick = {
-          filtersChanged(
-            appliedFiltersForRole(appliedFilters, Role.GUARDIAN)
-          )
-        },
-        leadingIcon = getLeadingIcon(
-          appliedFilters.roles.contains(Role.GUARDIAN),
-          R.drawable.guardian,
-          stringResource(R.string.guardian)
-        ),
-        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
-      ) {
-        Text(stringResource(R.string.guardian), style = localTextStyleOverride)
-      }
-      FilterChip(
-        selected = appliedFilters.roles.contains(Role.HUNTER),
-        onClick = {
-          filtersChanged(
-            appliedFiltersForRole(appliedFilters, Role.HUNTER)
-          )
-        },
-        leadingIcon = getLeadingIcon(
-          appliedFilters.roles.contains(Role.HUNTER),
-          R.drawable.hunter,
-          stringResource(R.string.hunter)
-        ),
-        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
-      ) {
-        Text(stringResource(R.string.hunter), style = localTextStyleOverride)
-      }
-      FilterChip(
-        selected = appliedFilters.roles.contains(Role.MAGE),
-        onClick = {
-          filtersChanged(
-            appliedFiltersForRole(appliedFilters, Role.MAGE)
-          )
-        },
-        leadingIcon = getLeadingIcon(
-          appliedFilters.roles.contains(Role.MAGE),
-          R.drawable.mage,
-          stringResource(R.string.mage)
-        ),
-        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
-      ) {
-        Text(stringResource(R.string.mage), style = localTextStyleOverride)
-      }
-      FilterChip(
-        selected = appliedFilters.roles.contains(Role.WARRIOR),
-        onClick = {
-          filtersChanged(
-            appliedFiltersForRole(appliedFilters, Role.WARRIOR)
-          )
-        },
-        leadingIcon = getLeadingIcon(
-          appliedFilters.roles.contains(Role.WARRIOR),
-          R.drawable.warrior,
-          stringResource(R.string.warrior)
-        ),
-        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
-      ) {
-        Text(stringResource(R.string.warrior), style = localTextStyleOverride)
-      }
-    }
-    FilterGroup(title = "Pantheon") {
-      FilterChip(
-        selected = appliedFilters.pantheons.contains(Pantheon.ARTHURIAN),
-        onClick = {
-          filtersChanged(
-            appliedFiltersForPantheon(appliedFilters, Pantheon.ARTHURIAN)
-          )
-        },
 
-        leadingIcon = getLeadingIcon(
-          appliedFilters.pantheons.contains(Pantheon.ARTHURIAN),
-          R.drawable.arthurian,
-          stringResource(R.string.arthurian)
-        ),
-        selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
-      ) {
-        Text(stringResource(R.string.arthurian), style = localTextStyleOverride)
+    }
+    FilterGroup(title = stringResource(R.string.pantheon)) {
+      for (pantheon in Pantheon.values()) {
+        FilterChip(
+          selected = appliedFilters.pantheons.contains(pantheon),
+          onClick = {
+            filtersChanged(
+              getNewAppliedFiltersForPantheon(appliedFilters, pantheon)
+            )
+          },
+
+          leadingIcon = getLeadingIcon(
+            appliedFilters.pantheons.contains(pantheon),
+            getPantheonDrawableResourceId(pantheon.pantheonName),
+            stringResource(getPantheonStringResourceId(pantheon.pantheonName))
+          ),
+          selectedIcon = { Icon(Icons.Filled.Done, stringResource(R.string.applied_filter)) }
+        ) {
+          Text(
+            stringResource(getPantheonStringResourceId(pantheon.pantheonName)),
+            style = localTextStyleOverride
+          )
+        }
       }
     }
   }
 }
 
 /**
- * Gets the new AppliedFilter object based on the given role
+ * Gets the new [AppliedGodFilters] object based on the given role
  */
-private fun appliedFiltersForRole(appliedFilters: AppliedGodFilters, role: Role): AppliedGodFilters {
+private fun getNewAppliedFiltersForRole(
+  appliedFilters: AppliedGodFilters,
+  role: Role
+): AppliedGodFilters {
   return appliedFilters.copy(
     roles = if (appliedFilters.roles.contains(role)) appliedFilters.roles.minus(
       role
@@ -147,9 +101,12 @@ private fun appliedFiltersForRole(appliedFilters: AppliedGodFilters, role: Role)
 }
 
 /**
- * Gets the new AppliedFilter object based on the given pantheon
+ * Gets the new [AppliedGodFilters] object based on the given pantheon
  */
-private fun appliedFiltersForPantheon(appliedFilters: AppliedGodFilters, pantheon: Pantheon): AppliedGodFilters {
+private fun getNewAppliedFiltersForPantheon(
+  appliedFilters: AppliedGodFilters,
+  pantheon: Pantheon
+): AppliedGodFilters {
   return appliedFilters.copy(
     pantheons = if (appliedFilters.pantheons.contains(pantheon)) appliedFilters.pantheons.minus(
       pantheon

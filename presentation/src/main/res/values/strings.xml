@@ -5,6 +5,7 @@
     <string name="item_screen">Items</string>
 
     <!-- roles -->
+    <string name="role">Role</string>
     <string name="assassin">Assassin</string>
     <string name="guardian">Guardian</string>
     <string name="hunter">Hunter</string>
@@ -12,5 +13,21 @@
     <string name="warrior">Warrior</string>
 
     <!-- pantheons -->
+    <string name="pantheon">Pantheon</string>
     <string name="arthurian">Arthurian</string>
+    <string name="babylonian">Babylonian</string>
+    <string name="celtic">Celtic</string>
+    <string name="chinese">Chinese</string>
+    <string name="egyptian">Egyptian</string>
+    <string name="great_old_ones">Great Old Ones</string>
+    <string name="greek">Greek</string>
+    <string name="hindu">Hindu</string>
+    <string name="japanese">Japanese</string>
+    <string name="maya">Maya</string>
+    <string name="norse">Norse</string>
+    <string name="polynesian">Polynesian</string>
+    <string name="roman">Roman</string>
+    <string name="slavic">Slavic</string>
+    <string name="voodoo">Voodoo</string>
+    <string name="yoruba">Yoruba</string>
 </resources>
