@@ -10,4 +10,7 @@
     <string name="hunter">Hunter</string>
     <string name="mage">Mage</string>
     <string name="warrior">Warrior</string>
+
+    <!-- pantheons -->
+    <string name="arthurian">Arthurian</string>
 </resources>
