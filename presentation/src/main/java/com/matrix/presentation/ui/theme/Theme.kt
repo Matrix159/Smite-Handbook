@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -76,7 +75,8 @@ fun MaterializedSmiteTheme(
   MaterialTheme(
     colorScheme = colorScheme,
     typography = Typography,
-    shapes = Shapes,
+    // Use default shapes currently
+    //shapes = MaterialTheme.shapes,
     content = content
   )
 }

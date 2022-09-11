@@ -109,7 +109,7 @@ fun GodDetails(
                 modifier = Modifier.fillMaxSize()
               )
             }
-            2 -> GodSkins(godDetailsUiState.godSkins, Modifier.fillMaxSize())
+            2 -> GodSkins(godDetailsUiState.godSkinInformations, Modifier.fillMaxSize())
           }
         }
       }

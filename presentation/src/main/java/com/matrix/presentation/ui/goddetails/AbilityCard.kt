@@ -4,7 +4,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -12,15 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.matrix.domain.models.Ability
 import com.matrix.domain.models.AbilityDescription
-import com.matrix.domain.models.AbilityItemDescription
 
 @Composable
 fun AbilityCard(
@@ -67,13 +63,13 @@ fun AbilityCard(
       }
       if (expanded) {
         Text(
-          text = abilityDetails.description.itemDescription.description,
+          text = abilityDetails.description.description,
           style = MaterialTheme.typography.bodyMedium,
           modifier = Modifier.padding(8.dp)
         )
 
-        val cooldown = abilityDetails.description.itemDescription.cooldown
-        val cost = abilityDetails.description.itemDescription.cost
+        val cooldown = abilityDetails.description.cooldown
+        val cost = abilityDetails.description.cost
         Row(
           horizontalArrangement = Arrangement.SpaceBetween,
           modifier = Modifier
@@ -94,7 +90,7 @@ fun AbilityCard(
           }
         }
 
-        for (rankItem in abilityDetails.description.itemDescription.rankitems) {
+        for (rankItem in abilityDetails.description.rankItems) {
           Text(
             "${rankItem.description} ${rankItem.value}",
             style = MaterialTheme.typography.bodyMedium,
@@ -116,13 +112,11 @@ fun Preview() {
         summary = "Shield of Achilles",
         url = "https://webcdn.hirezstudios.com/smite/god-abilities/shield-of-achilles.jpg",
         description = AbilityDescription(
-          itemDescription = AbilityItemDescription(
-            cooldown = "14s",
-            cost = "60/65/70/75/80",
-            description = "Achilles punches forward with the edge of his Shield, inflicting massive damage and stunning enemy targets hit by the impact. The force of his punch continues to radiate past his initial target area, dealing 75% damage to targets farther away.",
-            menuitems = listOf(),
-            rankitems = listOf()
-          )
+          cooldown = "14s",
+          cost = "60/65/70/75/80",
+          description = "Achilles punches forward with the edge of his Shield, inflicting massive damage and stunning enemy targets hit by the impact. The force of his punch continues to radiate past his initial target area, dealing 75% damage to targets farther away.",
+          menuItems = listOf(),
+          rankItems = listOf()
         )
       )
     )

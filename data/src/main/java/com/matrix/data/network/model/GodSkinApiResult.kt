@@ -1,10 +1,11 @@
-package com.matrix.domain.models
+package com.matrix.data.network.model
 
+import com.matrix.domain.models.GodSkinInformation
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GodSkin(
+data class GodSkinApiResult(
   @SerialName("godIcon_URL")
   val godIconURL: String,
 
@@ -36,4 +37,17 @@ data class GodSkin(
 
   @SerialName("skin_name")
   val skinName: String
-)
+) {
+  fun toDomain(): GodSkinInformation = GodSkinInformation(
+    godIconURL = this.godIconURL,
+    godSkinURL = this.godSkinURL,
+    godID = this.godID,
+    godName = this.godName,
+    obtainability = this.obtainability,
+    priceFavor = this.priceFavor,
+    priceGems = this.priceGems,
+    skinId1 = this.skinId1,
+    skinId2 = this.skinId2,
+    skinName = this.skinName
+  )
+}

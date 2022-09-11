@@ -1,10 +1,12 @@
 package com.matrix.data.injection
 
 import android.content.Context
+import androidx.room.Room
 import androidx.work.WorkManager
-import com.matrix.data.local.DataStoreSourceImpl
-import com.matrix.data.local.SmiteLocalDatasourceImpl
-import com.matrix.data.local.interfaces.DataStoreSource
+import com.matrix.data.local.PatchVersionDataSourceImpl
+import com.matrix.data.local.SmiteLocalDataSourceImpl
+import com.matrix.data.local.db.AppDatabase
+import com.matrix.data.local.interfaces.PatchVersionDataSource
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.SmiteRemoteDataSourceImpl
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
@@ -24,14 +26,14 @@ abstract class DataModule {
   @Binds
   @Singleton
   abstract fun bindsSmiteLocalDataSource(
-    smiteLocalDataSourceImpl: SmiteLocalDatasourceImpl
+    smiteLocalDataSourceImpl: SmiteLocalDataSourceImpl
   ): SmiteLocalDataSource
 
   @Binds
   @Singleton
   abstract fun bindsDataStoreSource(
-    dataStoreSourceImpl: DataStoreSourceImpl
-  ): DataStoreSource
+    dataStoreSourceImpl: PatchVersionDataSourceImpl
+  ): PatchVersionDataSource
 
   @Binds
   @Singleton
@@ -51,5 +53,13 @@ abstract class DataModule {
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
       return WorkManager.getInstance(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase = Room.databaseBuilder(
+      context,
+      AppDatabase::class.java, "smite-handbook-db"
+    ).fallbackToDestructiveMigration()
+      .build()
   }
 }

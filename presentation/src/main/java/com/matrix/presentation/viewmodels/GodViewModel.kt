@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.GodSkin
+import com.matrix.domain.models.GodSkinInformation
 import com.matrix.domain.usecases.GetGodSkinsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.presentation.models.LoadingState
@@ -15,7 +15,9 @@ import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,7 +29,7 @@ data class GodListUiState(
 
 data class GodDetailsUiState(
   val selectedGod: GodInformation? = null,
-  val godSkins: List<GodSkin> = listOf(),
+  val godSkinInformations: List<GodSkinInformation> = listOf(),
   val errors: List<String> = listOf(),
 )
 
@@ -86,14 +88,14 @@ class GodViewModel @Inject constructor(
           else -> {
             godDetailsUiState = godDetailsUiState.copy(
               selectedGod = godInformation,
-              godSkins = listOf()
+              godSkinInformations = listOf()
             )
-            var godSkins: List<GodSkin>
+            var godSkinInformations: List<GodSkinInformation>
             // Load the skins asynchronously
             withContext(Dispatchers.IO) {
-              godSkins = getGodSkinsUseCase(godInformation.id)
+              godSkinInformations = getGodSkinsUseCase(godInformation.id)
               godDetailsUiState =
-                godDetailsUiState.copy(godSkins = godSkins)
+                godDetailsUiState.copy(godSkinInformations = godSkinInformations)
             }
           }
         }
@@ -116,10 +118,12 @@ class GodViewModel @Inject constructor(
   private fun filterGod(filters: AppliedGodFilters, god: GodInformation): Boolean {
     return (if (filters.searchText.isNotBlank())
       god.name.contains(filters.searchText, true)
-      else true) &&
+    else true) &&
       // Role
-      (if (filters.roles.isNotEmpty()) filters.roles.contains(Role.values().first { it.roleName == god.roles }) else true) &&
+      (if (filters.roles.isNotEmpty()) filters.roles.contains(
+        Role.values().first { it.roleName == god.roles }) else true) &&
       // Pantheon
-      (if (filters.pantheons.isNotEmpty()) filters.pantheons.contains(Pantheon.values().first { it.pantheonName == god.pantheon }) else true)
+      (if (filters.pantheons.isNotEmpty()) filters.pantheons.contains(
+        Pantheon.values().first { it.pantheonName == god.pantheon }) else true)
   }
 }

@@ -48,9 +48,11 @@ fun GodScreenBackground(
       .replace("'", "")
   }
   var image by remember(underscoreGodName, dashGodName) {
-    mutableStateOf("https://webcdn.hirezstudios.com/smite/god-skins/" +
-      "${underscoreGodName}_standard-" +
-      "${dashGodName}.jpg")
+    mutableStateOf(
+      "https://webcdn.hirezstudios.com/smite/god-skins/" +
+        "${underscoreGodName}_standard-" +
+        "${dashGodName}.jpg"
+    )
   }
 
   Box(

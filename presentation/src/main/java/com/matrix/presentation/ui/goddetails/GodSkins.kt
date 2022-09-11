@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
-import com.matrix.domain.models.GodSkin
+import com.matrix.domain.models.GodSkinInformation
 
 @Composable
-fun GodSkins(godSkins: List<GodSkin>, modifier: Modifier = Modifier) {
+fun GodSkins(godSkinInformations: List<GodSkinInformation>, modifier: Modifier = Modifier) {
   FlowRow(modifier = modifier) {
-    for (skin in godSkins) {
+    for (skin in godSkinInformations) {
       if (skin.godSkinURL.isNotBlank()) {
         Box(
           contentAlignment = Alignment.BottomCenter,

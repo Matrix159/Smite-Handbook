@@ -1,7 +1,7 @@
 package com.matrix.data
 
 import com.matrix.data.local.LocalGodList
-import com.matrix.data.local.interfaces.DataStoreSource
+import com.matrix.data.local.interfaces.PatchVersionDataSource
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.data.repository.SmiteRepositoryImpl
@@ -27,7 +27,7 @@ class SmiteRepositoryTest {
   private lateinit var localDataSource: SmiteLocalDataSource
 
   @MockK
-  private lateinit var sharedPrefsDataSource: DataStoreSource
+  private lateinit var sharedPrefsDataSource: PatchVersionDataSource
 
   @InjectMockKs
   private lateinit var repository: SmiteRepositoryImpl

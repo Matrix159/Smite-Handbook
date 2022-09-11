@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.domain.models.Item
+import com.matrix.domain.models.ItemInformation
 import com.matrix.presentation.utils.ItemNode
 
 val itemPadding = 8.dp
@@ -18,9 +18,9 @@ val iconSize = 48.dp
 @Composable
 fun ItemTree(
   baseNode: ItemNode,
-  selectedItem: Item,
+  selectedItemInformation: ItemInformation,
   modifier: Modifier = Modifier,
-  itemClicked: (item: Item) -> Unit,
+  itemClicked: (itemInformation: ItemInformation) -> Unit,
 ) {
   // Wrap this is an outer column to have a parent that fills the max width
   Column(
@@ -29,7 +29,7 @@ fun ItemTree(
   ) {
     RecursiveItemTree(
       itemNode = baseNode,
-      selectedItem = selectedItem,
+      selectedItemInformation = selectedItemInformation,
       lengthOfTier = 1,
       indexInRow = 0,
       itemClicked = itemClicked
@@ -40,10 +40,10 @@ fun ItemTree(
 @Composable
 private fun RecursiveItemTree(
   itemNode: ItemNode,
-  selectedItem: Item,
+  selectedItemInformation: ItemInformation,
   lengthOfTier: Int,
   indexInRow: Int,
-  itemClicked: (item: Item) -> Unit
+  itemClicked: (itemInformation: ItemInformation) -> Unit
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,7 +54,7 @@ private fun RecursiveItemTree(
       itemNode.children.forEachIndexed { index, childNode ->
         RecursiveItemTree(
           childNode,
-          selectedItem = selectedItem,
+          selectedItemInformation = selectedItemInformation,
           lengthOfTier = itemNode.children.size,
           indexInRow = index,
           itemClicked = itemClicked
@@ -90,7 +90,7 @@ private fun RecursiveItemTree(
           .clickable {
             itemClicked(itemNode.value)
           }.let {
-            if (itemNode.value.itemID == selectedItem.itemID) {
+            if (itemNode.value.itemID == selectedItemInformation.itemID) {
               return@let it.border(1.dp, MaterialTheme.colorScheme.outline)
             }
             it

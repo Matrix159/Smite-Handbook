@@ -1,17 +1,17 @@
 package com.matrix.data.repository
 
-import com.matrix.data.local.LocalGodList
-import com.matrix.data.local.LocalItemList
-import com.matrix.data.local.interfaces.DataStoreSource
+import com.matrix.data.local.db.entity.GodEntity
+import com.matrix.data.local.db.entity.ItemEntity
+import com.matrix.data.local.interfaces.PatchVersionDataSource
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.domain.contracts.SmiteRepository
+import com.matrix.domain.models.BuildInformation
 import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.GodSkin
-import com.matrix.domain.models.Item
+import com.matrix.domain.models.GodSkinInformation
+import com.matrix.domain.models.ItemInformation
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -20,28 +20,28 @@ import javax.inject.Inject
 class SmiteRepositoryImpl @Inject constructor(
   private val networkDataSource: SmiteRemoteDataSource,
   private val localDataSource: SmiteLocalDataSource,
-  private val sharedPrefsDataSource: DataStoreSource
+  private val sharedPrefsDataSource: PatchVersionDataSource
 ) : SmiteRepository {
 
-  // TODO: Write some tests around these functions and their syncing mechanisms
   override suspend fun getGods(refresh: Boolean): List<GodInformation> {
     return withContext(Dispatchers.IO) {
       val currentPatchVersion: String? = sharedPrefsDataSource.getPatchVersion().firstOrNull()
-      val localGodData: LocalGodList? = localDataSource.readGods()
+      val localGods: List<GodEntity> = localDataSource.readGods()
       // Determine if we need to fetch from remote, we use patch version as our way of syncing data
-      if (localGodData == null || localGodData.patchVersion != currentPatchVersion || refresh) {
+      if (localGods.isEmpty() || localGods.any { it.patchVersion != currentPatchVersion } || refresh) {
         val newData = networkDataSource.getGods()
-        localDataSource.saveGods(newData, currentPatchVersion)
+        localDataSource.saveGods(newData.map {
+          GodEntity.fromApi(it, patchVersion = currentPatchVersion)
+        })
         Timber.d("Saved new god data to local storage")
-        return@withContext newData
       }
-      localGodData.gods
+      localDataSource.readGods().map { it.toDomain() }
     }
   }
 
-  override suspend fun getGodSkins(godId: Int): List<GodSkin> {
+  override suspend fun getGodSkins(godId: Int): List<GodSkinInformation> {
     try {
-      return networkDataSource.getGodSkins(godId)
+      return networkDataSource.getGodSkins(godId).map { it.toDomain() }
     } catch (ex: Exception) {
       if (ex !is CancellationException) {
         throw ex
@@ -50,18 +50,24 @@ class SmiteRepositoryImpl @Inject constructor(
     return emptyList()
   }
 
-  override suspend fun getItems(refresh: Boolean): List<Item> {
+  override suspend fun getItems(refresh: Boolean): List<ItemInformation> {
     return withContext(Dispatchers.IO) {
       val currentPatchVersion: String? = sharedPrefsDataSource.getPatchVersion().firstOrNull()
-      val localItemData: LocalItemList? = localDataSource.readItems()
-      if (localItemData == null || localItemData.patchVersion != currentPatchVersion || refresh) {
+      val localItems: List<GodEntity> = localDataSource.readGods()
+      // Determine if we need to fetch from remote, we use patch version as our way of syncing data
+      if (localItems.isEmpty() || localItems.any { it.patchVersion != currentPatchVersion } || refresh) {
         val newData = networkDataSource.getItems()
-        localDataSource.saveItems(newData, currentPatchVersion)
+        localDataSource.saveItems(newData.map {
+          ItemEntity.fromApi(it, patchVersion = currentPatchVersion)
+        })
         Timber.d("Saved new item data to local storage")
-        return@withContext newData
       }
-      localItemData.items
+      localDataSource.readItems().map { it.toDomain() }
     }
+  }
+
+  override suspend fun getBuilds(): List<BuildInformation> {
+    TODO("Not yet implemented")
   }
 
   override suspend fun syncPatchVersion() {

@@ -3,6 +3,7 @@
     <string name="applied_filter">Applied Filter</string>
     <string name="god_screen">Gods</string>
     <string name="item_screen">Items</string>
+    <string name="build_screen">Builds</string>
 
     <!-- roles -->
     <string name="role">Role</string>

@@ -1,9 +1,9 @@
 package com.matrix.presentation.utils
 
-import com.matrix.domain.models.Item
+import com.matrix.domain.models.ItemInformation
 
 
-class ItemNode(var value: Item) {
+class ItemNode(var value: ItemInformation) {
   var parent: ItemNode? = null
 
   var children: MutableList<ItemNode> = mutableListOf()
@@ -13,7 +13,7 @@ class ItemNode(var value: Item) {
     node.parent = this
   }
 
-  fun findChildren(itemsGroupedByTier: Map<Int, List<Item>>): ItemNode {
+  fun findChildren(itemsGroupedByTier: Map<Int, List<ItemInformation>>): ItemNode {
     val currentTier = this.value.itemTier
 
     if (itemsGroupedByTier.containsKey(currentTier + 1)) {
@@ -39,19 +39,19 @@ class ItemNode(var value: Item) {
 
   /**
    * Call on the root node of the tree, this finds the item within the tree if it exits and returns it.
-   * @param item The item node you want to find
+   * @param itemInformation The item node you want to find
    * @return The found item node
    */
-  fun findItem(item: Item): ItemNode? {
+  fun findItem(itemInformation: ItemInformation): ItemNode? {
 //    if (this.parent != null) {
 //      throw UnsupportedOperationException()
 //    }
 
-    if (this.value.itemID == item.itemID) {
+    if (this.value.itemID == itemInformation.itemID) {
       return this
     } else {
       this.children.forEach {
-        val itemNode = it.findItem(item)
+        val itemNode = it.findItem(itemInformation)
         if (itemNode != null) {
           return itemNode
         }
@@ -60,7 +60,7 @@ class ItemNode(var value: Item) {
     return null
   }
 
-  fun totalCost(): Long {
+  fun totalCost(): Int {
     var currentNode: ItemNode? = this
     var cost = value.price
 

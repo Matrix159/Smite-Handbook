@@ -14,16 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.domain.models.Item
+import com.matrix.domain.models.ItemInformation
 import com.matrix.presentation.R
 import com.matrix.presentation.utils.ItemNode
 
 @Composable
 fun ItemDetails(
-  item: Item,
+  itemInformation: ItemInformation,
   itemTreeNodes: List<ItemNode>,
   modifier: Modifier = Modifier,
-  itemClicked: (item: Item) -> Unit
+  itemClicked: (itemInformation: ItemInformation) -> Unit
 ) {
 //  val tierMap: Map<Long, List<Item>> = remember(item, itemIdMap) {
 //    val returnMap = itemIdMap?.values?.filter { filterItem ->
@@ -45,9 +45,9 @@ fun ItemDetails(
   /**
    * <baseNode, currentNode>
    */
-  val (baseNode, currentNode) = remember(itemTreeNodes, item) {
+  val (baseNode, currentNode) = remember(itemTreeNodes, itemInformation) {
     itemTreeNodes.forEach {
-      val foundItemNode = it.findItem(item)
+      val foundItemNode = it.findItem(itemInformation)
       if (foundItemNode != null) {
         return@remember Pair(it, foundItemNode)
       }
@@ -65,9 +65,9 @@ fun ItemDetails(
       horizontalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier.fillMaxWidth()
     ) {
-      Text(item.deviceName)
+      Text(itemInformation.deviceName)
       Row(verticalAlignment = Alignment.CenterVertically) {
-        val totalCost = remember(currentNode) { currentNode?.totalCost() ?: 0L }
+        val totalCost = remember(currentNode) { currentNode?.totalCost() ?: 0 }
         Image(
           painterResource(R.drawable.coins),
           "Gold",
@@ -76,7 +76,7 @@ fun ItemDetails(
             .padding(4.dp)
         )
         Text(
-          "${item.price}" + if (totalCost > 0) "($totalCost)" else "",
+          "${itemInformation.price}" + if (totalCost > 0) "($totalCost)" else "",
           modifier = Modifier.padding(4.dp)
         )
       }
@@ -89,18 +89,18 @@ fun ItemDetails(
         .fillMaxWidth()
     ) {
       AsyncImage(
-        model = item.itemIconURL,
-        contentDescription = item.deviceName,
+        model = itemInformation.itemIconURL,
+        contentDescription = itemInformation.deviceName,
         modifier = Modifier.size(64.dp)
       )
       Text(
-        item.shortDesc,
+        itemInformation.shortDesc,
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp)
       )
     }
-    val description = remember(item.itemDescription.secondaryDescription) {
-      item.itemDescription.secondaryDescription
+    val description = remember(itemInformation.itemDescription.secondaryDescription) {
+      itemInformation.itemDescription.secondaryDescription
         ?.replace("<n>", "\n")
         ?.replace("<.+>".toRegex(), "")
     }
@@ -116,7 +116,7 @@ fun ItemDetails(
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier.fillMaxWidth()
     ) {
-      for (menuItem in item.itemDescription.menuItems) {
+      for (menuItem in itemInformation.itemDescription.menuItems) {
         Text(
           "${menuItem.value} ${menuItem.description}",
           style = MaterialTheme.typography.bodyMedium,
@@ -127,9 +127,11 @@ fun ItemDetails(
     baseNode?.let {
       ItemTree(
         baseNode,
-        selectedItem = item,
+        selectedItemInformation = itemInformation,
         itemClicked = { itemClicked(it) },
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(8.dp)
       )
     }
   }

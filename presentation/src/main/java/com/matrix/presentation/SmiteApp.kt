@@ -1,15 +1,13 @@
 package com.matrix.presentation
 
-import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -24,16 +22,13 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.matrix.domain.models.GodInformation
-import com.matrix.presentation.NavigationRoutes.ItemDetails
 import com.matrix.presentation.ui.GodList
 import com.matrix.presentation.ui.ItemList
+import com.matrix.presentation.ui.builds.BuildScreen
 import com.matrix.presentation.ui.goddetails.GodScreen
 import com.matrix.presentation.ui.itemdetails.ItemDetails
 import com.matrix.presentation.viewmodels.GodViewModel
 import com.matrix.presentation.viewmodels.ItemViewModel
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 object NavigationRoutes {
@@ -41,6 +36,7 @@ object NavigationRoutes {
   const val GodDetails = "GodDetails"
   const val ItemList = "ItemList"
   const val ItemDetails = "ItemDetails"
+  const val Builds = "Builds"
 }
 
 @OptIn(
@@ -52,7 +48,7 @@ fun SmiteApp() {
   val navController: NavHostController = rememberAnimatedNavController()
 
   Scaffold(bottomBar = {
-    val topScreens = listOf(Screen.Gods, Screen.Items)
+    val topScreens = listOf(Screen.Gods, Screen.Items, Screen.Builds)
     NavigationBar {
 
       val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -75,7 +71,7 @@ fun SmiteApp() {
                   //saveState = true
                   // Do this to avoid double starting destinations on the stack
                   if (navController.graph.findStartDestination().hierarchy.any { it.route == screen.route }) {
-                   inclusive = true
+                    inclusive = true
                   }
                 }
               }
@@ -90,7 +86,7 @@ fun SmiteApp() {
       startDestination = Screen.Gods.route,
       modifier = Modifier.padding(paddingValues)
     ) {
-      navigation(startDestination = NavigationRoutes.GodList, route = Screen.Gods.route) {
+      navigation(route = Screen.Gods.route, startDestination = NavigationRoutes.GodList) {
         composable(NavigationRoutes.GodList,
           enterTransition = {
             when (initialState.destination.route) {
@@ -141,13 +137,17 @@ fun SmiteApp() {
           GodScreen(godViewModel, modifier = Modifier.fillMaxSize())
         }
       }
-      navigation(startDestination = NavigationRoutes.ItemList, route = Screen.Items.route) {
+      navigation(route = Screen.Items.route, startDestination = NavigationRoutes.ItemList) {
         composable(NavigationRoutes.ItemList) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry(Screen.Items.route)
           }
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
-          ItemList(viewModel = itemViewModel, navController = navController, modifier = Modifier.fillMaxSize())
+          ItemList(
+            viewModel = itemViewModel,
+            navController = navController,
+            modifier = Modifier.fillMaxSize()
+          )
         }
         composable(NavigationRoutes.ItemDetails) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
@@ -156,9 +156,9 @@ fun SmiteApp() {
           val itemViewModel = hiltViewModel<ItemViewModel>(parentEntry)
 
           val state = itemViewModel.uiState
-          if (state.selectedItem != null) {
+          if (state.selectedItemInformation != null) {
             ItemDetails(
-              state.selectedItem,
+              state.selectedItemInformation,
               state.baseItemTreeNodes,
               Modifier
                 .background(MaterialTheme.colorScheme.background)
@@ -169,6 +169,11 @@ fun SmiteApp() {
               itemViewModel.setItem(it)
             }
           }
+        }
+      }
+      navigation(route = Screen.Builds.route, startDestination = NavigationRoutes.Builds) {
+        composable(NavigationRoutes.Builds) {
+          BuildScreen(modifier = Modifier.fillMaxSize())
         }
       }
     }

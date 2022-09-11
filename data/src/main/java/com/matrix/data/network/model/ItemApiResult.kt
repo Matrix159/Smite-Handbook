@@ -1,15 +1,15 @@
-package com.matrix.domain.models
+package com.matrix.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Item(
+data class ItemApiResult(
   @SerialName("ActiveFlag")
   val activeFlag: String,
 
   @SerialName("ChildItemId")
-  val childItemID: Long,
+  val childItemID: Int,
 
   @SerialName("DeviceName")
   val deviceName: String,
@@ -21,25 +21,25 @@ data class Item(
   val glyph: String,
 
   @SerialName("IconId")
-  val iconID: Long,
+  val iconID: Int,
 
   @SerialName("ItemDescription")
   val itemDescription: ItemDescription,
 
   @SerialName("ItemId")
-  val itemID: Long,
+  val itemID: Int,
 
   @SerialName("ItemTier")
   val itemTier: Int,
 
   @SerialName("Price")
-  val price: Long,
+  val price: Int,
 
   @SerialName("RestrictedRoles")
   val restrictedRoles: String,
 
   @SerialName("RootItemId")
-  val rootItemID: Long,
+  val rootItemID: Int,
 
   @SerialName("ShortDesc")
   val shortDesc: String,
@@ -67,4 +67,12 @@ data class ItemDescription(
 
   @SerialName("SecondaryDescription")
   val secondaryDescription: String? = null
+)
+
+@Serializable
+data class UpperDescriptionValue(
+  @SerialName("Description")
+  val description: String,
+  @SerialName("Value")
+  val value: String
 )

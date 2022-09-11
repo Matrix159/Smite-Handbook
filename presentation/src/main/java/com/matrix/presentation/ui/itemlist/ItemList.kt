@@ -85,7 +85,9 @@ fun ItemList(
                   bottomSheetState.show()
                 }
               },
-              modifier = Modifier.padding(16.dp).fillMaxWidth()
+              modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
             )
             if (viewModel.visibleItems.isNotEmpty()) {
               LazyVerticalGrid(

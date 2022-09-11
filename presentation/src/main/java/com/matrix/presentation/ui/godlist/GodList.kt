@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +70,9 @@ fun GodList(
                   bottomSheetState.show()
                 }
               },
-              modifier = Modifier.padding(16.dp).fillMaxWidth()
+              modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
             )
             LazyVerticalGrid(
               columns = GridCells.Fixed(3)

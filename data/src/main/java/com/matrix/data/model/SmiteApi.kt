@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PatchVersionInfo (
+data class PatchVersionInfo(
   @SerialName("version_string")
   val version: String
 )

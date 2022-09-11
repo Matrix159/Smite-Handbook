@@ -39,7 +39,7 @@ dependencies {
 
     // ktor
     implementation 'io.ktor:ktor-client-android:2.0.3'
-    implementation 'io.ktor:ktor-client-content-negotiation:2.0.3'
+    implementation 'io.ktor:ktor-client-content-negotiation:2.1.0'
     implementation 'io.ktor:ktor-serialization-kotlinx-json:2.0.3'
     implementation 'io.ktor:ktor-client-logging-jvm:2.0.3'
 
@@ -63,6 +63,14 @@ dependencies {
     // data store
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
 
+    // room db
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
 
     testImplementation "junit:junit:$junit_version"
     testImplementation "io.mockk:mockk:$mockk_version"
