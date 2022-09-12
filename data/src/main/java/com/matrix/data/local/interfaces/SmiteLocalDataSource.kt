@@ -1,7 +1,10 @@
 package com.matrix.data.local.interfaces
 
+import com.matrix.data.local.db.entity.BuildDbResult
+import com.matrix.data.local.db.entity.BuildEntity
 import com.matrix.data.local.db.entity.GodEntity
 import com.matrix.data.local.db.entity.ItemEntity
+import kotlinx.coroutines.flow.Flow
 
 interface SmiteLocalDataSource {
   /**
@@ -25,4 +28,10 @@ interface SmiteLocalDataSource {
    * Retrieves the saved item list with an attach smite patch version
    */
   suspend fun readItems(): List<ItemEntity>
+
+  suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>)
+
+  fun getBuilds(): Flow<List<BuildDbResult>>
+
+  suspend fun deleteBuild(buildEntity: BuildEntity)
 }

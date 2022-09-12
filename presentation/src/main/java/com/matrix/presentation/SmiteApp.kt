@@ -27,6 +27,7 @@ import com.matrix.presentation.ui.ItemList
 import com.matrix.presentation.ui.builds.BuildScreen
 import com.matrix.presentation.ui.goddetails.GodScreen
 import com.matrix.presentation.ui.itemdetails.ItemDetails
+import com.matrix.presentation.viewmodels.BuildViewModel
 import com.matrix.presentation.viewmodels.GodViewModel
 import com.matrix.presentation.viewmodels.ItemViewModel
 
@@ -172,8 +173,15 @@ fun SmiteApp() {
         }
       }
       navigation(route = Screen.Builds.route, startDestination = NavigationRoutes.Builds) {
-        composable(NavigationRoutes.Builds) {
-          BuildScreen(modifier = Modifier.fillMaxSize())
+        composable(NavigationRoutes.Builds) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Builds.route)
+          }
+          val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+          BuildScreen(
+            buildViewModel,
+            modifier = Modifier.fillMaxSize()
+          )
         }
       }
     }

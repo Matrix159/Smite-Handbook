@@ -16,7 +16,7 @@ fun Loader(modifier: Modifier = Modifier) {
   )
   LottieAnimation(
     composition,
-    progress,
+    progress = { progress },
     modifier = modifier,
   )
 }

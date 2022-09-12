@@ -1,5 +1,6 @@
 package com.matrix.data.repository
 
+import com.matrix.data.local.db.entity.BuildEntity
 import com.matrix.data.local.db.entity.GodEntity
 import com.matrix.data.local.db.entity.ItemEntity
 import com.matrix.data.local.interfaces.PatchVersionDataSource
@@ -12,7 +13,9 @@ import com.matrix.domain.models.GodSkinInformation
 import com.matrix.domain.models.ItemInformation
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
@@ -53,7 +56,7 @@ class SmiteRepositoryImpl @Inject constructor(
   override suspend fun getItems(refresh: Boolean): List<ItemInformation> {
     return withContext(Dispatchers.IO) {
       val currentPatchVersion: String? = sharedPrefsDataSource.getPatchVersion().firstOrNull()
-      val localItems: List<GodEntity> = localDataSource.readGods()
+      val localItems: List<ItemEntity> = localDataSource.readItems()
       // Determine if we need to fetch from remote, we use patch version as our way of syncing data
       if (localItems.isEmpty() || localItems.any { it.patchVersion != currentPatchVersion } || refresh) {
         val newData = networkDataSource.getItems()
@@ -66,8 +69,22 @@ class SmiteRepositoryImpl @Inject constructor(
     }
   }
 
-  override suspend fun getBuilds(): List<BuildInformation> {
-    TODO("Not yet implemented")
+  override fun getBuilds(): Flow<List<BuildInformation>> =
+    localDataSource.getBuilds().map { list -> list.map { it.toDomain() } }
+
+  override suspend fun createBuild(buildInformation: BuildInformation) {
+    localDataSource.createBuild(
+      buildEntity = BuildEntity(godId = buildInformation.god.id),
+      itemIds = buildInformation.items.map { it.itemID })
+  }
+
+  override suspend fun deleteBuild(buildInformation: BuildInformation) {
+    localDataSource.deleteBuild(
+      BuildEntity(
+        id = buildInformation.id,
+        godId = buildInformation.god.id
+      )
+    )
   }
 
   override suspend fun syncPatchVersion() {

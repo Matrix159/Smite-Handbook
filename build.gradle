@@ -11,7 +11,7 @@ buildscript {
         junit_version = '4.13.2'
         kotlin_version = '1.7.0'
         kotlinx_coroutines_test = '1.6.4'
-        lifecycle_version = '2.5.1'
+        lifecycle_version = '2.6.0-alpha02'
         lottie_version = '5.2.0'
         mockk_version = '1.12.7'
         room_version = '2.4.3'
