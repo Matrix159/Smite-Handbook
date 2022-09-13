@@ -60,6 +60,7 @@ data class GodEntity(
   val godIconURL: String,
   val latestGod: Boolean,
 ) {
+  //region conversions
   fun toDomain(): GodInformation =
     GodInformation(
       id = this.id,
@@ -390,8 +391,8 @@ data class GodEntity(
         latestGod = god.latestGod == "y",
       )
   }
+  //endregion
 }
-
 
 data class AbilityDescription(
   val cooldown: String,

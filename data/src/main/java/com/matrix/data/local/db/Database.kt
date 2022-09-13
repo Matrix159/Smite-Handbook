@@ -16,7 +16,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-// TODO: migrations
 @TypeConverters(Converters::class)
 @Database(
   entities =
@@ -26,7 +25,10 @@ import kotlinx.serialization.json.Json
     BuildEntity::class,
     BuildItemCrossRef::class,
   ],
-  version = 1
+  version = 1,
+  autoMigrations = [
+    //AutoMigration (from = 1, to = 2)
+  ]
 )
 abstract class AppDatabase : RoomDatabase() {
   abstract fun godDao(): GodDao

@@ -10,7 +10,18 @@ data class BuildEntity(
   val godId: Int
 )
 
-@Entity(primaryKeys = ["buildId", "itemId"], indices = [Index(value = ["itemId"])])
+@Entity(
+  primaryKeys = ["buildId", "itemId"],
+  foreignKeys = [
+    ForeignKey(
+      entity = BuildEntity::class,
+      parentColumns = arrayOf("id"),
+      childColumns = arrayOf("buildId"),
+      onDelete = ForeignKey.CASCADE
+    )
+  ],
+  indices = [Index(value = ["itemId"])]
+)
 data class BuildItemCrossRef(
   val buildId: Long,
   val itemId: Int

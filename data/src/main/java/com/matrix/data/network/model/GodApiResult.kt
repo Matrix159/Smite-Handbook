@@ -120,7 +120,6 @@ data class GodApiResult(
   @SerialName("ret_msg") val retMsg: String?
 )
 
-
 @Serializable
 data class AbilityDescription(
   val itemDescription: AbilityItemDescription

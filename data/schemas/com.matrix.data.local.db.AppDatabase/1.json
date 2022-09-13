@@ -1,0 +1,699 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "5c207705efe35c2344ecaa94c4ac1ea5",
+    "entities": [
+      {
+        "tableName": "gods",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `patchVersion` TEXT, `attackSpeed` REAL NOT NULL, `attackSpeedPerLevel` REAL NOT NULL, `autoBanned` INTEGER NOT NULL, `cons` TEXT NOT NULL, `hp5PerLevel` REAL NOT NULL, `health` INTEGER NOT NULL, `healthPerFive` REAL NOT NULL, `healthPerLevel` REAL NOT NULL, `lore` TEXT NOT NULL, `mp5PerLevel` REAL NOT NULL, `magicProtection` REAL NOT NULL, `magicProtectionPerLevel` REAL NOT NULL, `magicalPower` INTEGER NOT NULL, `magicalPowerPerLevel` REAL NOT NULL, `mana` INTEGER NOT NULL, `manaPerFive` REAL NOT NULL, `manaPerLevel` REAL NOT NULL, `name` TEXT NOT NULL, `onFreeRotation` INTEGER NOT NULL, `pantheon` TEXT NOT NULL, `physicalPower` INTEGER NOT NULL, `physicalPowerPerLevel` REAL NOT NULL, `physicalProtection` REAL NOT NULL, `physicalProtectionPerLevel` REAL NOT NULL, `pros` TEXT NOT NULL, `roles` TEXT NOT NULL, `speed` INTEGER NOT NULL, `title` TEXT NOT NULL, `type` TEXT NOT NULL, `godCardURL` TEXT NOT NULL, `godIconURL` TEXT NOT NULL, `latestGod` INTEGER NOT NULL, `ability_details_1_id` INTEGER NOT NULL, `ability_details_1_summary` TEXT NOT NULL, `ability_details_1_url` TEXT NOT NULL, `ability_details_1_cooldown` TEXT NOT NULL, `ability_details_1_cost` TEXT NOT NULL, `ability_details_1_description` TEXT NOT NULL, `ability_details_1_menuItems` TEXT NOT NULL, `ability_details_1_rankItems` TEXT NOT NULL, `ability_details_2_id` INTEGER NOT NULL, `ability_details_2_summary` TEXT NOT NULL, `ability_details_2_url` TEXT NOT NULL, `ability_details_2_cooldown` TEXT NOT NULL, `ability_details_2_cost` TEXT NOT NULL, `ability_details_2_description` TEXT NOT NULL, `ability_details_2_menuItems` TEXT NOT NULL, `ability_details_2_rankItems` TEXT NOT NULL, `ability_details_3_id` INTEGER NOT NULL, `ability_details_3_summary` TEXT NOT NULL, `ability_details_3_url` TEXT NOT NULL, `ability_details_3_cooldown` TEXT NOT NULL, `ability_details_3_cost` TEXT NOT NULL, `ability_details_3_description` TEXT NOT NULL, `ability_details_3_menuItems` TEXT NOT NULL, `ability_details_3_rankItems` TEXT NOT NULL, `ability_details_4_id` INTEGER NOT NULL, `ability_details_4_summary` TEXT NOT NULL, `ability_details_4_url` TEXT NOT NULL, `ability_details_4_cooldown` TEXT NOT NULL, `ability_details_4_cost` TEXT NOT NULL, `ability_details_4_description` TEXT NOT NULL, `ability_details_4_menuItems` TEXT NOT NULL, `ability_details_4_rankItems` TEXT NOT NULL, `ability_details_5_id` INTEGER NOT NULL, `ability_details_5_summary` TEXT NOT NULL, `ability_details_5_url` TEXT NOT NULL, `ability_details_5_cooldown` TEXT NOT NULL, `ability_details_5_cost` TEXT NOT NULL, `ability_details_5_description` TEXT NOT NULL, `ability_details_5_menuItems` TEXT NOT NULL, `ability_details_5_rankItems` TEXT NOT NULL, `basic_attack_desccooldown` TEXT NOT NULL, `basic_attack_desccost` TEXT NOT NULL, `basic_attack_descdescription` TEXT NOT NULL, `basic_attack_descmenuItems` TEXT NOT NULL, `basic_attack_descrankItems` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patchVersion",
+            "columnName": "patchVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "attackSpeed",
+            "columnName": "attackSpeed",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attackSpeedPerLevel",
+            "columnName": "attackSpeedPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoBanned",
+            "columnName": "autoBanned",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cons",
+            "columnName": "cons",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hp5PerLevel",
+            "columnName": "hp5PerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "health",
+            "columnName": "health",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "healthPerFive",
+            "columnName": "healthPerFive",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "healthPerLevel",
+            "columnName": "healthPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lore",
+            "columnName": "lore",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mp5PerLevel",
+            "columnName": "mp5PerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "magicProtection",
+            "columnName": "magicProtection",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "magicProtectionPerLevel",
+            "columnName": "magicProtectionPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "magicalPower",
+            "columnName": "magicalPower",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "magicalPowerPerLevel",
+            "columnName": "magicalPowerPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mana",
+            "columnName": "mana",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "manaPerFive",
+            "columnName": "manaPerFive",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "manaPerLevel",
+            "columnName": "manaPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onFreeRotation",
+            "columnName": "onFreeRotation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pantheon",
+            "columnName": "pantheon",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "physicalPower",
+            "columnName": "physicalPower",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "physicalPowerPerLevel",
+            "columnName": "physicalPowerPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "physicalProtection",
+            "columnName": "physicalProtection",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "physicalProtectionPerLevel",
+            "columnName": "physicalProtectionPerLevel",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pros",
+            "columnName": "pros",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "roles",
+            "columnName": "roles",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speed",
+            "columnName": "speed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "godCardURL",
+            "columnName": "godCardURL",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "godIconURL",
+            "columnName": "godIconURL",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latestGod",
+            "columnName": "latestGod",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.id",
+            "columnName": "ability_details_1_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.summary",
+            "columnName": "ability_details_1_summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.url",
+            "columnName": "ability_details_1_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.description.cooldown",
+            "columnName": "ability_details_1_cooldown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.description.cost",
+            "columnName": "ability_details_1_cost",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.description.description",
+            "columnName": "ability_details_1_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.description.menuItems",
+            "columnName": "ability_details_1_menuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails1.description.rankItems",
+            "columnName": "ability_details_1_rankItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.id",
+            "columnName": "ability_details_2_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.summary",
+            "columnName": "ability_details_2_summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.url",
+            "columnName": "ability_details_2_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.description.cooldown",
+            "columnName": "ability_details_2_cooldown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.description.cost",
+            "columnName": "ability_details_2_cost",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.description.description",
+            "columnName": "ability_details_2_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.description.menuItems",
+            "columnName": "ability_details_2_menuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails2.description.rankItems",
+            "columnName": "ability_details_2_rankItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.id",
+            "columnName": "ability_details_3_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.summary",
+            "columnName": "ability_details_3_summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.url",
+            "columnName": "ability_details_3_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.description.cooldown",
+            "columnName": "ability_details_3_cooldown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.description.cost",
+            "columnName": "ability_details_3_cost",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.description.description",
+            "columnName": "ability_details_3_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.description.menuItems",
+            "columnName": "ability_details_3_menuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails3.description.rankItems",
+            "columnName": "ability_details_3_rankItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.id",
+            "columnName": "ability_details_4_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.summary",
+            "columnName": "ability_details_4_summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.url",
+            "columnName": "ability_details_4_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.description.cooldown",
+            "columnName": "ability_details_4_cooldown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.description.cost",
+            "columnName": "ability_details_4_cost",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.description.description",
+            "columnName": "ability_details_4_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.description.menuItems",
+            "columnName": "ability_details_4_menuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails4.description.rankItems",
+            "columnName": "ability_details_4_rankItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.id",
+            "columnName": "ability_details_5_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.summary",
+            "columnName": "ability_details_5_summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.url",
+            "columnName": "ability_details_5_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.description.cooldown",
+            "columnName": "ability_details_5_cooldown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.description.cost",
+            "columnName": "ability_details_5_cost",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.description.description",
+            "columnName": "ability_details_5_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.description.menuItems",
+            "columnName": "ability_details_5_menuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityDetails5.description.rankItems",
+            "columnName": "ability_details_5_rankItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basicAttack.cooldown",
+            "columnName": "basic_attack_desccooldown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basicAttack.cost",
+            "columnName": "basic_attack_desccost",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basicAttack.description",
+            "columnName": "basic_attack_descdescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basicAttack.menuItems",
+            "columnName": "basic_attack_descmenuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "basicAttack.rankItems",
+            "columnName": "basic_attack_descrankItems",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "items",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `patchVersion` TEXT, `activeFlag` INTEGER NOT NULL, `childItemID` INTEGER NOT NULL, `deviceName` TEXT NOT NULL, `glyph` INTEGER NOT NULL, `iconID` INTEGER NOT NULL, `itemTier` INTEGER NOT NULL, `price` INTEGER NOT NULL, `restrictedRoles` TEXT NOT NULL, `rootItemID` INTEGER NOT NULL, `shortDesc` TEXT NOT NULL, `startingItem` INTEGER NOT NULL, `type` TEXT NOT NULL, `itemIconURL` TEXT NOT NULL, `description` TEXT, `menuItems` TEXT NOT NULL, `secondaryDescription` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "patchVersion",
+            "columnName": "patchVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "activeFlag",
+            "columnName": "activeFlag",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "childItemID",
+            "columnName": "childItemID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deviceName",
+            "columnName": "deviceName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "glyph",
+            "columnName": "glyph",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iconID",
+            "columnName": "iconID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemTier",
+            "columnName": "itemTier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "restrictedRoles",
+            "columnName": "restrictedRoles",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rootItemID",
+            "columnName": "rootItemID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shortDesc",
+            "columnName": "shortDesc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startingItem",
+            "columnName": "startingItem",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemIconURL",
+            "columnName": "itemIconURL",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemDescription.description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemDescription.menuItems",
+            "columnName": "menuItems",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemDescription.secondaryDescription",
+            "columnName": "secondaryDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "builds",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `godId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "godId",
+            "columnName": "godId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "BuildItemCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`buildId` INTEGER NOT NULL, `itemId` INTEGER NOT NULL, PRIMARY KEY(`buildId`, `itemId`), FOREIGN KEY(`buildId`) REFERENCES `builds`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "buildId",
+            "columnName": "buildId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "buildId",
+            "itemId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_BuildItemCrossRef_itemId",
+            "unique": false,
+            "columnNames": [
+              "itemId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_BuildItemCrossRef_itemId` ON `${TABLE_NAME}` (`itemId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "builds",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "buildId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5c207705efe35c2344ecaa94c4ac1ea5')"
+    ]
+  }
+}

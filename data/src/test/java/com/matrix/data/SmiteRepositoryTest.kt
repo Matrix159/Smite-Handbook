@@ -1,17 +1,13 @@
 package com.matrix.data
 
-import com.matrix.data.local.LocalGodList
-import com.matrix.data.local.interfaces.PatchVersionDataSource
-import com.matrix.data.local.interfaces.SmiteLocalDataSource
-import com.matrix.data.network.interfaces.SmiteRemoteDataSource
+import com.matrix.data.builder.getMockGodEntity
+import com.matrix.data.fakes.PatchVersionDataSourceFake
+import com.matrix.data.fakes.SmiteLocalDataSourceFake
+import com.matrix.data.fakes.SmiteRemoteDataSourceFake
 import com.matrix.data.repository.SmiteRepositoryImpl
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -20,22 +16,19 @@ import org.junit.Test
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SmiteRepositoryTest {
-  @MockK
-  private lateinit var remoteDataSource: SmiteRemoteDataSource
+  private lateinit var remoteDataSource: SmiteRemoteDataSourceFake
+  private lateinit var localDataSource: SmiteLocalDataSourceFake
+  private lateinit var patchVersionDataSource: PatchVersionDataSourceFake
 
-  @MockK
-  private lateinit var localDataSource: SmiteLocalDataSource
-
-  @MockK
-  private lateinit var sharedPrefsDataSource: PatchVersionDataSource
-
-  @InjectMockKs
+//  @InjectMockKs
   private lateinit var repository: SmiteRepositoryImpl
 
   @Before
   fun before() {
-    MockKAnnotations.init(this, relaxUnitFun = true)
-    repository = SmiteRepositoryImpl(remoteDataSource, localDataSource, sharedPrefsDataSource)
+    remoteDataSource = SmiteRemoteDataSourceFake()
+    localDataSource = SmiteLocalDataSourceFake()
+    patchVersionDataSource = PatchVersionDataSourceFake()
+    repository = SmiteRepositoryImpl(remoteDataSource, localDataSource, patchVersionDataSource)
   }
 
   // TODO: try a Fake version of this
@@ -44,22 +37,35 @@ class SmiteRepositoryTest {
     val firstPatch = "9.7"
     val secondPatch = "9.8"
 
-    // Local data source should be locked in for this test
-    coEvery { localDataSource.readGods() } returns LocalGodList(
-      SmiteRepositoryData.firstPatchList,
-      firstPatch
-    )
-
-    // The current patch is the first patch
-    coEvery { sharedPrefsDataSource.getPatchVersion() } returns firstPatch
+    // Setup existing gods
+    localDataSource.saveGods(listOf(getMockGodEntity(1), getMockGodEntity(2)))
+    patchVersionDataSource.setPatchVersion(firstPatch)
     val firstGodList = repository.getGods()
 
-    // Patch changed, so remote should return new data and we should be overriding the
-    // updating the local source of truth
-    coEvery { sharedPrefsDataSource.getPatchVersion() } returns secondPatch
-    coEvery { remoteDataSource.getGods() } returns SmiteRepositoryData.secondPatchList
+    patchVersionDataSource.setPatchVersion(secondPatch)
+    remoteDataSource.increaseReturnedGodsByOne()
     val secondGodList = repository.getGods()
 
-    assertNotEquals(firstGodList.size, secondGodList.size)
+    assertEquals(2, firstGodList.size)
+    assertEquals(3, secondGodList.size)
+  }
+
+  @Test
+  fun `Should return a new item list when patch changes`() = runTest {
+    val firstPatch = "9.7"
+    val secondPatch = "9.8"
+
+    // TODO: Needs to be items
+    // Setup existing gods
+    localDataSource.saveGods(listOf(getMockGodEntity(1), getMockGodEntity(2)))
+    patchVersionDataSource.setPatchVersion(firstPatch)
+    val firstGodList = repository.getGods()
+
+    patchVersionDataSource.setPatchVersion(secondPatch)
+    remoteDataSource.increaseReturnedGodsByOne()
+    val secondGodList = repository.getGods()
+
+    assertEquals(2, firstGodList.size)
+    assertEquals(3, secondGodList.size)
   }
 }
