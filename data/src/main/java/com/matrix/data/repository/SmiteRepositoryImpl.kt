@@ -87,6 +87,9 @@ class SmiteRepositoryImpl @Inject constructor(
     )
   }
 
+  /**
+   * Grabs the latest patch version from the remote data source and stores it in shared prefs data source
+   */
   override suspend fun syncPatchVersion() {
     sharedPrefsDataSource.setPatchVersion(networkDataSource.getPatchVersion().version)
   }
