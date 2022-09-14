@@ -1,6 +1,7 @@
 package com.matrix.presentation.ui.builds
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,9 @@ fun BuildScreen(
 
   val buildState: BuildsUiState by viewModel.uiState.collectAsStateWithLifecycle()
   when (val state = buildState) {
-    is BuildsUiState.Error -> { Text(state.exception.toString()) }
+    is BuildsUiState.Error -> {
+      Text(state.exception.toString())
+    }
     is BuildsUiState.Loading -> Loader()
     is BuildsUiState.Success -> {
       val coroutineScope = rememberCoroutineScope()
@@ -47,15 +50,12 @@ fun BuildScreen(
         LazyColumn {
           items(state.builds) { build ->
             Column {
-              Text(text = build.god.name)
-              for (item in build.items) {
-                Text(text = item.deviceName)
-              }
-              Button(onClick = {
-                coroutineScope.launch { viewModel.deleteBuild(build) }
-              }) {
-                Text("Delete")
-              }
+              BuildOverviewCard(
+                godInfo = build.god,
+                items = build.items,
+                modifier = Modifier.fillMaxWidth(),
+                onDelete = { coroutineScope.launch { viewModel.deleteBuild(build) } }
+              )
             }
           }
         }
