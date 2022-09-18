@@ -16,9 +16,7 @@ import com.matrix.presentation.models.filters.ItemTier
 import com.matrix.presentation.models.filters.ItemType
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import timber.log.Timber
@@ -62,9 +60,7 @@ class ItemViewModel @Inject constructor(
     var newState = uiState.copy()
     viewModelScope.launch {
       try {
-        val itemList = withContext(Dispatchers.IO) {
-          getLatestItemsUseCase()
-        }
+        val itemList = getLatestItemsUseCase()
         newState = newState.copy(itemInformations = itemList.filter { it.activeFlag })
       } catch (ex: Exception) {
         newState = newState.copy(errorMessages = listOf(ex.toString()))

@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.matrix.presentation.NavigationRoutes
 import com.matrix.presentation.R
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
@@ -37,6 +36,7 @@ import com.matrix.presentation.ui.components.filters.FilterModal
 import com.matrix.presentation.ui.components.filters.ItemFilters
 import com.matrix.presentation.ui.components.filters.SearchPanel
 import com.matrix.presentation.ui.items.ItemViewModel
+import com.matrix.presentation.ui.items.navigation.ItemsNavigation
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -110,7 +110,7 @@ fun ItemList(
                       .clickable {
                         focusManager.clearFocus()
                         viewModel.setItem(item)
-                        navController.navigate(NavigationRoutes.ItemDetails)
+                        navController.navigate(ItemsNavigation.ItemDetails.route)
                       }
                   ) {
                     AsyncImage(

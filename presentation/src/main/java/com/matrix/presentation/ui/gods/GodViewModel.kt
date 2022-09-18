@@ -15,9 +15,7 @@ import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -61,10 +59,7 @@ class GodViewModel @Inject constructor(
       Timber.d("loadState")
       godListUiState = godListUiState.copy(loadingState = LoadingState.LOADING)
       try {
-        var gods: List<GodInformation>
-        withContext(Dispatchers.IO) {
-          gods = getLatestGodsUseCase()
-        }
+        val gods = getLatestGodsUseCase()
 
         godListUiState = godListUiState.copy(gods = gods, loadingState = LoadingState.DONE)
       } catch (ex: Exception) {
@@ -90,13 +85,10 @@ class GodViewModel @Inject constructor(
               selectedGod = godInformation,
               godSkinInformations = listOf()
             )
-            var godSkinInformations: List<GodSkinInformation>
             // Load the skins asynchronously
-            withContext(Dispatchers.IO) {
-              godSkinInformations = getGodSkinsUseCase(godInformation.id)
-              godDetailsUiState =
-                godDetailsUiState.copy(godSkinInformations = godSkinInformations)
-            }
+            val godSkinInformations = getGodSkinsUseCase(godInformation.id)
+            godDetailsUiState =
+              godDetailsUiState.copy(godSkinInformations = godSkinInformations)
           }
         }
       } catch (ex: Exception) {
