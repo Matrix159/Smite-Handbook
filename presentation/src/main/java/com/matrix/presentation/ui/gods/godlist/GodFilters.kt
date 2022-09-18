@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.components.filters
+package com.matrix.presentation.ui.gods.godlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import com.matrix.presentation.R
 import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
+import com.matrix.presentation.ui.components.filters.FilterGroup
 import com.matrix.presentation.utils.getPantheonDrawableResourceId
 import com.matrix.presentation.utils.getPantheonStringResourceId
 import com.matrix.presentation.utils.getRoleDrawableResourceId

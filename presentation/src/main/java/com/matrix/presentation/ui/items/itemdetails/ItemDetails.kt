@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.itemdetails
+package com.matrix.presentation.ui.items.itemdetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -58,7 +58,9 @@ fun ItemDetails(
   Column(
     horizontalAlignment = Alignment.Start,
     verticalArrangement = Arrangement.Top,
-    modifier = modifier.verticalScroll(rememberScrollState())
+    modifier = modifier
+      .statusBarsPadding()
+      .verticalScroll(rememberScrollState())
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,

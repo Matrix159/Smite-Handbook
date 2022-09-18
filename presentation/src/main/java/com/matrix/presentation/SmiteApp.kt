@@ -1,9 +1,10 @@
 package com.matrix.presentation
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,14 +23,15 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.matrix.presentation.ui.GodList
 import com.matrix.presentation.ui.ItemList
-import com.matrix.presentation.ui.builds.BuildScreen
-import com.matrix.presentation.ui.goddetails.GodScreen
-import com.matrix.presentation.ui.itemdetails.ItemDetails
-import com.matrix.presentation.viewmodels.BuildViewModel
-import com.matrix.presentation.viewmodels.GodViewModel
-import com.matrix.presentation.viewmodels.ItemViewModel
+import com.matrix.presentation.ui.builds.BuildOverviewScreen
+import com.matrix.presentation.ui.builds.BuildViewModel
+import com.matrix.presentation.ui.builds.CreateBuildScreen
+import com.matrix.presentation.ui.gods.GodViewModel
+import com.matrix.presentation.ui.gods.goddetails.GodScreen
+import com.matrix.presentation.ui.gods.godlist.GodList
+import com.matrix.presentation.ui.items.ItemViewModel
+import com.matrix.presentation.ui.items.itemdetails.ItemDetails
 
 
 object NavigationRoutes {
@@ -38,76 +40,80 @@ object NavigationRoutes {
   const val ItemList = "ItemList"
   const val ItemDetails = "ItemDetails"
   const val Builds = "Builds"
+  const val CreateBuild = "CreateBuild"
 }
+
+val defaultAnimationSpec: FiniteAnimationSpec<Float> = tween(300)
 
 @OptIn(
   ExperimentalAnimationApi::class,
-  ExperimentalMaterial3Api::class
+  ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class
 )
 @Composable
 fun SmiteApp() {
   val navController: NavHostController = rememberAnimatedNavController()
+  Scaffold(
+    bottomBar = {
+      val topScreens = listOf(Screen.Gods, Screen.Items, Screen.Builds)
+      NavigationBar {
 
-  Scaffold(bottomBar = {
-    val topScreens = listOf(Screen.Gods, Screen.Items, Screen.Builds)
-    NavigationBar {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
 
-      val navBackStackEntry by navController.currentBackStackEntryAsState()
-      val currentDestination = navBackStackEntry?.destination
-
-      topScreens.forEachIndexed { _, screen ->
-        NavigationBarItem(
-          icon = { Icon(painterResource(screen.iconResourceId), contentDescription = null) },
-          label = { Text(stringResource(screen.resourceId)) },
-          selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-          onClick = {
-            val currentTab = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-            // If we're not already in this navigation graph
-            if (!currentTab) {
-              navController.navigate(screen.route) {
-                // Pop up to the start destination of the graph to
-                // avoid building up a large stack of destinations
-                // on the back stack as users select items
-                popUpTo(navController.graph.findStartDestination().id) {
-                  //saveState = true
-                  // Do this to avoid double starting destinations on the stack
-                  if (navController.graph.findStartDestination().hierarchy.any { it.route == screen.route }) {
-                    inclusive = true
+        topScreens.forEachIndexed { _, screen ->
+          NavigationBarItem(
+            icon = { Icon(painterResource(screen.iconResourceId), contentDescription = null) },
+            label = { Text(stringResource(screen.resourceId)) },
+            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+            onClick = {
+              val currentTab =
+                currentDestination?.hierarchy?.any { it.route == screen.route } == true
+              // If we're not already in this navigation graph
+              if (!currentTab) {
+                navController.navigate(screen.route) {
+                  // Pop up to the start destination of the graph to
+                  // avoid building up a large stack of destinations
+                  // on the back stack as users select items
+                  popUpTo(navController.graph.findStartDestination().id) {
+                    //saveState = true
+                    // Do this to avoid double starting destinations on the stack
+                    if (navController.graph.findStartDestination().hierarchy.any { it.route == screen.route }) {
+                      inclusive = true
+                    }
                   }
                 }
               }
             }
-          }
-        )
+          )
+        }
       }
-    }
-  }) { paddingValues ->
+    },
+    contentWindowInsets = WindowInsets(0, 0, 0, 0)
+  ) { paddingValues ->
     AnimatedNavHost(
       navController = navController,
       startDestination = Screen.Gods.route,
-      modifier = Modifier.padding(paddingValues)
+      modifier = Modifier
+        .padding(paddingValues)
+        .consumedWindowInsets(paddingValues)
     ) {
       navigation(route = Screen.Gods.route, startDestination = NavigationRoutes.GodList) {
         composable(NavigationRoutes.GodList,
-          enterTransition = {
-            when (initialState.destination.route) {
-              NavigationRoutes.GodDetails -> fadeIn()
-              else -> null
-            }
-          },
-          exitTransition = {
-            when (targetState.destination.route) {
-              NavigationRoutes.GodDetails -> fadeOut()
-              else -> null
-            }
-          }
+          enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+          exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
         ) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry(Screen.Gods.route)
           }
           val godViewModel = hiltViewModel<GodViewModel>(parentEntry)
 
-          GodList(godViewModel, modifier = Modifier.fillMaxSize()) { selectedGod ->
+          GodList(
+            godViewModel,
+            modifier = Modifier
+              .fillMaxSize()
+              .statusBarsPadding()
+              .imePadding()
+          ) { selectedGod ->
             // Clear the god, navigate, and then load the god as it navigates
             godViewModel.setGod(selectedGod)
             navController.navigate(NavigationRoutes.GodDetails)
@@ -119,16 +125,15 @@ fun SmiteApp() {
               NavigationRoutes.GodList -> expandIn(
                 expandFrom = Alignment.Center,
               )
-              else -> null
+              else -> fadeIn(defaultAnimationSpec)
             }
           },
           exitTransition = {
             when (targetState.destination.route) {
               NavigationRoutes.GodList -> scaleOut()
-              else -> null
+              else -> fadeOut(animationSpec = defaultAnimationSpec)
             }
           }
-
         ) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry(Screen.Gods.route)
@@ -139,7 +144,11 @@ fun SmiteApp() {
         }
       }
       navigation(route = Screen.Items.route, startDestination = NavigationRoutes.ItemList) {
-        composable(NavigationRoutes.ItemList) { backStackEntry ->
+        composable(
+          NavigationRoutes.ItemList,
+          enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+          exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+        ) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry(Screen.Items.route)
           }
@@ -147,10 +156,17 @@ fun SmiteApp() {
           ItemList(
             viewModel = itemViewModel,
             navController = navController,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+              .fillMaxSize()
+              .statusBarsPadding()
+              .imePadding()
           )
         }
-        composable(NavigationRoutes.ItemDetails) { backStackEntry ->
+        composable(
+          NavigationRoutes.ItemDetails,
+          enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+          exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+        ) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry(Screen.Items.route)
           }
@@ -173,14 +189,39 @@ fun SmiteApp() {
         }
       }
       navigation(route = Screen.Builds.route, startDestination = NavigationRoutes.Builds) {
-        composable(NavigationRoutes.Builds) { backStackEntry ->
+        composable(
+          NavigationRoutes.Builds,
+          enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+          exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+        ) { backStackEntry ->
           val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry(Screen.Builds.route)
           }
           val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
-          BuildScreen(
+          BuildOverviewScreen(
             buildViewModel,
-            modifier = Modifier.fillMaxSize()
+            createBuild = { navController.navigate(NavigationRoutes.CreateBuild) },
+            modifier = Modifier
+              .fillMaxSize()
+              .statusBarsPadding()
+              .imePadding()
+          )
+        }
+
+        composable(
+          NavigationRoutes.CreateBuild,
+          enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+          exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+        ) { backStackEntry ->
+          val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Screen.Builds.route)
+          }
+          val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+          CreateBuildScreen(
+            modifier = Modifier
+              .fillMaxSize()
+              .statusBarsPadding()
+              .imePadding()
           )
         }
       }

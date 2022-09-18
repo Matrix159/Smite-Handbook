@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui
+package com.matrix.presentation.ui.gods.godlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,42 +21,43 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.matrix.presentation.NavigationRoutes
+import com.matrix.domain.models.GodInformation
+import com.matrix.presentation.R
 import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.components.filters.FilterModal
-import com.matrix.presentation.ui.components.filters.ItemFilters
 import com.matrix.presentation.ui.components.filters.SearchPanel
-import com.matrix.presentation.viewmodels.ItemViewModel
+import com.matrix.presentation.ui.gods.GodViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun ItemList(
-  viewModel: ItemViewModel,
-  navController: NavController,
+fun GodList(
+  viewModel: GodViewModel,
   modifier: Modifier = Modifier,
+  godClicked: (godInfo: GodInformation) -> Unit,
 ) {
-  Box(
-    contentAlignment = Alignment.Center,
+  val godListUiState = viewModel.godListUiState
+
+  Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier
   ) {
-    when (viewModel.uiState.loadingState) {
+    when (godListUiState.loadingState) {
       LoadingState.LOADING -> Loader()
-      LoadingState.ERROR -> ErrorText(viewModel.uiState.errorMessages.joinToString(", "))
+      LoadingState.ERROR -> ErrorText(godListUiState.errors.joinToString(","))
       LoadingState.DONE -> {
-        // Wrapped in ItemFilterModal for a bottom sheet modal for filters
         FilterModal(
           sheetContent = {
-            ItemFilters(
-              appliedItemFilters = viewModel.filters,
+            GodFilters(
+              appliedFilters = viewModel.filters,
               filtersChanged = viewModel::updateAppliedFilters,
               modifier = Modifier.padding(16.dp),
             )
@@ -78,7 +79,7 @@ fun ItemList(
             val coroutineScope = rememberCoroutineScope()
             SearchPanel(
               searchText = viewModel.filters.searchText,
-              searchLabel = "Search for an item",
+              searchLabel = stringResource(R.string.search_for_god),
               searchTextChanged = viewModel::updateSearchText,
               filterIconTap = {
                 coroutineScope.launch {
@@ -93,11 +94,11 @@ fun ItemList(
               LazyVerticalGrid(
                 columns = GridCells.Fixed(3)
               ) {
-                items(items = viewModel.visibleItems, key = { it.itemID }) { item ->
+                items(items = viewModel.visibleItems, key = { it.id }) { god ->
                   Box(
                     contentAlignment = Alignment.BottomCenter,
                     modifier = Modifier
-                      .requiredSize(128.dp)
+                      .fillMaxWidth()
                       .padding(8.dp)
                       .clip(MaterialTheme.shapes.extraLarge)
                       .border(
@@ -105,20 +106,16 @@ fun ItemList(
                         MaterialTheme.colorScheme.outline,
                         MaterialTheme.shapes.extraLarge
                       )
-                      .clickable {
-                        focusManager.clearFocus()
-                        viewModel.setItem(item)
-                        navController.navigate(NavigationRoutes.ItemDetails)
-                      }
+                      .clickable { godClicked(god) }
                   ) {
                     AsyncImage(
-                      model = item.itemIconURL,
-                      contentDescription = item.deviceName,
-                      contentScale = ContentScale.FillWidth,
-                      alignment = Alignment.Center,
+                      model = god.godCardURL,
+                      contentDescription = god.name,
+                      contentScale = ContentScale.Crop,
+                      alignment = Alignment.TopCenter,
                       modifier = Modifier
-                        //.height(80.dp)
-                        .matchParentSize()
+                        .height(180.dp)
+                        .fillMaxWidth()
                     )
                     Box(
                       modifier = Modifier
@@ -133,35 +130,22 @@ fun ItemList(
                         )
                     )
                     Text(
-                      text = item.deviceName,
+                      text = god.name,
                       fontWeight = FontWeight.Bold,
-                      fontSize = 14.sp,
+                      fontSize = 16.sp,
                       color = Color.White,
-                      textAlign = TextAlign.Center,
                       modifier = Modifier.padding(8.dp)
                     )
                   }
                 }
               }
             } else {
-              Text("No results found.", style = MaterialTheme.typography.bodyLarge)
+              Text(
+                text = stringResource(R.string.no_results_found),
+                style = MaterialTheme.typography.bodyLarge
+              )
             }
           }
-//          AnimatedVisibility(selectedItem != null) {
-//            selectedItem?.let {
-//              ItemDetails(
-//                selectedItem,
-//                viewModel.uiState.baseItemTreeNodes,
-//                Modifier
-//                  .background(MaterialTheme.colorScheme.background)
-//                  .fillMaxSize()
-//                  .clickable { viewModel.setItem(null) }
-//                  .padding(16.dp)
-//              ) {
-//                viewModel.setItem(it)
-//              }
-//            }
-//          }
         }
       }
     }

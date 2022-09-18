@@ -1,4 +1,4 @@
-package com.matrix.presentation.viewmodels
+package com.matrix.presentation.ui.builds
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,6 +39,7 @@ class BuildViewModel @Inject constructor(
     buildsUseCase.createBuild(
       BuildInformation(
         god = latestGods[0],
+        name = "Test build",
         items = latestItems.take(6)
       )
     )

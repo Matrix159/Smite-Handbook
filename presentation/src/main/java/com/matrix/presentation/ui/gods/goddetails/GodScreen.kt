@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.goddetails
+package com.matrix.presentation.ui.gods.goddetails
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import com.matrix.presentation.viewmodels.GodViewModel
+import com.matrix.presentation.ui.gods.GodViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

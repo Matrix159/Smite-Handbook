@@ -1,4 +1,4 @@
-package com.matrix.presentation.viewmodels
+package com.matrix.presentation.ui.gods
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue

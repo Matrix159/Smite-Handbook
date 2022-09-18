@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.goddetails
+package com.matrix.presentation.ui.gods.goddetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -18,9 +18,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.matrix.presentation.ui.components.ChipRow
+import com.matrix.presentation.ui.gods.GodDetailsUiState
 import com.matrix.presentation.utils.getPantheonDrawableResourceId
 import com.matrix.presentation.utils.getRoleDrawableResourceId
-import com.matrix.presentation.viewmodels.GodDetailsUiState
 
 @Composable
 fun GodDetails(
@@ -28,7 +28,7 @@ fun GodDetails(
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
-  Surface(modifier) {
+  Surface(modifier.statusBarsPadding()) {
     Column(modifier = Modifier.verticalScroll(scrollState)) {
       godDetailsUiState.selectedGod?.let { selectedGod ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

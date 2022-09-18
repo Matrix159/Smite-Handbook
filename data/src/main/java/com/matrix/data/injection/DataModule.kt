@@ -59,7 +59,6 @@ abstract class DataModule {
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase = Room.databaseBuilder(
       context,
       AppDatabase::class.java, "smite-handbook-db"
-    ).fallbackToDestructiveMigration()
-      .build()
+    ).build()
   }
 }

@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.itemdetails
+package com.matrix.presentation.ui.items.itemdetails
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

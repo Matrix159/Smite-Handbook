@@ -15,7 +15,8 @@
             android:name="com.matrix.presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MaterializedSmite">
+            android:theme="@style/Theme.MaterializedSmite"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

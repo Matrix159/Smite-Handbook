@@ -7,6 +7,7 @@ import com.matrix.domain.models.BuildInformation
 data class BuildEntity(
   @PrimaryKey(autoGenerate = true)
   val id: Long? = null,
+  val name: String? = null,
   val godId: Int
 )
 
@@ -47,7 +48,8 @@ data class BuildDbResult(
 ) {
   fun toDomain(): BuildInformation = BuildInformation(
     id = build.id,
+    name = build.name,
     god = god.toDomain(),
-    items = items.map { it.toDomain() }
+    items = items.map { it.toDomain() },
   )
 }

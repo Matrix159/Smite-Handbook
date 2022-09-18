@@ -1,4 +1,4 @@
-package com.matrix.presentation.viewmodels
+package com.matrix.presentation.ui.items
 
 import android.os.Parcelable
 import androidx.compose.runtime.derivedStateOf

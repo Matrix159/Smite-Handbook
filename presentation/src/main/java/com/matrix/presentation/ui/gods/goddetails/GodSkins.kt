@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.goddetails
+package com.matrix.presentation.ui.gods.goddetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
