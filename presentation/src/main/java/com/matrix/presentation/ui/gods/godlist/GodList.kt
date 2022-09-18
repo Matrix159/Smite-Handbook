@@ -36,10 +36,10 @@ import com.matrix.presentation.ui.components.filters.SearchPanel
 import com.matrix.presentation.ui.gods.GodViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GodList(
-  viewModel: GodViewModel,
+  viewModel: GodViewModel, // TODO: Pass down state instead of viewmodel
   modifier: Modifier = Modifier,
   godClicked: (godInfo: GodInformation) -> Unit,
 ) {

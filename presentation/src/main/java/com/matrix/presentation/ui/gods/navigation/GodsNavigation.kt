@@ -46,7 +46,7 @@ fun NavGraphBuilder.godsGraph(
           .statusBarsPadding()
           .imePadding()
       ) { selectedGod ->
-        // Clear the god, navigate, and then load the god as it navigates
+        // Set the god and navigate
         godViewModel.setGod(selectedGod)
         navController.navigate(GodsNavigation.GodDetails.route)
       }

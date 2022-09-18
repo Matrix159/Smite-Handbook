@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.Loader
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -29,17 +30,28 @@ fun BuildOverviewScreen(
     modifier = modifier
   ) {
     val buildState: BuildsUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     when (val state = buildState) {
       is BuildsUiState.Error -> {
         Text(state.exception.toString())
       }
-      is BuildsUiState.Loading -> Loader()
+      is BuildsUiState.Loading -> {
+        Timber.d(buildState.toString())
+        Loader()
+      }
       is BuildsUiState.Success -> {
+        Timber.d("BuildsUiState Success")
         val coroutineScope = rememberCoroutineScope()
         Scaffold(
           floatingActionButton = {
             FloatingActionButton(
-              onClick = createBuild,
+              onClick = {
+                // TODO: TESTING
+                createBuild()
+                coroutineScope.launch {
+                  viewModel.createBuild()
+                }
+              },
             ) {
               Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
             }
