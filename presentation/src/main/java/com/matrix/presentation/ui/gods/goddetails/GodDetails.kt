@@ -18,19 +18,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.matrix.presentation.ui.components.ChipRow
-import com.matrix.presentation.ui.gods.GodDetailsUiState
 import com.matrix.presentation.utils.getPantheonDrawableResourceId
 import com.matrix.presentation.utils.getRoleDrawableResourceId
 
 @Composable
 fun GodDetails(
-  godDetailsUiState: GodDetailsUiState,
+  godDetailsUiState: GodDetailsUiState.Success,
   scrollState: ScrollState,
   modifier: Modifier = Modifier
 ) {
+  val selectedGod = godDetailsUiState.godInformation
   Surface(modifier.statusBarsPadding()) {
     Column(modifier = Modifier.verticalScroll(scrollState)) {
-      godDetailsUiState.selectedGod?.let { selectedGod ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
           Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -109,10 +108,9 @@ fun GodDetails(
                 modifier = Modifier.fillMaxSize()
               )
             }
-            2 -> GodSkins(godDetailsUiState.godSkinInformations, Modifier.fillMaxSize())
+            2 -> GodSkins(godDetailsUiState.skins, Modifier.fillMaxSize())
           }
         }
-      }
     }
   }
 }

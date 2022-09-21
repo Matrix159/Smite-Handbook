@@ -2,12 +2,9 @@ package com.matrix.domain.usecases
 
 import com.matrix.domain.contracts.SmiteRepository
 import com.matrix.domain.models.ItemInformation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetLatestItemsUseCase @Inject constructor(val smiteRepository: SmiteRepository) {
-  suspend operator fun invoke(): List<ItemInformation> = withContext(Dispatchers.IO) {
-    smiteRepository.getItems()
-  }
+class GetLatestItemsUseCase @Inject constructor(private val smiteRepository: SmiteRepository) {
+  operator fun invoke(): Flow<List<ItemInformation>> = smiteRepository.getItems()
 }

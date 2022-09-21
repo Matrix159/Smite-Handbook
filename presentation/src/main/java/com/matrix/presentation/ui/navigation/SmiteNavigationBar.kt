@@ -40,12 +40,14 @@ fun SmiteNavigationBar(
               // avoid building up a large stack of destinations
               // on the back stack as users select items
               popUpTo(navController.graph.findStartDestination().id) {
-                //saveState = true
+                saveState = true
                 // Do this to avoid double starting destinations on the stack
-                if (navController.graph.findStartDestination().hierarchy.any { it.route == screen.route }) {
-                  inclusive = true
-                }
+//                if (navController.graph.findStartDestination().hierarchy.any { it.route == screen.route }) {
+//                  inclusive = true
+//                }
               }
+              launchSingleTop = true
+              restoreState = true
             }
           }
         }

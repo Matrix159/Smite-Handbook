@@ -110,7 +110,9 @@ fun ItemList(
                       .clickable {
                         focusManager.clearFocus()
                         viewModel.setItem(item)
-                        navController.navigate(ItemsNavigation.ItemDetails.route)
+                        navController.navigate(ItemsNavigation.ItemDetails.route) {
+                          launchSingleTop = true
+                        }
                       }
                   ) {
                     AsyncImage(

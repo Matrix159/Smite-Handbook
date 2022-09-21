@@ -1,6 +1,8 @@
 package com.matrix.presentation.ui.builds
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,6 +29,7 @@ fun BuildOverviewScreen(
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
     modifier = modifier
   ) {
     val buildState: BuildsUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,7 +58,8 @@ fun BuildOverviewScreen(
             ) {
               Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
             }
-          }
+          },
+          modifier = Modifier.fillMaxSize()
         ) {
           LazyColumn {
             items(state.builds) { build ->

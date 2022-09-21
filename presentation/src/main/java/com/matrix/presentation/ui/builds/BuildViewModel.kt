@@ -9,10 +9,7 @@ import com.matrix.domain.usecases.BuildsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.domain.usecases.GetLatestItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,8 +46,8 @@ class BuildViewModel @Inject constructor(
 
   suspend fun createBuild(/*buildInformation: BuildInformation*/) {
     // TODO: temporary
-    val latestGods = getLatestGodsUseCase()
-    val latestItems = getLatestItemsUseCase()
+    val latestGods = getLatestGodsUseCase().first()
+    val latestItems = getLatestItemsUseCase().first()
     buildsUseCase.createBuild(
       BuildInformation(
         god = latestGods[0],

@@ -5,6 +5,6 @@ import com.matrix.domain.models.GodInformation
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetLatestGodsUseCase @Inject constructor(private val smiteRepository: SmiteRepository) {
-  operator fun invoke(): Flow<List<GodInformation>> = smiteRepository.getGods()
+class GetGodUseCase @Inject constructor(private val smiteRepository: SmiteRepository) {
+  operator fun invoke(godId: Int): Flow<GodInformation> = smiteRepository.getGod(godId)
 }

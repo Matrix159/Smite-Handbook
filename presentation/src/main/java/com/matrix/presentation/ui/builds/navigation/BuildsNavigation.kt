@@ -41,7 +41,7 @@ fun NavGraphBuilder.buildsGraph(
       val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
       BuildOverviewScreen(
         buildViewModel,
-        createBuild = { navController.navigate(BuildsNavigation.CreateBuilds.route) },
+        createBuild = { navController.navigate(BuildsNavigation.CreateBuilds.route) { launchSingleTop = true} },
         modifier = Modifier
           .fillMaxSize()
           .statusBarsPadding()

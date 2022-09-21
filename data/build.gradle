@@ -68,6 +68,10 @@ dependencies {
     // data store
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
 
+    // app startup
+    implementation "androidx.startup:startup-runtime:1.1.1"
+
+
     // room db
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"

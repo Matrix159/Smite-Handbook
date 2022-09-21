@@ -16,6 +16,7 @@ import com.matrix.presentation.models.filters.ItemTier
 import com.matrix.presentation.models.filters.ItemType
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
@@ -61,7 +62,7 @@ class ItemViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         val itemList = getLatestItemsUseCase()
-        newState = newState.copy(itemInformations = itemList.filter { it.activeFlag })
+        newState = newState.copy(itemInformations = itemList.first().filter { it.activeFlag })
       } catch (ex: Exception) {
         newState = newState.copy(errorMessages = listOf(ex.toString()))
         Timber.e(ex.toString())

@@ -12,6 +12,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -25,35 +26,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.domain.models.GodInformation
 import com.matrix.presentation.R
-import com.matrix.presentation.models.LoadingState
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.components.filters.FilterModal
 import com.matrix.presentation.ui.components.filters.SearchPanel
-import com.matrix.presentation.ui.gods.GodViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
 @Composable
 fun GodList(
-  viewModel: GodViewModel, // TODO: Pass down state instead of viewmodel
+  viewModel: GodListViewModel, // TODO: Pass down state instead of viewmodel
   modifier: Modifier = Modifier,
   godClicked: (godInfo: GodInformation) -> Unit,
 ) {
-  val godListUiState = viewModel.godListUiState
+  val godListUiState by viewModel.godListUiState.collectAsStateWithLifecycle()
 
   Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier
   ) {
-    when (godListUiState.loadingState) {
-      LoadingState.LOADING -> Loader()
-      LoadingState.ERROR -> ErrorText(godListUiState.errors.joinToString(","))
-      LoadingState.DONE -> {
+    when (val godListUiState = godListUiState) {
+      GodListUiState.Loading -> Loader()
+      is GodListUiState.Error -> ErrorText(godListUiState.exception.toString())
+      is GodListUiState.Success -> {
         FilterModal(
           sheetContent = {
             GodFilters(
@@ -90,11 +91,11 @@ fun GodList(
                 .padding(16.dp)
                 .fillMaxWidth()
             )
-            if (viewModel.visibleItems.isNotEmpty()) {
+            if (godListUiState.gods.isNotEmpty()) {
               LazyVerticalGrid(
                 columns = GridCells.Fixed(3)
               ) {
-                items(items = viewModel.visibleItems, key = { it.id }) { god ->
+                items(items = godListUiState.gods, key = { it.id }) { god ->
                   Box(
                     contentAlignment = Alignment.BottomCenter,
                     modifier = Modifier

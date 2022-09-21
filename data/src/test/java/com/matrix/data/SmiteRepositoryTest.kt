@@ -5,7 +5,7 @@ import com.matrix.data.builder.getMockItemEntity
 import com.matrix.data.fakes.PatchVersionDataSourceFake
 import com.matrix.data.fakes.SmiteLocalDataSourceFake
 import com.matrix.data.fakes.SmiteRemoteDataSourceFake
-import com.matrix.data.repository.SmiteRepositoryImpl
+import com.matrix.data.repository.OfflineFirstSmiteRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -22,14 +22,14 @@ class SmiteRepositoryTest {
   private lateinit var localDataSource: SmiteLocalDataSourceFake
   private lateinit var patchVersionDataSource: PatchVersionDataSourceFake
 
-  private lateinit var repository: SmiteRepositoryImpl
+  private lateinit var repository: OfflineFirstSmiteRepository
 
   @Before
   fun before() {
     remoteDataSource = SmiteRemoteDataSourceFake()
     localDataSource = SmiteLocalDataSourceFake()
     patchVersionDataSource = PatchVersionDataSourceFake()
-    repository = SmiteRepositoryImpl(remoteDataSource, localDataSource, patchVersionDataSource)
+    repository = OfflineFirstSmiteRepository(remoteDataSource, localDataSource, patchVersionDataSource)
   }
 
 

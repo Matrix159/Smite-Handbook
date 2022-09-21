@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import androidx.work.WorkManager
 import com.matrix.data.local.PatchVersionDataSourceImpl
-import com.matrix.data.local.SmiteLocalDataSourceImpl
+import com.matrix.data.local.SmiteDatabaseLocalDataSource
 import com.matrix.data.local.db.AppDatabase
 import com.matrix.data.local.interfaces.PatchVersionDataSource
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
-import com.matrix.data.network.SmiteRemoteDataSourceImpl
+import com.matrix.data.network.SmiteApiRemoteDataSource
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
-import com.matrix.data.repository.SmiteRepositoryImpl
+import com.matrix.data.repository.OfflineFirstSmiteRepository
 import com.matrix.domain.contracts.SmiteRepository
 import dagger.Binds
 import dagger.Module
@@ -26,7 +26,7 @@ abstract class DataModule {
   @Binds
   @Singleton
   abstract fun bindsSmiteLocalDataSource(
-    smiteLocalDataSourceImpl: SmiteLocalDataSourceImpl
+    smiteDatabaseLocalDataSource: SmiteDatabaseLocalDataSource
   ): SmiteLocalDataSource
 
   @Binds
@@ -38,13 +38,13 @@ abstract class DataModule {
   @Binds
   @Singleton
   abstract fun bindsSmiteRemoteDataSource(
-    smiteApiDataSourceImpl: SmiteRemoteDataSourceImpl
+    smiteApiDataSourceImpl: SmiteApiRemoteDataSource
   ): SmiteRemoteDataSource
 
   @Binds
   @Singleton
   abstract fun bindsSmiteRepository(
-    smiteRepositoryImpl: SmiteRepositoryImpl
+    offlineFirstSmiteRepository: OfflineFirstSmiteRepository
   ): SmiteRepository
 
   companion object {

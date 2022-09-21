@@ -13,7 +13,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
 @OptIn(ExperimentalSerializationApi::class)
-class SmiteRemoteDataSourceImpl @Inject constructor() : SmiteRemoteDataSource {
+class SmiteApiRemoteDataSource @Inject constructor() : SmiteRemoteDataSource {
   private val baseUrl = "https://smite-handbook.onrender.com"
   private val client: HttpClient = ktorHttpClient
 

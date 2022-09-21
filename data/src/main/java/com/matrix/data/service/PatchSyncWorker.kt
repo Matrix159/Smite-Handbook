@@ -2,13 +2,13 @@ package com.matrix.data.service
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.matrix.domain.contracts.SmiteRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
@@ -19,9 +19,12 @@ class PatchSyncWorker @AssistedInject constructor(
   private val smiteRepository: SmiteRepository
 ) : CoroutineWorker(appContext, workerParams) {
   override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-    Timber.d("PATCH WORKER RUNNING...")
+    Timber.d("PATCH SYNC WORKER RUNNING...")
     try {
-      smiteRepository.syncPatchVersion()
+      smiteRepository.syncWithPatchVersion {
+        launch { smiteRepository.syncGods() }
+        launch { smiteRepository.syncItems() }
+      }
     } catch (ex: Exception) {
       if (ex !is CancellationException) {
         Timber.e(ex)
@@ -32,4 +35,17 @@ class PatchSyncWorker @AssistedInject constructor(
 
     return@withContext Result.success()
   }
+
+  companion object {
+    /**
+     * Expedited one time work to sync data on app startup
+     */
+    fun startUpSyncWork() = OneTimeWorkRequestBuilder<PatchSyncWorker>()
+      .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+      .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+      .build()
+  }
 }
+
+
+
