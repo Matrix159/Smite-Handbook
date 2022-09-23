@@ -27,7 +27,7 @@ class OfflineFirstSmiteRepository @Inject constructor(
 ) : SmiteRepository {
 
   override fun getGods(refresh: Boolean): Flow<List<GodInformation>> =
-    localDataSource.readGods().map { entityList -> entityList.map { it.toDomain() } }
+    localDataSource.getGods().map { entityList -> entityList.map { it.toDomain() } }
 
   override fun getGod(godId: Int): Flow<GodInformation> =
     localDataSource.getGod(godId).map { it.toDomain() }
@@ -46,7 +46,11 @@ class OfflineFirstSmiteRepository @Inject constructor(
     flow { emit(networkDataSource.getGodSkins(godId).map { it.toDomain() }) }
 
   override fun getItems(refresh: Boolean): Flow<List<ItemInformation>> =
-    localDataSource.readItems().map { entityList -> entityList.map { it.toDomain() } }
+    localDataSource.getItems().map { entityList -> entityList.map { it.toDomain() } }
+
+  override fun getItem(itemId: Int): Flow<ItemInformation> =
+    localDataSource.getItem(itemId).map { it.toDomain() }
+
 
   override suspend fun syncItems() = withContext(Dispatchers.IO) {
     val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()

@@ -12,15 +12,22 @@ import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
+import com.matrix.presentation.models.navigation.Route
 import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
 import com.matrix.presentation.ui.gods.goddetails.GodScreen
-import com.matrix.presentation.ui.gods.godlist.GodList
+import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
-import timber.log.Timber
 
-sealed class GodsNavigation(val route: String) {
-  object GodList: GodsNavigation("god_list")
-  object GodDetails: GodsNavigation("god_details/{godId}")
+sealed class GodsNavigation: Route {
+  object GodList: GodsNavigation() {
+    override val route = "god_list"
+  }
+  object GodDetails: GodsNavigation() {
+    const val godIdArg = "godId"
+    override val route = "god_details/{$godIdArg}"
+
+    fun createNavigationRoute(godId: String): String = "god_details/${Uri.encode(godId)}"
+  }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -33,28 +40,25 @@ fun NavGraphBuilder.godsGraph(
       GodsNavigation.GodList.route,
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) { backStackEntry ->
-//      val parentEntry = remember(backStackEntry) {
-//        navController.getBackStackEntry(Screen.Gods.route)
-//      }
+    ) {
       val godListViewModel = hiltViewModel<GodListViewModel>()
 
-      GodList(
+      GodListScreen(
         godListViewModel,
+        godClicked = {
+          navController.navigate(GodsNavigation.GodDetails.createNavigationRoute(it.id.toString())) {
+            launchSingleTop = true
+          }
+        },
         modifier = Modifier
           .fillMaxSize()
           .statusBarsPadding()
           .imePadding()
-      ) { selectedGod ->
-        // TODO: Cleanup
-        navController.navigate("god_details/${Uri.encode(selectedGod.id.toString())}") {
-          launchSingleTop = true
-        }
-      }
+      )
     }
     composable(
       GodsNavigation.GodDetails.route,
-      arguments = listOf(navArgument("godId") { type = NavType.StringType }),
+      arguments = listOf(navArgument(GodsNavigation.GodDetails.godIdArg) { type = NavType.StringType }),
       enterTransition = {
         when (initialState.destination.route) {
           GodsNavigation.GodList.route -> expandIn(
@@ -69,11 +73,7 @@ fun NavGraphBuilder.godsGraph(
           else -> fadeOut(animationSpec = defaultAnimationSpec)
         }
       }
-    ) { backStackEntry ->
-      Timber.d(backStackEntry.arguments?.getString("godId"))
-//      val parentEntry = remember(backStackEntry) {
-//        navController.getBackStackEntry(Screen.Gods.route)
-//      }
+    ) {
       val godListViewModel = hiltViewModel<GodDetailsViewModel>()
 
       GodScreen(godListViewModel, modifier = Modifier.fillMaxSize())

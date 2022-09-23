@@ -14,7 +14,6 @@ import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -25,16 +24,38 @@ class GodListViewModel @Inject constructor(
   getLatestGodsUseCase: GetLatestGodsUseCase
 ) : ViewModel() {
 
-  val godListUiState = godListUiStateStream(getLatestGodsUseCase).stateIn(
+  val godListUiState = combine(
+    getLatestGodsUseCase().asResult(),
+    snapshotFlow { filters }
+  ) { result: Result<List<GodInformation>>, filters: AppliedGodFilters ->
+    when (result) {
+      is Result.Success -> {
+        when (result.data.isEmpty()) {
+          true -> GodListUiState.Loading
+          false -> GodListUiState.Success(
+            gods = result.data.filter { god ->
+              filterGod(filters, god)
+            }.sortedBy { it.name },
+            filters = filters
+          )
+        }
+      }
+      is Result.Loading -> {
+        GodListUiState.Loading
+      }
+      is Result.Error -> {
+        GodListUiState.Error(result.exception)
+      }
+    }
+  }.stateIn(
     scope = viewModelScope,
     started = SharingStarted.WhileSubscribed(5000),
     initialValue = GodListUiState.Loading
   )
 
-  var filters by mutableStateOf(
+  private var filters by mutableStateOf(
     AppliedGodFilters()
   )
-    private set
 
   fun updateAppliedFilters(newFilters: AppliedGodFilters) {
     filters = newFilters.copy()
@@ -55,40 +76,14 @@ class GodListViewModel @Inject constructor(
       (if (filters.pantheons.isNotEmpty()) filters.pantheons.contains(
         Pantheon.values().first { it.pantheonName == god.pantheon }) else true)
   }
-
-  private fun godListUiStateStream(
-    getLatestGodsUseCase: GetLatestGodsUseCase,
-  ): Flow<GodListUiState> {
-
-    return combine(
-      getLatestGodsUseCase().asResult(),
-      snapshotFlow { filters }
-    ) { result: Result<List<GodInformation>>, filters: AppliedGodFilters ->
-      when (result) {
-        is Result.Success -> {
-          when (result.data.isEmpty()) {
-            true -> GodListUiState.Loading
-            false -> GodListUiState.Success(
-              result.data.filter { god ->
-                filterGod(filters, god)
-              }.sortedBy { it.name }
-            )
-          }
-        }
-        is Result.Loading -> {
-          GodListUiState.Loading
-        }
-        is Result.Error -> {
-          GodListUiState.Error(result.exception)
-        }
-      }
-    }
-  }
 }
 
-// Represents different states for the Builds screen
 sealed interface GodListUiState {
-  data class Success(val gods: List<GodInformation>) : GodListUiState
+  data class Success(
+    val gods: List<GodInformation>,
+    val filters: AppliedGodFilters
+  ) : GodListUiState
+
   data class Error(val exception: Throwable?) : GodListUiState
   object Loading : GodListUiState
 }

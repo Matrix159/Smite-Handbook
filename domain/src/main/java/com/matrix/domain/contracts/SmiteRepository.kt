@@ -12,6 +12,7 @@ interface SmiteRepository {
   suspend fun syncGods()
   fun getGodSkins(godId: Int): Flow<List<GodSkinInformation>>
   fun getItems(refresh: Boolean = false): Flow<List<ItemInformation>>
+  fun getItem(itemId: Int): Flow<ItemInformation>
   suspend fun syncItems()
   fun getBuilds(): Flow<List<BuildInformation>>
   suspend fun createBuild(buildInformation: BuildInformation)

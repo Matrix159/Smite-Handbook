@@ -26,149 +26,110 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.matrix.domain.models.ItemInformation
 import com.matrix.presentation.R
-import com.matrix.presentation.models.LoadingState
-import com.matrix.presentation.ui.components.ErrorText
-import com.matrix.presentation.ui.components.Loader
+import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.presentation.ui.components.filters.FilterModal
 import com.matrix.presentation.ui.components.filters.ItemFilters
 import com.matrix.presentation.ui.components.filters.SearchPanel
-import com.matrix.presentation.ui.items.ItemViewModel
-import com.matrix.presentation.ui.items.navigation.ItemsNavigation
+import com.matrix.presentation.ui.items.itemlist.ItemListUiState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ItemList(
-  viewModel: ItemViewModel,
-  navController: NavController,
+  uiState: ItemListUiState.Success,
+  itemClicked: (itemInformation: ItemInformation) -> Unit,
+  updateAppliedItemFilters: (itemFilters: AppliedItemFilters) -> Unit,
+  updateSearchText: (text: String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  Box(
-    contentAlignment = Alignment.Center,
-    modifier = modifier
-  ) {
-    when (viewModel.uiState.loadingState) {
-      LoadingState.LOADING -> Loader()
-      LoadingState.ERROR -> ErrorText(viewModel.uiState.errorMessages.joinToString(", "))
-      LoadingState.DONE -> {
-        // Wrapped in ItemFilterModal for a bottom sheet modal for filters
-        FilterModal(
-          sheetContent = {
-            ItemFilters(
-              appliedItemFilters = viewModel.filters,
-              filtersChanged = viewModel::updateAppliedFilters,
-              modifier = Modifier.padding(16.dp),
-            )
+  FilterModal(
+    sheetContent = {
+      ItemFilters(
+        appliedItemFilters = uiState.filters,
+        filtersChanged = updateAppliedItemFilters,
+        modifier = Modifier.padding(16.dp),
+      )
+    }
+  ) { bottomSheetState ->
+    val focusManager = LocalFocusManager.current
+    Column(
+      verticalArrangement = Arrangement.Top,
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = modifier
+        .clickable(
+          indication = null,
+          interactionSource = remember { MutableInteractionSource() }
+        ) {
+          focusManager.clearFocus()
+        }
+    ) {
+      val coroutineScope = rememberCoroutineScope()
+      SearchPanel(
+        searchText = uiState.filters.searchText,
+        searchLabel = stringResource(R.string.search_for_item),
+        searchTextChanged = updateSearchText,
+        filterIconTap = {
+          coroutineScope.launch {
+            bottomSheetState.show()
           }
-        ) { bottomSheetState ->
-          val focusManager = LocalFocusManager.current
-          Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        },
+        modifier = Modifier
+          .padding(16.dp)
+          .fillMaxWidth()
+      )
+      LazyVerticalGrid(
+        columns = GridCells.Fixed(3)
+      ) {
+        items(items = uiState.items, key = { it.itemID }) { item ->
+          Box(
+            contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
-              .fillMaxSize()
-              .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-              ) {
+              .requiredSize(128.dp)
+              .padding(8.dp)
+              .clip(MaterialTheme.shapes.extraLarge)
+              .border(
+                1.dp,
+                MaterialTheme.colorScheme.outline,
+                MaterialTheme.shapes.extraLarge
+              )
+              .clickable {
                 focusManager.clearFocus()
+                itemClicked(item)
               }
           ) {
-            val coroutineScope = rememberCoroutineScope()
-            SearchPanel(
-              searchText = viewModel.filters.searchText,
-              searchLabel = stringResource(R.string.search_for_item),
-              searchTextChanged = viewModel::updateSearchText,
-              filterIconTap = {
-                coroutineScope.launch {
-                  bottomSheetState.show()
-                }
-              },
+            AsyncImage(
+              model = item.itemIconURL,
+              contentDescription = item.deviceName,
+              contentScale = ContentScale.FillWidth,
+              alignment = Alignment.Center,
               modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+                //.height(80.dp)
+                .matchParentSize()
             )
-            if (viewModel.visibleItems.isNotEmpty()) {
-              LazyVerticalGrid(
-                columns = GridCells.Fixed(3)
-              ) {
-                items(items = viewModel.visibleItems, key = { it.itemID }) { item ->
-                  Box(
-                    contentAlignment = Alignment.BottomCenter,
-                    modifier = Modifier
-                      .requiredSize(128.dp)
-                      .padding(8.dp)
-                      .clip(MaterialTheme.shapes.extraLarge)
-                      .border(
-                        1.dp,
-                        MaterialTheme.colorScheme.outline,
-                        MaterialTheme.shapes.extraLarge
-                      )
-                      .clickable {
-                        focusManager.clearFocus()
-                        viewModel.setItem(item)
-                        navController.navigate(ItemsNavigation.ItemDetails.route) {
-                          launchSingleTop = true
-                        }
-                      }
-                  ) {
-                    AsyncImage(
-                      model = item.itemIconURL,
-                      contentDescription = item.deviceName,
-                      contentScale = ContentScale.FillWidth,
-                      alignment = Alignment.Center,
-                      modifier = Modifier
-                        //.height(80.dp)
-                        .matchParentSize()
-                    )
-                    Box(
-                      modifier = Modifier
-                        .matchParentSize()
-                        .background(
-                          brush = Brush.verticalGradient(
-                            0F to Color.Transparent,
-                            .5F to Color(0x40000000),
-                            .75f to Color(0x80000000),
-                            1f to Color(0xFF000000)
-                          )
-                        )
-                    )
-                    Text(
-                      text = item.deviceName,
-                      fontWeight = FontWeight.Bold,
-                      fontSize = 14.sp,
-                      color = Color.White,
-                      textAlign = TextAlign.Center,
-                      modifier = Modifier.padding(8.dp)
-                    )
-                  }
-                }
-              }
-            } else {
-              Text(
-                text = stringResource(R.string.no_results_found),
-                style = MaterialTheme.typography.bodyLarge
-              )
-            }
+            Box(
+              modifier = Modifier
+                .matchParentSize()
+                .background(
+                  brush = Brush.verticalGradient(
+                    0F to Color.Transparent,
+                    .5F to Color(0x40000000),
+                    .75f to Color(0x80000000),
+                    1f to Color(0xFF000000)
+                  )
+                )
+            )
+            Text(
+              text = item.deviceName,
+              fontWeight = FontWeight.Bold,
+              fontSize = 14.sp,
+              color = Color.White,
+              textAlign = TextAlign.Center,
+              modifier = Modifier.padding(8.dp)
+            )
           }
-//          AnimatedVisibility(selectedItem != null) {
-//            selectedItem?.let {
-//              ItemDetails(
-//                selectedItem,
-//                viewModel.uiState.baseItemTreeNodes,
-//                Modifier
-//                  .background(MaterialTheme.colorScheme.background)
-//                  .fillMaxSize()
-//                  .clickable { viewModel.setItem(null) }
-//                  .padding(16.dp)
-//              ) {
-//                viewModel.setItem(it)
-//              }
-//            }
-//          }
         }
       }
     }

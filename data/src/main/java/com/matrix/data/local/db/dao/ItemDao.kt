@@ -12,6 +12,9 @@ interface ItemDao {
   @Query("SELECT * FROM items")
   fun getAll(): Flow<List<ItemEntity>>
 
+  @Query("SELECT * from items where id = :itemId")
+  fun getItem(itemId: Int): Flow<ItemEntity>
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertAll(items: List<ItemEntity>)
 }

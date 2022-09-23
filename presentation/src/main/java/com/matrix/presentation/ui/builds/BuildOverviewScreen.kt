@@ -43,7 +43,6 @@ fun BuildOverviewScreen(
         Loader()
       }
       is BuildsUiState.Success -> {
-        Timber.d("BuildsUiState Success")
         val coroutineScope = rememberCoroutineScope()
         Scaffold(
           floatingActionButton = {

@@ -9,11 +9,9 @@ import com.matrix.domain.models.Result
 import com.matrix.domain.models.asResult
 import com.matrix.domain.usecases.GetGodSkinsUseCase
 import com.matrix.domain.usecases.GetGodUseCase
+import com.matrix.presentation.ui.gods.navigation.GodsNavigation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,11 +21,12 @@ class GodDetailsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-  private val selectedGodId: Int = (checkNotNull(savedStateHandle["godId"]) as String).toInt()
+  private val selectedGodId: Int = (checkNotNull(savedStateHandle[GodsNavigation.GodDetails.godIdArg]) as String).toInt()
 
   val godDetailsUiState = combine(
     getGodUseCase(selectedGodId),
-    getGodSkinsUseCase(selectedGodId),
+    // Skins don't need to be loaded immediately
+    getGodSkinsUseCase(selectedGodId).onStart { emit(emptyList()) },
     ::Pair
   ).asResult()
     .map { result ->
@@ -49,7 +48,6 @@ class GodDetailsViewModel @Inject constructor(
     )
 }
 
-// Represents different states for the Builds screen
 sealed interface GodDetailsUiState {
   data class Success(val godInformation: GodInformation, val skins: List<GodSkinInformation>) :
     GodDetailsUiState

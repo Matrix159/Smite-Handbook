@@ -16,38 +16,19 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.domain.models.ItemInformation
 import com.matrix.presentation.R
-import com.matrix.presentation.utils.ItemNode
 
 @Composable
 fun ItemDetails(
-  itemInformation: ItemInformation,
-  itemTreeNodes: List<ItemNode>,
+  uiState: ItemDetailUiState.Success,
+  itemClicked: (itemInformation: ItemInformation) -> Unit,
   modifier: Modifier = Modifier,
-  itemClicked: (itemInformation: ItemInformation) -> Unit
 ) {
-//  val tierMap: Map<Long, List<Item>> = remember(item, itemIdMap) {
-//    val returnMap = itemIdMap?.values?.filter { filterItem ->
-//      filterItem.childItemID == item.itemID // If I'm the child item ID of another item
-//        || filterItem.rootItemID == item.itemID // If I'm the root item ID of another item
-//        || filterItem.itemID == item.itemID // If this item is me
-//        || filterItem.itemID == item.childItemID // If this item is one of my children items
-//        || filterItem.itemID == item.rootItemID // If this item is my root item
-//    }?.groupBy { it.itemTier }?.toMutableMap() ?: mutableMapOf<Long, List<Item>>()
-//    // API doesn't provide a way to see past 2 levels so when an outer tier is selected
-//    // need to do a manual lookup for the opposing tier (tier 1 & 4)
-//    if (returnMap.containsKey(2) && returnMap[2]!!.isNotEmpty()) {
-//      returnMap[1] = listOf(itemIdMap?.get(returnMap[2]!![0].childItemID)!!)
-//    }
-//
-//    returnMap.toSortedMap()
-//  }
-
   /**
    * <baseNode, currentNode>
    */
-  val (baseNode, currentNode) = remember(itemTreeNodes, itemInformation) {
-    itemTreeNodes.forEach {
-      val foundItemNode = it.findItem(itemInformation)
+  val (baseNode, currentNode) = remember(uiState.itemTreeNodes, uiState.item) {
+    uiState.itemTreeNodes.forEach {
+      val foundItemNode = it.findItem(uiState.item)
       if (foundItemNode != null) {
         return@remember Pair(it, foundItemNode)
       }
@@ -67,7 +48,7 @@ fun ItemDetails(
       horizontalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier.fillMaxWidth()
     ) {
-      Text(itemInformation.deviceName)
+      Text(uiState.item.deviceName)
       Row(verticalAlignment = Alignment.CenterVertically) {
         val totalCost = remember(currentNode) { currentNode?.totalCost() ?: 0 }
         Image(
@@ -78,7 +59,7 @@ fun ItemDetails(
             .padding(4.dp)
         )
         Text(
-          "${itemInformation.price}" + if (totalCost > 0) "($totalCost)" else "",
+          "${uiState.item.price}" + if (totalCost > 0) "($totalCost)" else "",
           modifier = Modifier.padding(4.dp)
         )
       }
@@ -91,18 +72,18 @@ fun ItemDetails(
         .fillMaxWidth()
     ) {
       AsyncImage(
-        model = itemInformation.itemIconURL,
-        contentDescription = itemInformation.deviceName,
+        model = uiState.item.itemIconURL,
+        contentDescription = uiState.item.deviceName,
         modifier = Modifier.size(64.dp)
       )
       Text(
-        itemInformation.shortDesc,
+        uiState.item.shortDesc,
         style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp)
       )
     }
-    val description = remember(itemInformation.itemDescription.secondaryDescription) {
-      itemInformation.itemDescription.secondaryDescription
+    val description = remember(uiState.item.itemDescription.secondaryDescription) {
+      uiState.item.itemDescription.secondaryDescription
         ?.replace("<n>", "\n")
         ?.replace("<.+>".toRegex(), "")
     }
@@ -118,7 +99,7 @@ fun ItemDetails(
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = Modifier.fillMaxWidth()
     ) {
-      for (menuItem in itemInformation.itemDescription.menuItems) {
+      for (menuItem in uiState.item.itemDescription.menuItems) {
         Text(
           "${menuItem.value} ${menuItem.description}",
           style = MaterialTheme.typography.bodyMedium,
@@ -129,7 +110,7 @@ fun ItemDetails(
     baseNode?.let {
       ItemTree(
         baseNode,
-        selectedItemInformation = itemInformation,
+        selectedItemInformation = uiState.item,
         itemClicked = { itemClicked(it) },
         modifier = Modifier
           .fillMaxWidth()
