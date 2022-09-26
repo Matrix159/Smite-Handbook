@@ -1,9 +1,6 @@
-package com.matrix.presentation.ui.builds
+package com.matrix.presentation.ui.builds.buildlist
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -14,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.Loader
@@ -48,11 +46,7 @@ fun BuildOverviewScreen(
           floatingActionButton = {
             FloatingActionButton(
               onClick = {
-                // TODO: TESTING
                 createBuild()
-                coroutineScope.launch {
-                  viewModel.createBuild()
-                }
               },
             ) {
               Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
@@ -60,7 +54,10 @@ fun BuildOverviewScreen(
           },
           modifier = Modifier.fillMaxSize()
         ) {
-          LazyColumn {
+          LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+          ) {
             items(state.builds) { build ->
               Column {
                 BuildOverviewCard(

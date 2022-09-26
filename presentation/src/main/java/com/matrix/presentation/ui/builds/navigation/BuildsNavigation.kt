@@ -15,9 +15,10 @@ import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
-import com.matrix.presentation.ui.builds.BuildOverviewScreen
-import com.matrix.presentation.ui.builds.BuildViewModel
-import com.matrix.presentation.ui.builds.CreateBuildScreen
+import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
+import com.matrix.presentation.ui.builds.buildlist.BuildViewModel
+import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
+import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
 
 sealed class BuildsNavigation(val route: String) {
   object Builds: BuildsNavigation("builds")
@@ -52,12 +53,13 @@ fun NavGraphBuilder.buildsGraph(
       BuildsNavigation.CreateBuilds.route,
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) { backStackEntry ->
-      val parentEntry = remember(backStackEntry) {
-        navController.getBackStackEntry(Screen.Builds.route)
-      }
-      val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+    ) {
+      val createBuildViewModel = hiltViewModel<CreateBuildViewModel>()
       CreateBuildScreen(
+        createBuildViewModel,
+        done = {
+          navController.popBackStack()
+        },
         modifier = Modifier
           .fillMaxSize()
           .statusBarsPadding()

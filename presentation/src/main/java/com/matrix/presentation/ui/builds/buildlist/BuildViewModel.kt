@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.builds
+package com.matrix.presentation.ui.builds.buildlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,10 @@ import com.matrix.domain.usecases.BuildsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.domain.usecases.GetLatestItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,19 +46,6 @@ class BuildViewModel @Inject constructor(
       started = SharingStarted.WhileSubscribed(5000),
       initialValue = BuildsUiState.Loading
     )
-
-  suspend fun createBuild(/*buildInformation: BuildInformation*/) {
-    // TODO: temporary
-    val latestGods = getLatestGodsUseCase().first()
-    val latestItems = getLatestItemsUseCase().first()
-    buildsUseCase.createBuild(
-      BuildInformation(
-        god = latestGods[0],
-        name = "Test build",
-        items = latestItems.take(6)
-      )
-    )
-  }
 
   suspend fun deleteBuild(buildInformation: BuildInformation) {
     buildsUseCase.deleteBuild(buildInformation)

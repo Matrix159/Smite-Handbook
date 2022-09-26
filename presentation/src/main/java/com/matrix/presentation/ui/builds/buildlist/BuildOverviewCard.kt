@@ -1,4 +1,4 @@
-package com.matrix.presentation.ui.builds
+package com.matrix.presentation.ui.builds.buildlist
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -17,7 +17,7 @@ fun BuildOverviewCard(
   modifier: Modifier = Modifier,
   onDelete: () -> Unit
 ) {
-  Card(modifier = modifier.padding(16.dp)) {
+  Card(modifier = modifier) {
     Column {
       Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -48,6 +48,7 @@ fun BuildOverviewCard(
             contentDescription = item.deviceName,
             modifier = Modifier
               .weight(1f)
+              .size(64.dp)
               .padding(8.dp)
           )
         }

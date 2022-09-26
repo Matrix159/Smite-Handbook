@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.domain.models.ItemInformation
-import com.matrix.presentation.ui.ItemList
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 
@@ -32,7 +31,7 @@ fun ItemListScreen(
       ItemListUiState.Loading -> Loader()
       is ItemListUiState.Error -> ErrorText(itemListUiState.exception.toString())
       is ItemListUiState.Success -> {
-        ItemList(
+        FilterableItemList(
           uiState = itemListUiState,
           itemClicked = itemClicked,
           updateAppliedItemFilters = itemListViewModel::updateAppliedFilters,

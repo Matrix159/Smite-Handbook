@@ -30,7 +30,7 @@ fun GodListScreen(
       GodListUiState.Loading -> Loader()
       is GodListUiState.Error -> ErrorText(godListUiState.exception.toString())
       is GodListUiState.Success -> {
-        GodList(
+        FilterableGodList(
           uiState = godListUiState,
           godClicked = godClicked,
           updateAppliedGodFilters = godListViewModel::updateAppliedFilters,
