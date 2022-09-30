@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.accompanist.placeholder.placeholder
 import com.matrix.domain.models.GodInformation
 
 @Composable
@@ -33,7 +34,7 @@ fun GodList(
 ) {
   LazyVerticalGrid(
     columns = GridCells.Fixed(3),
-    modifier = modifier
+    modifier = modifier.placeholder(visible = gods.isEmpty(), color = MaterialTheme.colorScheme.onBackground)
   ) {
     items(items = gods, key = { it.id }) { god ->
       Box(

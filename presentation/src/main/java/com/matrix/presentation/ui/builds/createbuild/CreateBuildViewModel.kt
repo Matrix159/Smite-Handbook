@@ -1,9 +1,17 @@
 package com.matrix.presentation.ui.builds.createbuild
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.*
+import com.matrix.domain.models.BuildInformation
+import com.matrix.domain.models.GodInformation
+import com.matrix.domain.models.ItemInformation
+import com.matrix.domain.models.Result
+import com.matrix.domain.models.asResult
 import com.matrix.domain.usecases.BuildsUseCase
 import com.matrix.domain.usecases.GetLatestGodsUseCase
 import com.matrix.domain.usecases.GetLatestItemsUseCase
@@ -81,13 +89,16 @@ class CreateBuildViewModel @Inject constructor(
 
   fun createBuild() = viewModelScope.launch {
     if (selectedGod != null && selectedItems.isNotEmpty()) {
-      buildsUseCase.createBuild(
-        BuildInformation(
-          god = selectedGod!!,
-          name = buildName,
-          items = selectedItems
+      // TODO REMOVE
+      repeat(50) {
+        buildsUseCase.createBuild(
+          BuildInformation(
+            god = selectedGod!!,
+            name = buildName,
+            items = selectedItems
+          )
         )
-      )
+      }
     }
   }
 }

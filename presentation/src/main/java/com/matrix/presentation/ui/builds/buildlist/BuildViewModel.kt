@@ -30,7 +30,7 @@ class BuildViewModel @Inject constructor(
       when (result) {
         is Result.Success -> {
           BuildsUiState.Success(
-            result.data
+            result.data.sortedBy { it.god.name }
           )
         }
         is Result.Loading -> {
@@ -49,6 +49,10 @@ class BuildViewModel @Inject constructor(
 
   suspend fun deleteBuild(buildInformation: BuildInformation) {
     buildsUseCase.deleteBuild(buildInformation)
+  }
+
+  suspend fun addBuild(buildInformation: BuildInformation) {
+    buildsUseCase.createBuild(buildInformation)
   }
 }
 
