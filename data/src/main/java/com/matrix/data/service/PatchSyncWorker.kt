@@ -2,13 +2,17 @@ package com.matrix.data.service
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.CoroutineWorker
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkerParameters
 import com.matrix.domain.contracts.SmiteRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
@@ -21,10 +25,7 @@ class PatchSyncWorker @AssistedInject constructor(
   override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
     Timber.d("PATCH SYNC WORKER RUNNING...")
     try {
-      smiteRepository.syncWithPatchVersion {
-        launch { smiteRepository.syncGods() }
-        launch { smiteRepository.syncItems() }
-      }
+      smiteRepository.sync()
     } catch (ex: Exception) {
       if (ex !is CancellationException) {
         Timber.e(ex)

@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -91,6 +92,7 @@ class CreateBuildViewModel @Inject constructor(
     if (selectedGod != null && selectedItems.isNotEmpty()) {
       // TODO REMOVE
       repeat(50) {
+        Timber.d("Is it 50 times")
         buildsUseCase.createBuild(
           BuildInformation(
             god = selectedGod!!,
