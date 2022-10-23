@@ -14,8 +14,8 @@
         <activity
             android:name="com.matrix.presentation.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MaterializedSmite"
-            android:windowSoftInputMode="adjustResize">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MaterializedSmite">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +28,6 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove"/>
+            tools:node="remove"></provider>
     </application>
 </manifest>

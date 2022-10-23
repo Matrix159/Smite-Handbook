@@ -1,7 +1,5 @@
 package com.matrix.presentation.models.filters
 
-import androidx.compose.runtime.Stable
-
 enum class Role(val roleName: String) {
   ASSASSIN("Assassin"),
   GUARDIAN("Guardian"),
@@ -29,7 +27,6 @@ enum class Pantheon(val pantheonName: String) {
   YORUBA("Yoruba")
 }
 
-@Stable
 data class AppliedGodFilters(
   val searchText: String = "",
   val roles: Set<Role> = emptySet(),

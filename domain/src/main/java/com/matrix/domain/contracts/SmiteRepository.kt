@@ -7,16 +7,12 @@ import com.matrix.domain.models.ItemInformation
 import kotlinx.coroutines.flow.Flow
 
 interface SmiteRepository {
-  fun getGods(): Flow<List<GodInformation>>
-  fun getGod(godId: Int): Flow<GodInformation>
-  suspend fun syncGods()
-  fun getGodSkins(godId: Int): Flow<List<GodSkinInformation>>
-  fun getItems(): Flow<List<ItemInformation>>
-  fun getItem(itemId: Int): Flow<ItemInformation>
-  suspend fun syncItems()
+  suspend fun getGods(refresh: Boolean = false): List<GodInformation>
+  suspend fun getGodSkins(godId: Int): List<GodSkinInformation>
+  suspend fun getItems(refresh: Boolean = false): List<ItemInformation>
   fun getBuilds(): Flow<List<BuildInformation>>
   suspend fun createBuild(buildInformation: BuildInformation)
 
   suspend fun deleteBuild(buildInformation: BuildInformation)
-  suspend fun sync()
+  suspend fun syncPatchVersion()
 }
