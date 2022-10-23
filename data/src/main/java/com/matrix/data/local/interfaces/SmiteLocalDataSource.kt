@@ -16,7 +16,9 @@ interface SmiteLocalDataSource {
   /**
    * Retrieves the saved god list with an attach smite patch version
    */
-  suspend fun readGods(): List<GodEntity>
+  fun getGods(): Flow<List<GodEntity>>
+
+  fun getGod(godId: Int): Flow<GodEntity>
 
   /**
    * Saves the item list and patch version to the local data source
@@ -27,7 +29,8 @@ interface SmiteLocalDataSource {
   /**
    * Retrieves the saved item list with an attach smite patch version
    */
-  suspend fun readItems(): List<ItemEntity>
+  fun getItems(): Flow<List<ItemEntity>>
+  fun getItem(itemId: Int): Flow<ItemEntity>
 
   suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>)
 

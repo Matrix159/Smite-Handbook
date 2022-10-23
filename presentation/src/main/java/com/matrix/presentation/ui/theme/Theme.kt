@@ -4,8 +4,9 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColorScheme(
@@ -55,22 +56,17 @@ fun MaterializedSmiteTheme(
     darkTheme -> DarkColorPalette
     else -> LightColorPalette
   }
+  val useDarkIcons = !darkTheme
   val systemUiController = rememberSystemUiController()
-  if (darkTheme) {
+  LaunchedEffect(systemUiController, useDarkIcons) {
+    // Update all of the system bar colors to be transparent, and use
+    // dark icons if we're in light theme
     systemUiController.setSystemBarsColor(
-      color = colorScheme.background
+      color = Color.Transparent,
+      darkIcons = useDarkIcons
     )
-
-  } else {
-    systemUiController.setSystemBarsColor(
-      color = colorScheme.background
-    )
+    // setStatusBarColor() and setNavigationBarColor() also exist
   }
-
-  // This is to match the navigation bar used in the app, it matches the elevation of the bar
-  systemUiController.setNavigationBarColor(
-    color = colorScheme.surfaceColorAtElevation(3.dp),
-  )
 
   MaterialTheme(
     colorScheme = colorScheme,

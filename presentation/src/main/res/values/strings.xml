@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">MaterializedSmite</string>
     <string name="applied_filter">Applied Filter</string>
     <string name="god_screen">Gods</string>
     <string name="item_screen">Items</string>
@@ -31,4 +30,7 @@
     <string name="slavic">Slavic</string>
     <string name="voodoo">Voodoo</string>
     <string name="yoruba">Yoruba</string>
+    <string name="search_for_god">Search for a god</string>
+    <string name="no_results_found">No results found.</string>
+    <string name="search_for_item">Search for an item</string>
 </resources>

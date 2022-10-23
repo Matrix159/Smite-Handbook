@@ -5,8 +5,9 @@ import com.matrix.data.builder.getMockItemEntity
 import com.matrix.data.fakes.PatchVersionDataSourceFake
 import com.matrix.data.fakes.SmiteLocalDataSourceFake
 import com.matrix.data.fakes.SmiteRemoteDataSourceFake
-import com.matrix.data.repository.SmiteRepositoryImpl
+import com.matrix.data.repository.OfflineFirstSmiteRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -22,24 +23,24 @@ class SmiteRepositoryTest {
   private lateinit var localDataSource: SmiteLocalDataSourceFake
   private lateinit var patchVersionDataSource: PatchVersionDataSourceFake
 
-  private lateinit var repository: SmiteRepositoryImpl
+  private lateinit var repository: OfflineFirstSmiteRepository
 
   @Before
   fun before() {
     remoteDataSource = SmiteRemoteDataSourceFake()
     localDataSource = SmiteLocalDataSourceFake()
     patchVersionDataSource = PatchVersionDataSourceFake()
-    repository = SmiteRepositoryImpl(remoteDataSource, localDataSource, patchVersionDataSource)
+    repository = OfflineFirstSmiteRepository(remoteDataSource, localDataSource, patchVersionDataSource)
   }
 
 
   @Test
   fun `getGods should populate and return two gods from local data when no local data is present`() = runTest {
     // verify local is empty before the retrieval
-    assertTrue(localDataSource.readGods().isEmpty())
-    val results = repository.getGods()
+    assertTrue(localDataSource.getGods().first().isEmpty())
+    val results = repository.getGods().first()
     // verify local was updated
-    assertEquals(2, localDataSource.readGods().size)
+    assertEquals(2, localDataSource.getGods().first().size)
     assertEquals(2, results.size)
   }
 
@@ -51,11 +52,11 @@ class SmiteRepositoryTest {
     // Setup existing gods
     localDataSource.saveGods(listOf(getMockGodEntity(1), getMockGodEntity(2)))
     patchVersionDataSource.setPatchVersion(firstPatch)
-    val firstGodList = repository.getGods()
+    val firstGodList = repository.getGods().first()
 
     patchVersionDataSource.setPatchVersion(secondPatch)
     remoteDataSource.increaseReturnedGodsByOne()
-    val secondGodList = repository.getGods()
+    val secondGodList = repository.getGods().first()
 
     assertEquals(2, firstGodList.size)
     assertEquals(3, secondGodList.size)
@@ -69,11 +70,11 @@ class SmiteRepositoryTest {
     // Setup existing items
     localDataSource.saveItems(listOf(getMockItemEntity(1), getMockItemEntity(2)))
     patchVersionDataSource.setPatchVersion(firstPatch)
-    val firstItemList = repository.getItems()
+    val firstItemList = repository.getItems().first()
 
     patchVersionDataSource.setPatchVersion(secondPatch)
     remoteDataSource.increaseReturnedItemsByOne()
-    val secondItemList = repository.getItems()
+    val secondItemList = repository.getItems().first()
 
     assertEquals(2, firstItemList.size)
     assertEquals(3, secondItemList.size)
