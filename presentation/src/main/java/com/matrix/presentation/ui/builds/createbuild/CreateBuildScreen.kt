@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -40,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,7 +47,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -56,9 +55,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.ItemInformation
+import com.matrix.presentation.ui.components.ErrorText
+import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.gods.godlist.GodList
 import com.matrix.presentation.ui.items.itemlist.ItemList
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -95,14 +97,8 @@ fun CreateBuildScreen(
     modifier = modifier
   ) {
     when (val createBuildUiState = uiState) {
-      is CreateBuildUiState.Error -> {
-        Text(createBuildUiState.exception.toString())
-      }
-
-      is CreateBuildUiState.Loading -> {
-        Loader()
-      }
-
+      is CreateBuildUiState.Error -> ErrorText(createBuildUiState.exception)
+      is CreateBuildUiState.Loading -> Loader()
       is CreateBuildUiState.Success -> {
         Box(
           modifier = Modifier
@@ -119,40 +115,17 @@ fun CreateBuildScreen(
               title = "Pick a God",
               stepNumber = 1,
               modifier = Modifier.fillMaxWidth()
-            ) {
+            ) { paddingValues ->
               if (createBuildUiState.selectedGod != null) {
-                Card(
-                  modifier = Modifier
-                    .padding(it)
-                    .fillMaxWidth(),
-                  onClick = { showGodList = true }
-                ) {
-                  Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.height(IntrinsicSize.Max)
-                  ) {
-                    AsyncImage(
-                      model = createBuildUiState.selectedGod.godIconURL,
-                      contentDescription = createBuildUiState.selectedGod.name,
-                      modifier = Modifier.fillMaxHeight()
-                    )
-                    Column(
-                      modifier = Modifier.padding(16.dp)
-                    ) {
-                      Text(
-                        text = createBuildUiState.selectedGod.name,
-                        style = MaterialTheme.typography.titleLarge,
-                      )
-                      Text(
-                        text = createBuildUiState.selectedGod.title,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontStyle = FontStyle.Italic
-                      )
-                    }
-                  }
-                }
+                GodTitleCard(
+                  godImageUrl = createBuildUiState.selectedGod.godIconURL,
+                  godName = createBuildUiState.selectedGod.name,
+                  godTitle = createBuildUiState.selectedGod.title,
+                  onClick = { showGodList = true },
+                  modifier = Modifier.padding(paddingValues)
+                )
               } else {
-                Button(onClick = { showGodList = true }, modifier = Modifier.padding(it)) {
+                Button(onClick = { showGodList = true }, modifier = Modifier.padding(paddingValues)) {
                   Text(text = "Add god")
                 }
               }
@@ -161,13 +134,13 @@ fun CreateBuildScreen(
               title = "Pick the Items",
               stepNumber = 2,
               modifier = Modifier.fillMaxWidth()
-            ) {
+            ) {paddingValues ->
               if (createBuildUiState.selectedItems.isNotEmpty()) {
                 Row(
                   horizontalArrangement = Arrangement.Start,
                   verticalAlignment = Alignment.CenterVertically,
                   modifier = Modifier
-                    .padding(it)
+                    .padding(paddingValues)
                     .fillMaxWidth()
                     .background(
                       color = MaterialTheme.colorScheme.secondaryContainer,
@@ -181,15 +154,15 @@ fun CreateBuildScreen(
                       model = item.itemIconURL,
                       contentDescription = item.deviceName,
                       modifier = Modifier
-                        .weight(1f)
+                        .weight(1f, fill = false)
+                        .size(64.dp)
                         .padding(8.dp)
-                        .size(42.dp)
                         .clip(MaterialTheme.shapes.small)
                     )
                   }
                 }
               } else {
-                Button(onClick = { showItemList = true }, modifier = Modifier.padding(it)) {
+                Button(onClick = { showItemList = true }, modifier = Modifier.padding(paddingValues)) {
                   Text(text = "Add items")
                 }
               }
@@ -199,11 +172,13 @@ fun CreateBuildScreen(
               stepNumber = 3,
               isLast = true,
               modifier = Modifier.fillMaxWidth()
-            ) {
+            ) {paddingValues ->
               TextField(
                 value = createBuildUiState.buildName,
                 onValueChange = createBuildViewModel::updateBuildName,
-                modifier = Modifier.padding(it).fillMaxWidth(),
+                modifier = Modifier
+                  .padding(paddingValues)
+                  .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
                   focusManager.clearFocus()
@@ -228,15 +203,23 @@ fun CreateBuildScreen(
               removeSelectedItem = createBuildViewModel::removeSelectedItem
             )
           }
-          // The FAB shouldn't show on the god list view
-          if (!showGodList) {
+          // The FAB shouldn't show on the god list view, but do show as long as we have a
+          // selected god/items or are selecting items
+          if (
+            !showGodList &&
+            ((showItemList && createBuildUiState.selectedItems.isNotEmpty()) ||
+              (createBuildUiState.selectedGod != null && createBuildUiState.selectedItems.isNotEmpty()))
+          ) {
+            val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(
               onClick = {
                 if (showItemList) {
                   showItemList = false
                 } else {
-                  createBuildViewModel.createBuild()
-                  done()
+                  coroutineScope.launch {
+                    createBuildViewModel.createBuild()
+                    done()
+                  }
                 }
               },
               modifier = Modifier

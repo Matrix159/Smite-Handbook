@@ -36,5 +36,7 @@ interface SmiteLocalDataSource {
 
   fun getBuilds(): Flow<List<BuildDbResult>>
 
+  fun getBuild(buildId: Int): Flow<BuildDbResult>
+
   suspend fun deleteBuild(buildEntity: BuildEntity)
 }

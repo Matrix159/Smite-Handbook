@@ -10,6 +10,10 @@ class BuildsUseCase @Inject constructor(private val smiteRepository: SmiteReposi
     return smiteRepository.getBuilds()
   }
 
+  fun getBuild(buildId: Int): Flow<BuildInformation> {
+    return smiteRepository.getBuild(buildId)
+  }
+
   suspend fun createBuild(buildInformation: BuildInformation) {
     smiteRepository.createBuild(buildInformation)
   }

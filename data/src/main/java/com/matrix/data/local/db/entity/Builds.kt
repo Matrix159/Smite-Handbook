@@ -1,12 +1,18 @@
 package com.matrix.data.local.db.entity
 
-import androidx.room.*
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.Junction
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.matrix.domain.models.BuildInformation
 
 @Entity(tableName = "builds")
 data class BuildEntity(
   @PrimaryKey(autoGenerate = true)
-  val id: Long? = null,
+  val id: Int? = null,
   val name: String? = null,
   val godId: Int
 )
@@ -24,7 +30,7 @@ data class BuildEntity(
   indices = [Index(value = ["itemId"])]
 )
 data class BuildItemCrossRef(
-  val buildId: Long,
+  val buildId: Int,
   val itemId: Int
 )
 

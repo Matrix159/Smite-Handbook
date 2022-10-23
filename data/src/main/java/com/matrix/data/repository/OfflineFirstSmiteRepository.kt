@@ -66,6 +66,9 @@ class OfflineFirstSmiteRepository @Inject constructor(
   override fun getBuilds(): Flow<List<BuildInformation>> =
     localDataSource.getBuilds().map { list -> list.map { it.toDomain() } }
 
+  override fun getBuild(buildId: Int): Flow<BuildInformation> =
+    localDataSource.getBuild(buildId).map { it.toDomain() }
+
   override suspend fun createBuild(buildInformation: BuildInformation) {
     localDataSource.createBuild(
       buildEntity = BuildEntity(godId = buildInformation.god.id, name = buildInformation.name),

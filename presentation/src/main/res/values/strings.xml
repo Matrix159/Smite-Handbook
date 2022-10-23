@@ -33,4 +33,5 @@
     <string name="search_for_god">Search for a god</string>
     <string name="no_results_found">No results found.</string>
     <string name="search_for_item">Search for an item</string>
+    <string name="unknown_error">An unknown error occurred.</string>
 </resources>

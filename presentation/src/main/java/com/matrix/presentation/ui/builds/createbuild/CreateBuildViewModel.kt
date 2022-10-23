@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -88,15 +87,18 @@ class CreateBuildViewModel @Inject constructor(
     buildName = name
   }
 
-  fun createBuild() = viewModelScope.launch {
+  suspend fun createBuild() {
     if (selectedGod != null && selectedItems.isNotEmpty()) {
       // TODO REMOVE
-      repeat(50) {
-        Timber.d("Is it 50 times")
+      for (x in 1..20) {
+        Timber.d("This is the for loop")
         buildsUseCase.createBuild(
           BuildInformation(
             god = selectedGod!!,
-            name = buildName,
+            name = when {
+              buildName.isEmpty() -> "${selectedGod!!.name}'s build"
+              else -> buildName
+            },
             items = selectedItems
           )
         )
@@ -105,7 +107,6 @@ class CreateBuildViewModel @Inject constructor(
   }
 }
 
-// Represents different states for the Builds screen
 sealed interface CreateBuildUiState {
   data class Success(
     val gods: List<GodInformation> = emptyList(),

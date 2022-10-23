@@ -6,7 +6,6 @@ import com.matrix.data.local.db.entity.BuildEntity
 import com.matrix.data.local.db.entity.GodEntity
 import com.matrix.data.local.db.entity.ItemEntity
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
-import com.matrix.domain.models.ItemInformation
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,6 +28,8 @@ class SmiteDatabaseLocalDataSource @Inject constructor(
     database.buildDao().createBuild(buildEntity, itemIds)
 
   override fun getBuilds(): Flow<List<BuildDbResult>> = database.buildDao().getAll()
+  override fun getBuild(buildId: Int): Flow<BuildDbResult> = database.buildDao().getBuild(buildId)
+
   override suspend fun deleteBuild(buildEntity: BuildEntity) =
     database.buildDao().deleteBuildEntity(buildEntity)
 }
