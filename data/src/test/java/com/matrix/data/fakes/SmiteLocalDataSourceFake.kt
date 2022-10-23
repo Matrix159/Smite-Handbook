@@ -4,6 +4,7 @@ import com.matrix.data.local.db.entity.*
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class SmiteLocalDataSourceFake : SmiteLocalDataSource {
   private val localGodEntities = mutableListOf<GodEntity>()
@@ -18,7 +19,10 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
     localGodEntities.addAll(distinctEntities)
   }
 
-  override suspend fun readGods(): List<GodEntity> = localGodEntities
+  override fun getGods(): Flow<List<GodEntity>> = flowOf(localGodEntities)
+  override fun getGod(godId: Int): Flow<GodEntity> {
+    TODO("Not yet implemented")
+  }
 
   override suspend fun saveItems(items: List<ItemEntity>) {
     localItemEntities.addAll(items)
@@ -27,7 +31,10 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
     localItemEntities.addAll(distinctEntities)
   }
 
-  override suspend fun readItems(): List<ItemEntity> = localItemEntities
+  override fun getItems(): Flow<List<ItemEntity>> = flowOf(localItemEntities)
+  override fun getItem(itemId: Int): Flow<ItemEntity> {
+    TODO("Not yet implemented")
+  }
 
   override suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>) {
     // Mimic inserting with a REPLACE policy on conflict

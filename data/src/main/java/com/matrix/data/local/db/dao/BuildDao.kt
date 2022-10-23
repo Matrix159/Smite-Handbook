@@ -1,6 +1,11 @@
 package com.matrix.data.local.db.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import com.matrix.data.local.db.entity.BuildDbResult
 import com.matrix.data.local.db.entity.BuildEntity
 import com.matrix.data.local.db.entity.BuildItemCrossRef
@@ -11,6 +16,10 @@ interface BuildDao {
   @Transaction
   @Query("SELECT * FROM builds")
   fun getAll(): Flow<List<BuildDbResult>>
+
+  @Transaction
+  @Query("SELECT * FROM builds where id = :buildId")
+  fun getBuild(buildId: Int): Flow<BuildDbResult>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertBuildEntity(buildEntity: BuildEntity): Long
@@ -24,7 +33,7 @@ interface BuildDao {
     for (itemId in itemIds) {
       insertBuildItemCrossRef(
         BuildItemCrossRef(
-          buildId = newBuildId,
+          buildId = newBuildId.toInt(),
           itemId = itemId
         )
       )
