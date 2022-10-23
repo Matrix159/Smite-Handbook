@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a65185f1444f4ad14ba0a336fc6fe682",
+    "identityHash": "5c207705efe35c2344ecaa94c4ac1ea5",
     "entities": [
       {
         "tableName": "gods",
@@ -616,18 +616,12 @@
       },
       {
         "tableName": "builds",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `godId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `godId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -699,7 +693,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a65185f1444f4ad14ba0a336fc6fe682')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5c207705efe35c2344ecaa94c4ac1ea5')"
     ]
   }
 }

@@ -2,13 +2,12 @@ package com.matrix.materializedsmite
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
+import androidx.work.*
 import com.matrix.data.service.PatchSyncWorker
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -32,15 +31,14 @@ class SmiteApplication : Application(), Configuration.Provider {
   override fun onCreate() {
     super.onCreate()
 
-    workManager.enqueueUniqueWork(
-      "PatchSyncWorker",
-      ExistingWorkPolicy.KEEP,
-      PatchSyncWorker.startUpSyncWork()
-//      PeriodicWorkRequestBuilder<PatchSyncWorker>(12, TimeUnit.HOURS)
-//        .setConstraints(constraints)
-//        .build()
+    val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+    workManager.enqueueUniquePeriodicWork(
+      "PeriodicPatchSyncWorker",
+      ExistingPeriodicWorkPolicy.KEEP,
+      PeriodicWorkRequestBuilder<PatchSyncWorker>(12, TimeUnit.HOURS)
+        .setConstraints(constraints)
+        .build()
     )
-
 
     if (BuildConfig.DEBUG) {
       plant(DebugTree())

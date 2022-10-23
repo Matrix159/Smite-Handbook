@@ -17,11 +17,9 @@ class ItemNode(var value: ItemInformation) {
     val currentTier = this.value.itemTier
 
     if (itemsGroupedByTier.containsKey(currentTier + 1)) {
-      itemsGroupedByTier[currentTier + 1]!!
-        .filter { it.childItemID == this.value.itemID }
-        .forEach {
-          addChild(ItemNode(it).findChildren(itemsGroupedByTier))
-        }
+      itemsGroupedByTier[currentTier + 1]!!.filter { it.childItemID == this.value.itemID }.forEach {
+        addChild(ItemNode(it).findChildren(itemsGroupedByTier))
+      }
     }
     return this
   }
