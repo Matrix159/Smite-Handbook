@@ -12,15 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
-import com.matrix.presentation.ui.builds.builddetails.BuildDetailsScreen
-import com.matrix.presentation.ui.builds.builddetails.BuildDetailsViewModel
 import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
 import com.matrix.presentation.ui.builds.buildlist.BuildViewModel
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
@@ -64,9 +60,10 @@ fun NavGraphBuilder.buildsGraph(
           }
         },
         goToBuildDetails = {
-          navController.navigate(BuildsNavigation.BuildDetails.createNavigationRoute(it.toString())) {
-            launchSingleTop = true
-          }
+          // no-op for now until I finish this
+//          navController.navigate(BuildsNavigation.BuildDetails.createNavigationRoute(it.toString())) {
+//            launchSingleTop = true
+//          }
         },
         modifier = Modifier
           .fillMaxSize()
@@ -91,20 +88,20 @@ fun NavGraphBuilder.buildsGraph(
           .imePadding()
       )
     }
-    composable(
-      BuildsNavigation.BuildDetails.route,
-      arguments = listOf(navArgument(BuildsNavigation.BuildDetails.buildIdArg) { type = NavType.StringType }),
-      enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
-      exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) {
-      val buildDetailsViewModel = hiltViewModel<BuildDetailsViewModel>()
-      BuildDetailsScreen(
-        buildDetailsViewModel = buildDetailsViewModel,
-        modifier = Modifier
-          .fillMaxSize()
-          .statusBarsPadding()
-          .imePadding()
-      )
-    }
+//    composable(
+//      BuildsNavigation.BuildDetails.route,
+//      arguments = listOf(navArgument(BuildsNavigation.BuildDetails.buildIdArg) { type = NavType.StringType }),
+//      enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+//      exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+//    ) {
+//      val buildDetailsViewModel = hiltViewModel<BuildDetailsViewModel>()
+//      BuildDetailsScreen(
+//        buildDetailsViewModel = buildDetailsViewModel,
+//        modifier = Modifier
+//          .fillMaxSize()
+//          .statusBarsPadding()
+//          .imePadding()
+//      )
+//    }
   }
 }

@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -89,20 +88,16 @@ class CreateBuildViewModel @Inject constructor(
 
   suspend fun createBuild() {
     if (selectedGod != null && selectedItems.isNotEmpty()) {
-      // TODO REMOVE
-      for (x in 1..20) {
-        Timber.d("This is the for loop")
-        buildsUseCase.createBuild(
-          BuildInformation(
-            god = selectedGod!!,
-            name = when {
-              buildName.isEmpty() -> "${selectedGod!!.name}'s build"
-              else -> buildName
-            },
-            items = selectedItems
-          )
+      buildsUseCase.createBuild(
+        BuildInformation(
+          god = selectedGod!!,
+          name = when {
+            buildName.isEmpty() -> "${selectedGod!!.name}'s build"
+            else -> buildName
+          },
+          items = selectedItems
         )
-      }
+      )
     }
   }
 }
