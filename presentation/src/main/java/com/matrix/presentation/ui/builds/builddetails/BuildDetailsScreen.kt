@@ -17,12 +17,14 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,15 +47,13 @@ import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun BuildDetailsScreen(
   buildDetailsViewModel: BuildDetailsViewModel,
   onDeleteBuild: (buildInfo: BuildInformation) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  var inEditMode by remember { mutableStateOf(false) }
-
   Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,6 +64,13 @@ fun BuildDetailsScreen(
       is BuildDetailsUiState.Error -> ErrorText(uiState.exception)
       BuildDetailsUiState.Loading -> Loader()
       is BuildDetailsUiState.Success -> {
+        var inEditMode by remember { mutableStateOf(false) }
+        var buildNameTextFieldValue by remember {
+          mutableStateOf(
+            uiState.buildInformation.name ?: ""
+          )
+        }
+
         Box(
           modifier = Modifier
             .fillMaxSize()
@@ -110,30 +117,52 @@ fun BuildDetailsScreen(
               }
 
             }
-            Text(
-              text = uiState.buildInformation.name ?: "",
-              style = MaterialTheme.typography.headlineMedium,
-              textAlign = TextAlign.Center,
-              overflow = TextOverflow.Visible,
-              modifier = Modifier.fillMaxWidth()
-            )
 
+            when (inEditMode) {
+              true -> TextField(
+                value = buildNameTextFieldValue,
+                onValueChange = { buildNameTextFieldValue = it },
+                label = { Text("Build Name") },
+                modifier = Modifier.fillMaxWidth()
+              )
+
+              false -> Text(
+                text = uiState.buildInformation.name ?: "",
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Visible,
+                modifier = Modifier.fillMaxWidth()
+              )
+            }
             Divider(modifier = Modifier.padding(bottom = 16.dp))
+
             Row(
               verticalAlignment = Alignment.Top,
               modifier = Modifier.fillMaxWidth()
             ) {
-              GodTitleCard(
-                godImageUrl = uiState.buildInformation.god.godIconURL,
-                godName = uiState.buildInformation.god.name,
-                godTitle = uiState.buildInformation.god.title,
-                modifier = Modifier.fillMaxWidth().let {
-                  when (inEditMode) {
-                    true -> it.border(1.dp, Color.Yellow)
-                    false -> it
+              Box {
+                GodTitleCard(
+                  godImageUrl = uiState.buildInformation.god.godIconURL,
+                  godName = uiState.buildInformation.god.name,
+                  godTitle = uiState.buildInformation.god.title,
+                  modifier = Modifier.fillMaxWidth()
+                )
+                if (inEditMode) {
+                  Box(
+                    modifier = Modifier
+                      .border(1.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.medium)
+                      .matchParentSize()
+                  ) {
+                    Icon(
+                      Icons.Default.Edit,
+                      contentDescription = "Change god",
+                      modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                    )
                   }
                 }
-              )
+              }
             }
             Text(
               text = stringResource(R.string.build_details_items),
@@ -144,24 +173,41 @@ fun BuildDetailsScreen(
                 .padding(top = 32.dp)
             )
             Divider(modifier = Modifier.padding(bottom = 16.dp))
-            Row(
-              modifier = Modifier.let {
-                when (inEditMode) {
-                  true -> it.border(1.dp, Color.Yellow)
-                  false -> it
+
+            Box {
+              Row(
+                modifier = Modifier.fillMaxWidth()
+              ) {
+                for (item in uiState.buildInformation.items) {
+                  AsyncImage(
+                    model = item.itemIconURL,
+                    contentDescription = item.deviceName,
+                    modifier = Modifier
+                      .weight(1f, fill = false)
+                      .size(64.dp)
+                      .padding(8.dp)
+                      .clip(MaterialTheme.shapes.small)
+                  )
                 }
               }
-            ) {
-              for (item in uiState.buildInformation.items) {
-                AsyncImage(
-                  model = item.itemIconURL,
-                  contentDescription = item.deviceName,
+              if (inEditMode) {
+                Box(
                   modifier = Modifier
-                    .weight(1f, fill = false)
-                    .size(64.dp)
-                    .padding(8.dp)
-                    .clip(MaterialTheme.shapes.small)
-                )
+                    .border(
+                      1.dp,
+                      MaterialTheme.colorScheme.secondary,
+                      MaterialTheme.shapes.medium
+                    )
+                    .matchParentSize()
+                ) {
+                  Icon(
+                    Icons.Default.Edit,
+                    contentDescription = "Change items",
+                    modifier = Modifier
+                      .align(Alignment.TopEnd)
+                      .padding(8.dp)
+                  )
+                }
               }
             }
           }
