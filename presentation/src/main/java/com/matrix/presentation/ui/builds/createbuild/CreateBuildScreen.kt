@@ -122,7 +122,7 @@ fun CreateBuildScreen(
                   godName = createBuildUiState.selectedGod.name,
                   godTitle = createBuildUiState.selectedGod.title,
                   onClick = { showGodList = true },
-                  modifier = Modifier.padding(paddingValues)
+                  modifier = Modifier.fillMaxWidth().padding(paddingValues)
                 )
               } else {
                 Button(onClick = { showGodList = true }, modifier = Modifier.padding(paddingValues)) {
@@ -168,7 +168,7 @@ fun CreateBuildScreen(
               }
             }
             Step(
-              title = "Give it a Name",
+              title = "Give It a Name",
               stepNumber = 3,
               isLast = true,
               modifier = Modifier.fillMaxWidth()
@@ -225,7 +225,6 @@ fun CreateBuildScreen(
               modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
-              //.safeDrawingPadding()
             ) {
               Icon(Icons.Default.Done, contentDescription = null)
             }

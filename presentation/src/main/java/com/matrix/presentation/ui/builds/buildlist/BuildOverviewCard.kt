@@ -29,7 +29,7 @@ fun BuildOverviewCard(
   goToBuildDetails: (id: Int) -> Unit,
 ) {
   SwipeToDeleteCard(onDelete = onDelete, modifier = modifier) {
-    Card(/* removed until details screen onClick = { goToBuildDetails(buildInformation.id!!) })*/) {
+    Card(onClick = { goToBuildDetails(buildInformation.id!!) }) {
       Column {
         Row(
           verticalAlignment = Alignment.CenterVertically,

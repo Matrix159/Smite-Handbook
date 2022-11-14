@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BuildDetailsViewModel @Inject constructor(
-  buildsUseCase: BuildsUseCase,
+  val buildsUseCase: BuildsUseCase,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   private val buildId: Int =
@@ -36,6 +36,10 @@ class BuildDetailsViewModel @Inject constructor(
       started = SharingStarted.WhileSubscribed(5_000),
       initialValue = BuildDetailsUiState.Loading
     )
+
+  suspend fun deleteBuild(buildInformation: BuildInformation) {
+    buildsUseCase.deleteBuild(buildInformation)
+  }
 }
 
 sealed interface BuildDetailsUiState {

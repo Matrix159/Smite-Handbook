@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -84,6 +85,7 @@ fun BuildOverviewScreen(
             }
           },
           snackbarHost = { SnackbarHost(snackbarHostState) },
+          contentWindowInsets = WindowInsets(0, 0, 0, 0),
           modifier = Modifier.fillMaxSize()
         ) {
           if (state.builds.isEmpty()) {
@@ -97,7 +99,7 @@ fun BuildOverviewScreen(
           } else {
             LazyColumn(
               contentPadding = PaddingValues(16.dp),
-              verticalArrangement = Arrangement.spacedBy(16.dp),
+              verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
               items(state.builds, key = { it.id!! }) { build ->
                 var visible by remember { mutableStateOf(true) }

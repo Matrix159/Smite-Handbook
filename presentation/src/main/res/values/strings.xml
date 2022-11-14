@@ -34,4 +34,7 @@
     <string name="no_results_found">No results found.</string>
     <string name="search_for_item">Search for an item</string>
     <string name="unknown_error">An unknown error occurred.</string>
+
+    <!-- Build Details -->
+    <string name="build_details_items">Items</string>
 </resources>
