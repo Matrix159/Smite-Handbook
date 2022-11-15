@@ -15,7 +15,13 @@ import com.matrix.domain.usecases.GetLatestItemsUseCase
 import com.matrix.presentation.ui.items.navigation.ItemsNavigation
 import com.matrix.presentation.utils.ItemNode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -67,7 +73,7 @@ class ItemDetailsViewModel @Inject constructor(
       }.launchIn(viewModelScope)
   }
 
-  fun createBaseNodes(itemInformationList: List<ItemInformation>): List<ItemNode> {
+  private fun createBaseNodes(itemInformationList: List<ItemInformation>): List<ItemNode> {
     // Set up the item tree's via a node structure
     val baseNodes = mutableListOf<ItemNode>()
     itemInformationList.filter { item -> item.itemTier == 1 }.forEach {

@@ -1,8 +1,10 @@
 package com.matrix.presentation.ui.items.itemdetails
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -18,14 +20,16 @@ import com.matrix.presentation.ui.components.Loader
 fun ItemDetailsScreen(
   itemDetailsViewModel: ItemDetailsViewModel,
   itemClicked: (itemInformation: ItemInformation) -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
 
   val uiState by itemDetailsViewModel.uiState.collectAsStateWithLifecycle()
-  Column(
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
+  Box(
+    contentAlignment = Alignment.Center,
     modifier = modifier
+      .statusBarsPadding()
+      .verticalScroll(rememberScrollState())
+      .fillMaxSize()
   ) {
     when (val itemDetailUiState = uiState) {
       ItemDetailUiState.Loading -> Loader()
@@ -34,7 +38,7 @@ fun ItemDetailsScreen(
         ItemDetails(
           uiState = itemDetailUiState,
           itemClicked = itemClicked,
-          modifier = Modifier.fillMaxSize()
+          modifier = Modifier.align(Alignment.TopStart)
         )
       }
     }

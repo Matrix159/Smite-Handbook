@@ -1,7 +1,11 @@
 package com.matrix.presentation.ui.builds.builddetails
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,8 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -49,8 +52,13 @@ import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
+import com.matrix.presentation.ui.items.itemdetails.ItemDetailUiState
+import com.matrix.presentation.ui.items.itemdetails.ItemDetails
 
-@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+  ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class,
+  ExperimentalMaterialApi::class
+)
 @Composable
 fun BuildDetailsScreen(
   buildDetailsViewModel: BuildDetailsViewModel,
@@ -73,6 +81,7 @@ fun BuildDetailsScreen(
             uiState.buildInformation.name ?: ""
           )
         }
+        var selectedItem by remember { mutableStateOf(uiState.buildInformation.items[0]) }
 
         Box(
           modifier = Modifier
@@ -98,50 +107,48 @@ fun BuildDetailsScreen(
               }
               if (showDeleteDialog) {
                 // Delete Dialog
-                AlertDialog(
-                  onDismissRequest = { showDeleteDialog = false },
-                  confirmButton = {
-                    TextButton(onClick = {
-                      onDeleteBuild(uiState.buildInformation)
-                      showDeleteDialog = false
-                    }) {
-                      Text("Delete")
-                    }
-                  },
-                  dismissButton = {
-                    TextButton(onClick = { showDeleteDialog = false }) {
-                      Text("Cancel")
-                    }
-                  },
-                  text = {
-                    Text("Delete build?")
+                AlertDialog(onDismissRequest = { showDeleteDialog = false }, confirmButton = {
+                  TextButton(onClick = {
+                    onDeleteBuild(uiState.buildInformation)
+                    showDeleteDialog = false
+                  }) {
+                    Text("Delete")
                   }
+                }, dismissButton = {
+                  TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                  }
+                }, text = {
+                  Text("Delete build?")
+                })
+              }
+            }
+
+            Crossfade(targetState = inEditMode) { inEditMode ->
+              when (inEditMode) {
+                true -> TextField(
+                  value = buildNameTextFieldValue,
+                  onValueChange = { buildNameTextFieldValue = it },
+                  label = { Text("Build Name") },
+                  modifier = Modifier.fillMaxWidth()
+                )
+
+                false -> Text(
+                  text = uiState.buildInformation.name ?: "",
+                  style = MaterialTheme.typography.headlineMedium,
+                  textAlign = TextAlign.Center,
+                  overflow = TextOverflow.Visible,
+                  modifier = Modifier
+                    .padding(top = 19.dp)
+                    .fillMaxWidth() // 19 to make it same size as TextField
                 )
               }
-
             }
 
-            when (inEditMode) {
-              true -> TextField(
-                value = buildNameTextFieldValue,
-                onValueChange = { buildNameTextFieldValue = it },
-                label = { Text("Build Name") },
-                modifier = Modifier.fillMaxWidth()
-              )
-
-              false -> Text(
-                text = uiState.buildInformation.name ?: "",
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Visible,
-                modifier = Modifier.fillMaxWidth()
-              )
-            }
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
             Row(
-              verticalAlignment = Alignment.Top,
-              modifier = Modifier.fillMaxWidth()
+              verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()
             ) {
               Box {
                 GodTitleCard(
@@ -150,15 +157,25 @@ fun BuildDetailsScreen(
                   godTitle = uiState.buildInformation.god.title,
                   modifier = Modifier.fillMaxWidth()
                 )
-                if (inEditMode) {
+                androidx.compose.animation.AnimatedVisibility(
+                  visible = inEditMode,
+                  enter = fadeIn(),
+                  exit = fadeOut(),
+                  modifier = Modifier.matchParentSize()
+                ) {
                   Box(
-                    modifier = Modifier
-                      .border(1.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.medium)
-                      .matchParentSize()
+                    modifier = Modifier.border(
+                      1.dp,
+                      MaterialTheme.colorScheme.secondary,
+                      MaterialTheme.shapes.medium
+                    )
                   ) {
                     Box(
                       modifier = Modifier
-                        .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp))
+                        .background(
+                          MaterialTheme.colorScheme.secondary,
+                          RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp)
+                        )
                         .align(Alignment.TopEnd)
                     ) {
                       Icon(
@@ -185,34 +202,81 @@ fun BuildDetailsScreen(
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
             Box {
-              Row(
-                modifier = Modifier.fillMaxWidth()
-              ) {
-                for (item in uiState.buildInformation.items) {
-                  AsyncImage(
-                    model = item.itemIconURL,
-                    contentDescription = item.deviceName,
-                    modifier = Modifier
-                      .weight(1f, fill = false)
-                      .size(64.dp)
-                      .padding(8.dp)
-                      .clip(MaterialTheme.shapes.small)
-                  )
+              Column {
+                Row(
+                  modifier = Modifier.fillMaxWidth()
+                ) {
+                  for (item in uiState.buildInformation.items) {
+                    AsyncImage(
+                      model = item.itemIconURL,
+                      contentDescription = item.deviceName,
+                      modifier = Modifier
+                        .weight(1f, fill = false)
+                        .let {
+                          if (selectedItem == item) {
+                            it.background(
+                              MaterialTheme.colorScheme.secondaryContainer,
+                              RoundedCornerShape(12.dp, 12.dp, 0.dp, 0.dp)
+                            )
+                          } else {
+                            it
+                          }
+                        }
+                        .size(64.dp)
+                        .padding(8.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .clickable {
+                          selectedItem = item
+                        }
+                    )
+                  }
                 }
+                ItemDetails(
+                  uiState = ItemDetailUiState.Success(selectedItem, emptyList()),
+                  itemClicked = {
+                    selectedItem = it
+                  },
+                  modifier = Modifier
+                    .let {
+                      when (uiState.buildInformation.items.indexOf(selectedItem)) {
+                        0 -> it.background(
+                          MaterialTheme.colorScheme.secondaryContainer,
+                          RoundedCornerShape(0.dp, 12.dp, 12.dp, 12.dp)
+                        )
+
+                        uiState.buildInformation.items.lastIndex -> it.background(
+                          MaterialTheme.colorScheme.secondaryContainer,
+                          RoundedCornerShape(12.dp, 0.dp, 12.dp, 12.dp)
+                        )
+
+                        else -> it.background(
+                          MaterialTheme.colorScheme.secondaryContainer,
+                          MaterialTheme.shapes.medium
+                        )
+                      }
+                    }
+                    .padding(16.dp)
+                )
               }
-              if (inEditMode) {
+
+              androidx.compose.animation.AnimatedVisibility(
+                visible = inEditMode,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.matchParentSize()
+              ) {
                 Box(
                   modifier = Modifier
                     .border(
-                      1.dp,
-                      MaterialTheme.colorScheme.secondary,
-                      MaterialTheme.shapes.medium
+                      1.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.medium
                     )
-                    .matchParentSize()
                 ) {
                   Box(
                     modifier = Modifier
-                      .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp))
+                      .background(
+                        MaterialTheme.colorScheme.secondary,
+                        RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp)
+                      )
                       .align(Alignment.TopEnd)
                   ) {
                     Icon(
@@ -243,7 +307,7 @@ fun BuildDetailsScreen(
               },
             ) {
               when (inEditMode) {
-                true -> Icon(Icons.Default.Save, contentDescription = "Save build")
+                true -> Icon(Icons.Default.Check, contentDescription = "Save build")
                 false -> Icon(Icons.Default.Edit, contentDescription = "Edit build")
               }
             }
