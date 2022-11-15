@@ -1,5 +1,6 @@
 package com.matrix.presentation.ui.builds.builddetails
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -34,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -153,13 +156,20 @@ fun BuildDetailsScreen(
                       .border(1.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.medium)
                       .matchParentSize()
                   ) {
-                    Icon(
-                      Icons.Default.Edit,
-                      contentDescription = "Change god",
+                    Box(
                       modifier = Modifier
+                        .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp))
                         .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                    )
+                    ) {
+                      Icon(
+                        Icons.Default.Edit,
+                        contentDescription = "Change god",
+                        tint = MaterialTheme.colorScheme.onSecondary,
+                        modifier = Modifier
+                          .align(Alignment.TopEnd)
+                          .padding(8.dp)
+                      )
+                    }
                   }
                 }
               }
@@ -200,13 +210,20 @@ fun BuildDetailsScreen(
                     )
                     .matchParentSize()
                 ) {
-                  Icon(
-                    Icons.Default.Edit,
-                    contentDescription = "Change items",
+                  Box(
                     modifier = Modifier
+                      .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp))
                       .align(Alignment.TopEnd)
-                      .padding(8.dp)
-                  )
+                  ) {
+                    Icon(
+                      Icons.Default.Edit,
+                      contentDescription = "Change items",
+                      tint = MaterialTheme.colorScheme.onSecondary,
+                      modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                    )
+                  }
                 }
               }
             }
