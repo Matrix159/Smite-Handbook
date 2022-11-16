@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,6 +55,7 @@ import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailUiState
 import com.matrix.presentation.ui.items.itemdetails.ItemDetails
+import java.lang.Integer.max
 
 @OptIn(
   ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class,
@@ -124,29 +126,46 @@ fun BuildDetailsScreen(
               }
             }
 
-            Crossfade(targetState = inEditMode) { inEditMode ->
-              when (inEditMode) {
-                true -> TextField(
+            Crossfade(
+              targetState = inEditMode,
+            ) { inEditMode ->
+              Layout(modifier = Modifier.fillMaxWidth(), content = {
+                TextField(
                   value = buildNameTextFieldValue,
                   onValueChange = { buildNameTextFieldValue = it },
                   label = { Text("Build Name") },
-                  modifier = Modifier.fillMaxWidth()
                 )
-
-                false -> Text(
+                Text(
                   text = uiState.buildInformation.name ?: "",
                   style = MaterialTheme.typography.headlineMedium,
                   textAlign = TextAlign.Center,
                   overflow = TextOverflow.Visible,
-                  modifier = Modifier
-                    .padding(top = 19.dp)
-                    .fillMaxWidth() // 19 to make it same size as TextField
                 )
+              }) { measurables, constraints ->
+                val textFieldPlaceable = measurables[0].measure(constraints)
+                val textPlaceable = measurables[1].measure(constraints)
+                val requiredWidth = max(textFieldPlaceable.height, textPlaceable.width)
+                val requiredHeight = max(textFieldPlaceable.height, textPlaceable.height)
+                layout(requiredWidth, requiredHeight) {
+                  when (inEditMode) {
+                    // Center the placeables
+                    true -> textFieldPlaceable.place(
+                      x = (requiredWidth - textFieldPlaceable.width) / 2,
+                      y = (requiredHeight - textFieldPlaceable.height) / 2,
+                    )
+
+                    false -> textPlaceable.place(
+                      x = (requiredWidth - textPlaceable.width) / 2,
+                      y = (requiredHeight - textPlaceable.height) / 2,
+                    )
+                  }
+                }
               }
             }
 
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
+            // ---- GOD ----
             Row(
               verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()
             ) {
@@ -191,6 +210,8 @@ fun BuildDetailsScreen(
                 }
               }
             }
+
+            // ---- ITEMS ----
             Text(
               text = stringResource(R.string.build_details_items),
               style = MaterialTheme.typography.titleLarge,
@@ -201,7 +222,14 @@ fun BuildDetailsScreen(
             )
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
-            Box {
+            Box(
+              modifier = Modifier.let {
+                when(inEditMode) {
+                  true -> it.clickable {  }
+                  else -> it
+                }
+              }
+            ) {
               Column {
                 Row(
                   modifier = Modifier.fillMaxWidth()
@@ -293,23 +321,16 @@ fun BuildDetailsScreen(
             }
           }
 
-          // Edit/Save actions
-          Row(
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-              .fillMaxWidth()
-              .align(Alignment.BottomEnd)
+          // FAB
+          FloatingActionButton(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onClick = {
+              inEditMode = !inEditMode
+            },
           ) {
-            FloatingActionButton(
-              onClick = {
-                inEditMode = !inEditMode
-              },
-            ) {
-              when (inEditMode) {
-                true -> Icon(Icons.Default.Check, contentDescription = "Save build")
-                false -> Icon(Icons.Default.Edit, contentDescription = "Edit build")
-              }
+            when (inEditMode) {
+              true -> Icon(Icons.Default.Check, contentDescription = "Save build")
+              false -> Icon(Icons.Default.Edit, contentDescription = "Edit build")
             }
           }
         }
