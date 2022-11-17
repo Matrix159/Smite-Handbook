@@ -183,6 +183,7 @@ fun BuildDetailsScreen(
             Box(
               modifier = Modifier
                 .fillMaxWidth()
+                .clip(MaterialTheme.shapes.medium)
                 .conditional(inEditMode) {
                   clickable { }
                 }
@@ -239,9 +240,11 @@ fun BuildDetailsScreen(
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
             Box(
-              modifier = Modifier.conditional(inEditMode) {
-                clickable { }
-              }
+              modifier = Modifier
+                .clip(MaterialTheme.shapes.medium)
+                .conditional(inEditMode) {
+                  clickable { }
+                }
             ) {
               Column {
                 Row(
