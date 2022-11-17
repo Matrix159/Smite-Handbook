@@ -19,7 +19,7 @@ fun GodListScreen(
   godClicked: (godInformation: GodInformation) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val uiState by godListViewModel.godListUiState.collectAsStateWithLifecycle()
+  val uiState by godListViewModel.uiState.collectAsStateWithLifecycle()
 
   Column(
     verticalArrangement = Arrangement.Center,
@@ -32,7 +32,7 @@ fun GodListScreen(
       is GodListUiState.Success -> {
         FilterableGodList(
           uiState = godListUiState,
-          godClicked = godClicked,
+          godSelected = godClicked,
           updateAppliedGodFilters = godListViewModel::updateAppliedFilters,
           updateSearchText = godListViewModel::updateSearchText
         )

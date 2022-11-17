@@ -24,7 +24,7 @@ class GodListViewModel @Inject constructor(
   getLatestGodsUseCase: GetLatestGodsUseCase
 ) : ViewModel() {
 
-  val godListUiState = combine(
+  val uiState = combine(
     getLatestGodsUseCase().asResult(),
     snapshotFlow { filters }
   ) { result: Result<List<GodInformation>>, filters: AppliedGodFilters ->

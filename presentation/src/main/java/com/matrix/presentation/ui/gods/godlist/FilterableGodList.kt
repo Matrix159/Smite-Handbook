@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun FilterableGodList(
   uiState: GodListUiState.Success,
-  godClicked: (godInfo: GodInformation) -> Unit,
+  godSelected: (godInfo: GodInformation) -> Unit,
   updateAppliedGodFilters: (filters: AppliedGodFilters) -> Unit,
   updateSearchText: (text: String) -> Unit,
   modifier: Modifier = Modifier,
@@ -70,7 +70,7 @@ fun FilterableGodList(
           .fillMaxWidth()
       )
       if (uiState.gods.isNotEmpty()) {
-        GodList(gods = uiState.gods, godClicked = godClicked)
+        GodList(gods = uiState.gods, godClicked = godSelected)
       } else {
         Text(
           text = stringResource(R.string.no_results_found),

@@ -25,8 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateBuildViewModel @Inject constructor(
   private val buildsUseCase: BuildsUseCase,
-  private val getLatestGodsUseCase: GetLatestGodsUseCase,
-  private val getLatestItemsUseCase: GetLatestItemsUseCase,
+  getLatestGodsUseCase: GetLatestGodsUseCase,
+  getLatestItemsUseCase: GetLatestItemsUseCase,
 ) : ViewModel() {
 
   private var selectedGod by mutableStateOf<GodInformation?>(null)

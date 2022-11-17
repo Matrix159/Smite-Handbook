@@ -16,8 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
@@ -41,7 +42,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -53,13 +56,13 @@ import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
+import com.matrix.presentation.ui.extension.conditional
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailUiState
 import com.matrix.presentation.ui.items.itemdetails.ItemDetails
 import java.lang.Integer.max
 
 @OptIn(
   ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class,
-  ExperimentalMaterialApi::class
 )
 @Composable
 fun BuildDetailsScreen(
@@ -67,12 +70,15 @@ fun BuildDetailsScreen(
   onDeleteBuild: (buildInfo: BuildInformation) -> Unit,
   modifier: Modifier = Modifier,
 ) {
+  val collectedUiState by buildDetailsViewModel.uiState.collectAsStateWithLifecycle()
+  val focusManger = LocalFocusManager.current
+
   Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier
   ) {
-    val collectedUiState by buildDetailsViewModel.uiState.collectAsStateWithLifecycle()
+
     when (val uiState = collectedUiState) {
       is BuildDetailsUiState.Error -> ErrorText(uiState.exception)
       BuildDetailsUiState.Loading -> Loader()
@@ -129,19 +135,27 @@ fun BuildDetailsScreen(
             Crossfade(
               targetState = inEditMode,
             ) { inEditMode ->
-              Layout(modifier = Modifier.fillMaxWidth(), content = {
-                TextField(
-                  value = buildNameTextFieldValue,
-                  onValueChange = { buildNameTextFieldValue = it },
-                  label = { Text("Build Name") },
-                )
-                Text(
-                  text = uiState.buildInformation.name ?: "",
-                  style = MaterialTheme.typography.headlineMedium,
-                  textAlign = TextAlign.Center,
-                  overflow = TextOverflow.Visible,
-                )
-              }) { measurables, constraints ->
+              Layout(
+                modifier = Modifier.fillMaxWidth(),
+                content = {
+                  TextField(
+                    value = buildNameTextFieldValue,
+                    onValueChange = { buildNameTextFieldValue = it },
+                    label = { Text("Build Name") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                      focusManger.clearFocus()
+                    }),
+                  )
+                  Text(
+                    text = uiState.buildInformation.name ?: "",
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Visible,
+                  )
+                }
+              ) { measurables, constraints ->
                 val textFieldPlaceable = measurables[0].measure(constraints)
                 val textPlaceable = measurables[1].measure(constraints)
                 val requiredWidth = max(textFieldPlaceable.height, textPlaceable.width)
@@ -166,46 +180,48 @@ fun BuildDetailsScreen(
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
             // ---- GOD ----
-            Row(
-              verticalAlignment = Alignment.Top, modifier = Modifier.fillMaxWidth()
+            Box(
+              modifier = Modifier
+                .fillMaxWidth()
+                .conditional(inEditMode) {
+                  clickable { }
+                }
             ) {
-              Box {
-                GodTitleCard(
-                  godImageUrl = uiState.buildInformation.god.godIconURL,
-                  godName = uiState.buildInformation.god.name,
-                  godTitle = uiState.buildInformation.god.title,
-                  modifier = Modifier.fillMaxWidth()
-                )
-                androidx.compose.animation.AnimatedVisibility(
-                  visible = inEditMode,
-                  enter = fadeIn(),
-                  exit = fadeOut(),
-                  modifier = Modifier.matchParentSize()
+              GodTitleCard(
+                godImageUrl = uiState.buildInformation.god.godIconURL,
+                godName = uiState.buildInformation.god.name,
+                godTitle = uiState.buildInformation.god.title,
+                modifier = Modifier.fillMaxWidth()
+              )
+              androidx.compose.animation.AnimatedVisibility(
+                visible = inEditMode,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.matchParentSize()
+              ) {
+                Box(
+                  modifier = Modifier.border(
+                    1.dp,
+                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.shapes.medium
+                  )
                 ) {
                   Box(
-                    modifier = Modifier.border(
-                      1.dp,
-                      MaterialTheme.colorScheme.secondary,
-                      MaterialTheme.shapes.medium
-                    )
-                  ) {
-                    Box(
-                      modifier = Modifier
-                        .background(
-                          MaterialTheme.colorScheme.secondary,
-                          RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp)
-                        )
-                        .align(Alignment.TopEnd)
-                    ) {
-                      Icon(
-                        Icons.Default.Edit,
-                        contentDescription = "Change god",
-                        tint = MaterialTheme.colorScheme.onSecondary,
-                        modifier = Modifier
-                          .align(Alignment.TopEnd)
-                          .padding(8.dp)
+                    modifier = Modifier
+                      .background(
+                        MaterialTheme.colorScheme.secondary,
+                        RoundedCornerShape(0.dp, 12.dp, 0.dp, 12.dp)
                       )
-                    }
+                      .align(Alignment.TopEnd)
+                  ) {
+                    Icon(
+                      Icons.Default.Edit,
+                      contentDescription = "Change god",
+                      tint = MaterialTheme.colorScheme.onSecondary,
+                      modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                    )
                   }
                 }
               }
@@ -223,11 +239,8 @@ fun BuildDetailsScreen(
             Divider(modifier = Modifier.padding(bottom = 16.dp))
 
             Box(
-              modifier = Modifier.let {
-                when(inEditMode) {
-                  true -> it.clickable {  }
-                  else -> it
-                }
+              modifier = Modifier.conditional(inEditMode) {
+                clickable { }
               }
             ) {
               Column {
@@ -240,21 +253,19 @@ fun BuildDetailsScreen(
                       contentDescription = item.deviceName,
                       modifier = Modifier
                         .weight(1f, fill = false)
-                        .let {
-                          if (selectedItem == item) {
-                            it.background(
-                              MaterialTheme.colorScheme.secondaryContainer,
-                              RoundedCornerShape(12.dp, 12.dp, 0.dp, 0.dp)
-                            )
-                          } else {
-                            it
-                          }
+                        .conditional(selectedItem == item) {
+                          background(
+                            MaterialTheme.colorScheme.secondaryContainer,
+                            RoundedCornerShape(12.dp, 12.dp, 0.dp, 0.dp)
+                          )
                         }
                         .size(64.dp)
                         .padding(8.dp)
                         .clip(MaterialTheme.shapes.small)
-                        .clickable {
-                          selectedItem = item
+                        .conditional(!inEditMode) {
+                          clickable {
+                            selectedItem = item
+                          }
                         }
                     )
                   }

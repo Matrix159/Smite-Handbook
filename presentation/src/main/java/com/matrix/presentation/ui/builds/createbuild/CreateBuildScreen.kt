@@ -55,27 +55,37 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.domain.models.GodInformation
 import com.matrix.domain.models.ItemInformation
+import com.matrix.presentation.models.filters.AppliedGodFilters
+import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.presentation.ui.gods.godlist.GodList
-import com.matrix.presentation.ui.items.itemlist.ItemList
+import com.matrix.presentation.ui.gods.godlist.FilterableGodList
+import com.matrix.presentation.ui.gods.godlist.GodListUiState
+import com.matrix.presentation.ui.gods.godlist.GodListViewModel
+import com.matrix.presentation.ui.items.itemlist.FilterableItemList
+import com.matrix.presentation.ui.items.itemlist.ItemListUiState
+import com.matrix.presentation.ui.items.itemlist.ItemListViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateBuildScreen(
   createBuildViewModel: CreateBuildViewModel,
+  godListViewModel: GodListViewModel,
+  itemListViewModel: ItemListViewModel,
   done: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
 
-  var showGodList by rememberSaveable {
-    mutableStateOf(false)
-  }
-  var showItemList by rememberSaveable {
-    mutableStateOf(false)
-  }
+  val uiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
+  val godListUiState by godListViewModel.uiState.collectAsStateWithLifecycle()
+  val itemListUiState by itemListViewModel.uiState.collectAsStateWithLifecycle()
+
+  val focusManager = LocalFocusManager.current
+
+  var showGodList by rememberSaveable { mutableStateOf(false) }
+  var showItemList by rememberSaveable { mutableStateOf(false) }
 
   BackHandler {
     if (showGodList) {
@@ -87,9 +97,6 @@ fun CreateBuildScreen(
       done()
     }
   }
-
-  val uiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
-  val focusManager = LocalFocusManager.current
 
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,7 +129,9 @@ fun CreateBuildScreen(
                   godName = createBuildUiState.selectedGod.name,
                   godTitle = createBuildUiState.selectedGod.title,
                   onClick = { showGodList = true },
-                  modifier = Modifier.fillMaxWidth().padding(paddingValues)
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues)
                 )
               } else {
                 Button(onClick = { showGodList = true }, modifier = Modifier.padding(paddingValues)) {
@@ -188,19 +197,26 @@ fun CreateBuildScreen(
           }
           if (showGodList) {
             GodSelectionView(
-              availableGods = createBuildUiState.gods,
+              // TODO don't do this cast
+              godListUiState = (godListUiState as GodListUiState.Success),
               godSelected = {
                 showGodList = false
                 createBuildViewModel.setGod(it)
-              }
+              },
+              updateAppliedGodFilters = godListViewModel::updateAppliedFilters,
+              updateSearchText = godListViewModel::updateSearchText,
+              modifier = Modifier.fillMaxSize()
             )
           }
           if (showItemList) {
             ItemSelectionView(
-              availableItems = createBuildUiState.items,
+              itemListUiState = itemListUiState as ItemListUiState.Success,
               selectedItems = createBuildUiState.selectedItems,
+              updateAppliedFilters = itemListViewModel::updateAppliedFilters,
+              updateSearchText = itemListViewModel::updateSearchText,
               addSelectedItem = createBuildViewModel::addSelectedItem,
-              removeSelectedItem = createBuildViewModel::removeSelectedItem
+              removeSelectedItem = createBuildViewModel::removeSelectedItem,
+              modifier = Modifier.fillMaxSize()
             )
           }
           // The FAB shouldn't show on the god list view, but do show as long as we have a
@@ -283,15 +299,18 @@ fun Step(
 
 @Composable
 fun GodSelectionView(
-  availableGods: List<GodInformation>,
+  godListUiState: GodListUiState.Success,
   godSelected: (god: GodInformation) -> Unit,
+  updateAppliedGodFilters: (AppliedGodFilters) -> Unit,
+  updateSearchText: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Surface(modifier = modifier) {
-    GodList(
-      gods = availableGods,
-      godClicked = godSelected,
-      modifier = Modifier.fillMaxSize()
+    FilterableGodList(
+      uiState = godListUiState,
+      godSelected = godSelected,
+      updateAppliedGodFilters = updateAppliedGodFilters,
+      updateSearchText = updateSearchText
     )
   }
 }
@@ -299,8 +318,10 @@ fun GodSelectionView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemSelectionView(
-  availableItems: List<ItemInformation>,
+  itemListUiState: ItemListUiState.Success,
   selectedItems: List<ItemInformation>,
+  updateSearchText: (String) -> Unit,
+  updateAppliedFilters: (AppliedItemFilters) -> Unit,
   addSelectedItem: (item: ItemInformation) -> Unit,
   removeSelectedItem: (item: ItemInformation) -> Unit,
   modifier: Modifier = Modifier,
@@ -318,7 +339,7 @@ fun ItemSelectionView(
             .fillMaxWidth()
         ) {
           for (item in selectedItems) {
-            Box(modifier = Modifier) {
+            Box {
               AsyncImage(
                 model = item.itemIconURL,
                 contentDescription = item.deviceName,
@@ -336,9 +357,11 @@ fun ItemSelectionView(
           }
         }
       }
-      ItemList(
-        items = availableItems,
+      FilterableItemList(
+        uiState = itemListUiState,
         itemClicked = addSelectedItem,
+        updateAppliedItemFilters = updateAppliedFilters,
+        updateSearchText = updateSearchText,
         modifier = Modifier.weight(1f)
       )
     }
