@@ -78,7 +78,7 @@ fun CreateBuildScreen(
   modifier: Modifier = Modifier,
 ) {
 
-  val uiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
+  val buildUiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
   val godListUiState by godListViewModel.uiState.collectAsStateWithLifecycle()
   val itemListUiState by itemListViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -103,10 +103,15 @@ fun CreateBuildScreen(
     verticalArrangement = Arrangement.Center,
     modifier = modifier
   ) {
-    when (val createBuildUiState = uiState) {
-      is CreateBuildUiState.Error -> ErrorText(createBuildUiState.exception)
-      is CreateBuildUiState.Loading -> Loader()
-      is CreateBuildUiState.Success -> {
+    // Creating local variables to get around the open getter error
+    val buildUiState = buildUiState
+    val godListUiState = godListUiState
+    val itemListUiState = itemListUiState
+
+    when {
+      buildUiState is CreateBuildUiState.Error -> ErrorText(buildUiState.exception)
+      buildUiState is CreateBuildUiState.Loading -> Loader()
+      buildUiState is CreateBuildUiState.Success -> {
         Box(
           modifier = Modifier
             .fillMaxSize()
@@ -123,11 +128,11 @@ fun CreateBuildScreen(
               stepNumber = 1,
               modifier = Modifier.fillMaxWidth()
             ) { paddingValues ->
-              if (createBuildUiState.selectedGod != null) {
+              if (buildUiState.selectedGod != null) {
                 GodTitleCard(
-                  godImageUrl = createBuildUiState.selectedGod.godIconURL,
-                  godName = createBuildUiState.selectedGod.name,
-                  godTitle = createBuildUiState.selectedGod.title,
+                  godImageUrl = buildUiState.selectedGod.godIconURL,
+                  godName = buildUiState.selectedGod.name,
+                  godTitle = buildUiState.selectedGod.title,
                   onClick = { showGodList = true },
                   modifier = Modifier
                     .fillMaxWidth()
@@ -144,7 +149,7 @@ fun CreateBuildScreen(
               stepNumber = 2,
               modifier = Modifier.fillMaxWidth()
             ) {paddingValues ->
-              if (createBuildUiState.selectedItems.isNotEmpty()) {
+              if (buildUiState.selectedItems.isNotEmpty()) {
                 Row(
                   horizontalArrangement = Arrangement.Start,
                   verticalAlignment = Alignment.CenterVertically,
@@ -158,7 +163,7 @@ fun CreateBuildScreen(
                     .clip(MaterialTheme.shapes.medium)
                     .clickable { showItemList = true }
                 ) {
-                  for (item in createBuildUiState.selectedItems) {
+                  for (item in buildUiState.selectedItems) {
                     AsyncImage(
                       model = item.itemIconURL,
                       contentDescription = item.deviceName,
@@ -183,8 +188,9 @@ fun CreateBuildScreen(
               modifier = Modifier.fillMaxWidth()
             ) {paddingValues ->
               TextField(
-                value = createBuildUiState.buildName,
+                value = buildUiState.buildName,
                 onValueChange = createBuildViewModel::updateBuildName,
+                singleLine = true,
                 modifier = Modifier
                   .padding(paddingValues)
                   .fillMaxWidth(),
@@ -211,7 +217,7 @@ fun CreateBuildScreen(
           if (showItemList) {
             ItemSelectionView(
               itemListUiState = itemListUiState as ItemListUiState.Success,
-              selectedItems = createBuildUiState.selectedItems,
+              selectedItems = buildUiState.selectedItems,
               updateAppliedFilters = itemListViewModel::updateAppliedFilters,
               updateSearchText = itemListViewModel::updateSearchText,
               addSelectedItem = createBuildViewModel::addSelectedItem,
@@ -223,8 +229,8 @@ fun CreateBuildScreen(
           // selected god/items or are selecting items
           if (
             !showGodList &&
-            ((showItemList && createBuildUiState.selectedItems.isNotEmpty()) ||
-              (createBuildUiState.selectedGod != null && createBuildUiState.selectedItems.isNotEmpty()))
+            ((showItemList && buildUiState.selectedItems.isNotEmpty()) ||
+              (buildUiState.selectedGod != null && buildUiState.selectedItems.isNotEmpty()))
           ) {
             val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(

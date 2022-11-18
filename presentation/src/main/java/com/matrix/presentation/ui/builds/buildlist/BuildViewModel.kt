@@ -6,8 +6,6 @@ import com.matrix.domain.models.BuildInformation
 import com.matrix.domain.models.Result
 import com.matrix.domain.models.asResult
 import com.matrix.domain.usecases.BuildsUseCase
-import com.matrix.domain.usecases.GetLatestGodsUseCase
-import com.matrix.domain.usecases.GetLatestItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class BuildViewModel @Inject constructor(
   private val buildsUseCase: BuildsUseCase,
-  private val getLatestGodsUseCase: GetLatestGodsUseCase,
-  private val getLatestItemsUseCase: GetLatestItemsUseCase
 ) : ViewModel() {
 
   // The UI collects from this StateFlow to get its state updates
