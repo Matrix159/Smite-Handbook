@@ -3,7 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        //maven(url="https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 dependencyResolutionManagement {
@@ -11,12 +11,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        //maven(url="https://oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 rootProject.name = "MaterializedSmite"
-include ':app'
-include ':presentation'
-include ':domain'
-include ':data'
-include ':shared'
+include(":app")
+include(":presentation")
+include(":domain")
+include(":data")
+include(":shared")
