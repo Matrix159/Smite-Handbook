@@ -2,11 +2,13 @@ package com.matrix.presentation.ui.extension
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 
-@Composable
 fun Modifier.conditional(condition: Boolean, block: @Composable Modifier.() -> Modifier) =
-  if (condition) {
-    then(block(Modifier))
-  } else {
-    this
+  composed {
+    if (condition) {
+      then(block(Modifier))
+    } else {
+      this
+    }
   }

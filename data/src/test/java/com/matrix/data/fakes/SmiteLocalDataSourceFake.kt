@@ -1,6 +1,10 @@
 package com.matrix.data.fakes
 
-import com.matrix.data.local.db.entity.*
+import com.matrix.data.local.db.entity.BuildDbResult
+import com.matrix.data.local.db.entity.BuildEntity
+import com.matrix.data.local.db.entity.BuildItemCrossRef
+import com.matrix.data.local.db.entity.GodEntity
+import com.matrix.data.local.db.entity.ItemEntity
 import com.matrix.data.local.interfaces.SmiteLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -38,7 +42,7 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
 
   override suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>) {
     // Mimic inserting with a REPLACE policy on conflict
-    val lastId: Long = localBuildEntities.maxBy { it.godId }.godId.toLong()
+    val lastId: Int = localBuildEntities.maxBy { it.godId }.godId
     val newBuildEntity = buildEntity.copy(id = lastId + 1)
     localBuildEntities.add(newBuildEntity)
     val distinctBuildEntities = localBuildEntities.distinctBy { it.id }
@@ -67,6 +71,10 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
 
     }
     emit(buildDbResults)
+  }
+
+  override fun getBuild(buildId: Int): Flow<BuildDbResult> {
+    TODO("Not yet implemented")
   }
 
   override suspend fun deleteBuild(buildEntity: BuildEntity) {

@@ -1,18 +1,21 @@
 package com.matrix.data.impl
 
-import android.util.Log
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.cache.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.plugins.observer.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.observer.ResponseObserver
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 
 private const val TIME_OUT = 120 * 1000 // 120 seconds as milliseconds
 
@@ -33,7 +36,7 @@ val ktorHttpClient = HttpClient(Android) {
   install(Logging) {
     logger = object : Logger {
       override fun log(message: String) {
-        Log.v("Logger Ktor =>", message)
+        Timber.v("Logger Ktor =>", message)
       }
 
     }
@@ -42,8 +45,7 @@ val ktorHttpClient = HttpClient(Android) {
 
   install(ResponseObserver) {
     onResponse { response ->
-      Log.d("HTTP status:", "${response.status.value}")
-      //Log.d("HTTP data:", response.body())
+      Timber.d("HTTP status:", "${response.status.value}")
     }
   }
 

@@ -34,16 +34,6 @@ class OfflineFirstSmiteRepository @Inject constructor(
   override fun getGod(godId: Int): Flow<GodInformation> =
     localDataSource.getGod(godId).map { it.toDomain() }
 
-
-  override suspend fun syncGods() = withContext(Dispatchers.IO) {
-    val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
-    val newData = networkDataSource.getGods()
-    localDataSource.saveGods(newData.map {
-      GodEntity.fromApi(it, patchVersion = currentPatchVersion)
-    })
-    Timber.d("Saved new god data to local storage")
-  }
-
   override fun getGodSkins(godId: Int): Flow<List<GodSkinInformation>> =
     flow { emit(networkDataSource.getGodSkins(godId).map { it.toDomain() }) }
 
@@ -54,14 +44,7 @@ class OfflineFirstSmiteRepository @Inject constructor(
     localDataSource.getItem(itemId).map { it.toDomain() }
 
 
-  override suspend fun syncItems() = withContext(Dispatchers.IO) {
-    val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
-    val newData = networkDataSource.getItems()
-    localDataSource.saveItems(newData.map {
-      ItemEntity.fromApi(it, patchVersion = currentPatchVersion)
-    })
-    Timber.d("Saved new item data to local storage")
-  }
+
 
   override fun getBuilds(): Flow<List<BuildInformation>> =
     localDataSource.getBuilds().map { list -> list.map { it.toDomain() } }
@@ -108,5 +91,23 @@ class OfflineFirstSmiteRepository @Inject constructor(
    */
   private suspend fun syncPatchVersion() {
     patchVersionDataSource.setPatchVersion(networkDataSource.getPatchVersion().version)
+  }
+
+  private suspend fun syncGods() = withContext(Dispatchers.IO) {
+    val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
+    val newData = networkDataSource.getGods()
+    localDataSource.saveGods(newData.map {
+      GodEntity.fromApi(it, patchVersion = currentPatchVersion)
+    })
+    Timber.d("Saved new god data to local storage")
+  }
+
+  private suspend fun syncItems() = withContext(Dispatchers.IO) {
+    val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
+    val newData = networkDataSource.getItems()
+    localDataSource.saveItems(newData.map {
+      ItemEntity.fromApi(it, patchVersion = currentPatchVersion)
+    })
+    Timber.d("Saved new item data to local storage")
   }
 }

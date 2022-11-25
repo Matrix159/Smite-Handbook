@@ -35,9 +35,10 @@ class SmiteRepositoryTest {
 
 
   @Test
-  fun `getGods should populate and return two gods from local data when no local data is present`() = runTest {
+  fun `getGods should populate and return two gods after syncing`() = runTest {
     // verify local is empty before the retrieval
     assertTrue(localDataSource.getGods().first().isEmpty())
+    repository.sync()
     val results = repository.getGods().first()
     // verify local was updated
     assertEquals(2, localDataSource.getGods().first().size)
@@ -56,6 +57,8 @@ class SmiteRepositoryTest {
 
     patchVersionDataSource.setPatchVersion(secondPatch)
     remoteDataSource.increaseReturnedGodsByOne()
+
+    repository.sync()
     val secondGodList = repository.getGods().first()
 
     assertEquals(2, firstGodList.size)
@@ -74,6 +77,8 @@ class SmiteRepositoryTest {
 
     patchVersionDataSource.setPatchVersion(secondPatch)
     remoteDataSource.increaseReturnedItemsByOne()
+
+    repository.sync()
     val secondItemList = repository.getItems().first()
 
     assertEquals(2, firstItemList.size)
