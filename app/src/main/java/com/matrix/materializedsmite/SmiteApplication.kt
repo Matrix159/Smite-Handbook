@@ -47,5 +47,6 @@ class SmiteApplication : Application(), Configuration.Provider {
     } else {
       //plant(CrashReportingTree())
     }
+    // KMP Logging
   }
 }

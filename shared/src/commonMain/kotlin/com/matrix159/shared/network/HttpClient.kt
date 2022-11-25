@@ -1,8 +1,8 @@
-package com.matrix.data.impl
+package com.matrix159.shared.network
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -15,15 +15,14 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import timber.log.Timber
 
 private const val TIME_OUT = 120 * 1000 // 120 seconds as milliseconds
 
 @ExperimentalSerializationApi
-val ktorHttpClient = HttpClient(Android) {
-  engine {
-    connectTimeout = TIME_OUT
-    socketTimeout = TIME_OUT
+val ktorHttpClient = HttpClient {
+
+  install(HttpTimeout) {
+    requestTimeoutMillis = TIME_OUT.toLong()
   }
 
   install(ContentNegotiation) {
@@ -36,7 +35,7 @@ val ktorHttpClient = HttpClient(Android) {
   install(Logging) {
     logger = object : Logger {
       override fun log(message: String) {
-        Timber.v("Logger Ktor =>", message)
+        co.touchlab.kermit.Logger.v("Logger Ktor => $message")
       }
 
     }
@@ -45,7 +44,7 @@ val ktorHttpClient = HttpClient(Android) {
 
   install(ResponseObserver) {
     onResponse { response ->
-      Timber.d("HTTP status:", "${response.status.value}")
+      co.touchlab.kermit.Logger.d("HTTP status: ${response.status.value}")
     }
   }
 
@@ -55,3 +54,5 @@ val ktorHttpClient = HttpClient(Android) {
 
   install(HttpCache)
 }
+
+

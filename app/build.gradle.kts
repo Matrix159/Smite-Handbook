@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":presentation"))
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":shared"))
 
     implementation("androidx.core:core-ktx:1.9.0")
 

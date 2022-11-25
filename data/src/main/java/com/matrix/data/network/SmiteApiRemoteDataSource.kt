@@ -1,11 +1,11 @@
 package com.matrix.data.network
 
-import com.matrix.data.impl.ktorHttpClient
 import com.matrix.data.model.PatchVersionInfo
 import com.matrix.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.data.network.model.GodApiResult
 import com.matrix.data.network.model.GodSkinApiResult
 import com.matrix.data.network.model.ItemApiResult
+import com.matrix159.shared.network.ktorHttpClient
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
