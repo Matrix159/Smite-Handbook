@@ -24,7 +24,7 @@ jobs:
         with:
           java-version: 11
       - name: Unit tests
-        run: bash ./gradlew lint --stacktrace
+        run: bash ./gradlew lint --stacktrace --info
 
   test:
     name: Run Unit Tests

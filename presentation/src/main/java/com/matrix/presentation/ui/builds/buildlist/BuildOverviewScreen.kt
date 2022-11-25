@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -87,9 +88,11 @@ fun BuildOverviewScreen(
           snackbarHost = { SnackbarHost(snackbarHostState) },
           contentWindowInsets = WindowInsets(0, 0, 0, 0),
           modifier = Modifier.fillMaxSize()
-        ) {
+        ) { paddingValues ->
           if (state.builds.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier
+              .fillMaxSize()
+              .padding(paddingValues)) {
               Text(
                 text = "No builds available",
                 style = MaterialTheme.typography.displaySmall,
@@ -99,7 +102,8 @@ fun BuildOverviewScreen(
           } else {
             LazyColumn(
               contentPadding = PaddingValues(16.dp),
-              verticalArrangement = Arrangement.spacedBy(16.dp)
+              verticalArrangement = Arrangement.spacedBy(16.dp),
+              modifier = Modifier.padding(paddingValues)
             ) {
               items(state.builds, key = { it.id!! }) { build ->
                 var visible by remember { mutableStateOf(true) }
