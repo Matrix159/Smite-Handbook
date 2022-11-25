@@ -26,8 +26,6 @@ import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
 import com.matrix.presentation.ui.builds.buildlist.BuildViewModel
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
-import com.matrix.presentation.ui.gods.godlist.GodListViewModel
-import com.matrix.presentation.ui.items.itemlist.ItemListViewModel
 import kotlinx.coroutines.launch
 
 sealed interface BuildsNavigation: Route {
@@ -84,13 +82,9 @@ fun NavGraphBuilder.buildsGraph(
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
       val createBuildViewModel = hiltViewModel<CreateBuildViewModel>()
-      val godListViewModel = hiltViewModel<GodListViewModel>()
-      val itemListViewModel = hiltViewModel<ItemListViewModel>()
 
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
-        godListViewModel = godListViewModel,
-        itemListViewModel = itemListViewModel,
         done = {
           navController.popBackStack()
         },

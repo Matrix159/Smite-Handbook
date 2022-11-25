@@ -33,7 +33,6 @@ interface SmiteLocalDataSource {
   fun getItem(itemId: Int): Flow<ItemEntity>
 
   suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>)
-
   fun getBuilds(): Flow<List<BuildDbResult>>
 
   fun getBuild(buildId: Int): Flow<BuildDbResult>

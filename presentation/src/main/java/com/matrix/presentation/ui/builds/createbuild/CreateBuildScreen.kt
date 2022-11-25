@@ -1,5 +1,7 @@
 package com.matrix.presentation.ui.builds.createbuild
 
+import GodSelectionView
+import ItemSelectionView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,16 +25,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -53,34 +52,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.ItemInformation
-import com.matrix.presentation.models.filters.AppliedGodFilters
-import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.presentation.ui.gods.godlist.FilterableGodList
-import com.matrix.presentation.ui.gods.godlist.GodListUiState
-import com.matrix.presentation.ui.gods.godlist.GodListViewModel
-import com.matrix.presentation.ui.items.itemlist.FilterableItemList
-import com.matrix.presentation.ui.items.itemlist.ItemListUiState
-import com.matrix.presentation.ui.items.itemlist.ItemListViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateBuildScreen(
   createBuildViewModel: CreateBuildViewModel,
-  godListViewModel: GodListViewModel,
-  itemListViewModel: ItemListViewModel,
   done: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
 
   val buildUiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
-  val godListUiState by godListViewModel.uiState.collectAsStateWithLifecycle()
-  val itemListUiState by itemListViewModel.uiState.collectAsStateWithLifecycle()
 
   val focusManager = LocalFocusManager.current
 
@@ -104,14 +89,11 @@ fun CreateBuildScreen(
     modifier = modifier
   ) {
     // Creating local variables to get around the open getter error
-    val buildUiState = buildUiState
-    val godListUiState = godListUiState
-    val itemListUiState = itemListUiState
 
-    when {
-      buildUiState is CreateBuildUiState.Error -> ErrorText(buildUiState.exception)
-      buildUiState is CreateBuildUiState.Loading -> Loader()
-      buildUiState is CreateBuildUiState.Success -> {
+    when (val buildUiState = buildUiState) {
+      is CreateBuildUiState.Error -> ErrorText(buildUiState.exception)
+      is CreateBuildUiState.Loading -> Loader()
+      is CreateBuildUiState.Success -> {
         Box(
           modifier = Modifier
             .fillMaxSize()
@@ -203,23 +185,18 @@ fun CreateBuildScreen(
           }
           if (showGodList) {
             GodSelectionView(
-              // TODO don't do this cast
-              godListUiState = (godListUiState as GodListUiState.Success),
+              gods = buildUiState.gods,
               godSelected = {
                 showGodList = false
                 createBuildViewModel.setGod(it)
               },
-              updateAppliedGodFilters = godListViewModel::updateAppliedFilters,
-              updateSearchText = godListViewModel::updateSearchText,
               modifier = Modifier.fillMaxSize()
             )
           }
           if (showItemList) {
             ItemSelectionView(
-              itemListUiState = itemListUiState as ItemListUiState.Success,
+              items = buildUiState.items,
               selectedItems = buildUiState.selectedItems,
-              updateAppliedFilters = itemListViewModel::updateAppliedFilters,
-              updateSearchText = itemListViewModel::updateSearchText,
               addSelectedItem = createBuildViewModel::addSelectedItem,
               removeSelectedItem = createBuildViewModel::removeSelectedItem,
               modifier = Modifier.fillMaxSize()
@@ -299,77 +276,6 @@ fun Step(
           .width(1.dp)
       )
       content(PaddingValues(horizontal = 24.dp, vertical = 8.dp))
-    }
-  }
-}
-
-@Composable
-fun GodSelectionView(
-  godListUiState: GodListUiState.Success,
-  godSelected: (god: GodInformation) -> Unit,
-  updateAppliedGodFilters: (AppliedGodFilters) -> Unit,
-  updateSearchText: (String) -> Unit,
-  modifier: Modifier = Modifier,
-) {
-  Surface(modifier = modifier) {
-    FilterableGodList(
-      uiState = godListUiState,
-      godSelected = godSelected,
-      updateAppliedGodFilters = updateAppliedGodFilters,
-      updateSearchText = updateSearchText
-    )
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ItemSelectionView(
-  itemListUiState: ItemListUiState.Success,
-  selectedItems: List<ItemInformation>,
-  updateSearchText: (String) -> Unit,
-  updateAppliedFilters: (AppliedItemFilters) -> Unit,
-  addSelectedItem: (item: ItemInformation) -> Unit,
-  removeSelectedItem: (item: ItemInformation) -> Unit,
-  modifier: Modifier = Modifier,
-) {
-  Surface(modifier = modifier) {
-    Column {
-      if (selectedItems.isNotEmpty()) {
-        Row(
-          horizontalArrangement = Arrangement.Start,
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.secondaryContainer)
-            //.height(88.dp)
-            .padding(4.dp)
-            .fillMaxWidth()
-        ) {
-          for (item in selectedItems) {
-            Box {
-              AsyncImage(
-                model = item.itemIconURL,
-                contentDescription = item.deviceName,
-                modifier = Modifier
-                  .padding(8.dp)
-                  .size(48.dp)
-              )
-              Badge(modifier = Modifier
-                .align(Alignment.TopEnd)
-                .clickable { removeSelectedItem(item) }
-              ) {
-                Icon(Icons.Default.Close, contentDescription = "remove")
-              }
-            }
-          }
-        }
-      }
-      FilterableItemList(
-        uiState = itemListUiState,
-        itemClicked = addSelectedItem,
-        updateAppliedItemFilters = updateAppliedFilters,
-        updateSearchText = updateSearchText,
-        modifier = Modifier.weight(1f)
-      )
     }
   }
 }

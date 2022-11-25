@@ -32,10 +32,8 @@ fun ItemListScreen(
       is ItemListUiState.Error -> ErrorText(itemListUiState.exception.toString())
       is ItemListUiState.Success -> {
         FilterableItemList(
-          uiState = itemListUiState,
+          items = itemListUiState.items,
           itemClicked = itemClicked,
-          updateAppliedItemFilters = itemListViewModel::updateAppliedFilters,
-          updateSearchText = itemListViewModel::updateSearchText,
           modifier = Modifier.fillMaxSize()
         )
       }

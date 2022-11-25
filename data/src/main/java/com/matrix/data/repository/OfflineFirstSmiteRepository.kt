@@ -71,7 +71,11 @@ class OfflineFirstSmiteRepository @Inject constructor(
 
   override suspend fun createBuild(buildInformation: BuildInformation) {
     localDataSource.createBuild(
-      buildEntity = BuildEntity(godId = buildInformation.god.id, name = buildInformation.name),
+      buildEntity = BuildEntity(
+        id = buildInformation.id,
+        godId = buildInformation.god.id,
+        name = buildInformation.name
+      ),
       itemIds = buildInformation.items.map { it.itemID })
   }
 

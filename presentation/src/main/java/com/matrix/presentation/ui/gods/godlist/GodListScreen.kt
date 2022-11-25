@@ -31,13 +31,10 @@ fun GodListScreen(
       is GodListUiState.Error -> ErrorText(godListUiState.exception.toString())
       is GodListUiState.Success -> {
         FilterableGodList(
-          uiState = godListUiState,
+          gods = godListUiState.gods,
           godSelected = godClicked,
-          updateAppliedGodFilters = godListViewModel::updateAppliedFilters,
-          updateSearchText = godListViewModel::updateSearchText
         )
       }
     }
   }
-
 }

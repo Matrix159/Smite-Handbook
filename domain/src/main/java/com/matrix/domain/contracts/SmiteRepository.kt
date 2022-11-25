@@ -17,7 +17,6 @@ interface SmiteRepository {
   fun getBuilds(): Flow<List<BuildInformation>>
   fun getBuild(buildId: Int): Flow<BuildInformation>
   suspend fun createBuild(buildInformation: BuildInformation)
-
   suspend fun deleteBuild(buildInformation: BuildInformation)
   suspend fun sync()
 }

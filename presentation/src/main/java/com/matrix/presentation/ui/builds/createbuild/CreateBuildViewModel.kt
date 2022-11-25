@@ -43,8 +43,8 @@ class CreateBuildViewModel @Inject constructor(
   ) { latestGods, latestItems, selectedGod, selectedItems, buildName ->
     if (latestGods is Result.Success && latestItems is Result.Success) {
       CreateBuildUiState.Success(
-        gods = latestGods.data.sortedBy { it.name },
-        items = latestItems.data.sortedBy { it.deviceName },
+        gods = latestGods.data,
+        items = latestItems.data,
         selectedGod = selectedGod,
         selectedItems = selectedItems,
         buildName = buildName
@@ -68,10 +68,7 @@ class CreateBuildViewModel @Inject constructor(
   }
 
   fun addSelectedItem(item: ItemInformation) {
-    // Builds should only have 6 total items and no duplicates
-    if (selectedItems.size < 6 && !selectedItems.contains(item)) {
-      selectedItems.add(item)
-    }
+    selectedItems.add(item)
   }
 
   fun removeSelectedItem(item: ItemInformation) {
