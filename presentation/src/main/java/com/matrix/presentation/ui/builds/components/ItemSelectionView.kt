@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.domain.models.ItemInformation
+import com.matrix159.shared.data.models.ItemInformation
 import com.matrix.presentation.ui.items.itemlist.FilterableItemList
 
 @OptIn(ExperimentalMaterial3Api::class)

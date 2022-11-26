@@ -5,7 +5,7 @@ import com.matrix.data.builder.getMockItemEntity
 import com.matrix.data.fakes.PatchVersionDataSourceFake
 import com.matrix.data.fakes.SmiteLocalDataSourceFake
 import com.matrix.data.fakes.SmiteRemoteDataSourceFake
-import com.matrix.data.repository.OfflineFirstSmiteRepository
+import com.matrix159.shared.data.repository.OfflineFirstSmiteRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

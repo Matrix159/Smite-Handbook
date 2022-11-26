@@ -1,12 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    val kotlin_version = "1.7.21"
+    val kotlin_version = "1.7.10"
     val hilt_version = "2.43.2"
     extra.apply{
         set("accompanist_version", "0.26.3-beta")
         set("coil_version", "2.2.1")
-        set("compose_version", "1.4.0-alpha02")
+        set("compose_version", "1.3.1")
         set("datastore_version", "1.0.0")
         set("hilt_version", hilt_version)
         set("androidx_hilt_version", "1.0.0")
@@ -30,8 +30,8 @@ buildscript {
 plugins {
     id("com.android.application").version("7.3.1").apply(false)
     id("com.android.library").version("7.3.1").apply(false)
-    kotlin("android").version("1.7.21").apply(false)
-    kotlin("multiplatform").version("1.7.21").apply(false)
+    kotlin("android").version("1.7.10").apply(false)
+    kotlin("multiplatform").version("1.7.10").apply(false)
 }
 
 tasks.register("clean", Delete::class) {

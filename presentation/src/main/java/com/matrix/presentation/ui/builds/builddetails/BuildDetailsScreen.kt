@@ -53,9 +53,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.matrix.domain.models.BuildInformation
-import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.ItemInformation
+import com.matrix159.shared.data.models.BuildInformation
+import com.matrix159.shared.data.models.GodInformation
+import com.matrix159.shared.data.models.ItemInformation
 import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard

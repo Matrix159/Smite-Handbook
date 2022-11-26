@@ -2,10 +2,10 @@ package com.matrix.presentation.ui.builds.buildlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.BuildInformation
-import com.matrix.domain.models.Result
-import com.matrix.domain.models.asResult
-import com.matrix.domain.usecases.BuildsUseCase
+import com.matrix159.shared.data.models.BuildInformation
+import com.matrix159.shared.data.models.Result
+import com.matrix159.shared.data.models.asResult
+import com.matrix159.shared.data.usecases.BuildsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

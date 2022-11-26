@@ -2,10 +2,10 @@ package com.matrix.presentation.ui.items.itemlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.ItemInformation
-import com.matrix.domain.models.Result
-import com.matrix.domain.models.asResult
-import com.matrix.domain.usecases.GetLatestItemsUseCase
+import com.matrix159.shared.data.models.ItemInformation
+import com.matrix159.shared.data.models.Result
+import com.matrix159.shared.data.models.asResult
+import com.matrix159.shared.data.usecases.GetLatestItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -2,10 +2,10 @@ package com.matrix.presentation.ui.gods.godlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.Result
-import com.matrix.domain.models.asResult
-import com.matrix.domain.usecases.GetLatestGodsUseCase
+import com.matrix159.shared.data.models.GodInformation
+import com.matrix159.shared.data.models.Result
+import com.matrix159.shared.data.models.asResult
+import com.matrix159.shared.data.usecases.GetLatestGodsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

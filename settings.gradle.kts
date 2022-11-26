@@ -17,6 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "MaterializedSmite"
 include(":app")
 include(":presentation")
-include(":domain")
 include(":data")
 include(":shared")

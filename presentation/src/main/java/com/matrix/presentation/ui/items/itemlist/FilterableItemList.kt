@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.matrix.domain.models.ItemInformation
+import com.matrix159.shared.data.models.ItemInformation
 import com.matrix.presentation.R
 import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.presentation.models.filters.ItemTier

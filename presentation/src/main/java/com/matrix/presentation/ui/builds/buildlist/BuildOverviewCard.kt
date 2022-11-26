@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.domain.models.BuildInformation
+import com.matrix159.shared.data.models.BuildInformation
 import com.matrix.presentation.ui.components.SwipeToDeleteCard
 
 @OptIn(ExperimentalMaterial3Api::class)
