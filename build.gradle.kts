@@ -2,7 +2,7 @@
 
 buildscript {
     val kotlin_version = "1.7.10"
-    val hilt_version = "2.43.2"
+    val hilt_version = "2.44"
     extra.apply{
         set("accompanist_version", "0.26.3-beta")
         set("coil_version", "2.2.1")
@@ -23,7 +23,7 @@ buildscript {
     dependencies {
         //classpath("com.android.tools.build:gradle:8.0.0-alpha08")
         classpath("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:${hilt_version}")
+        //classpath("com.google.dagger:hilt-android-gradle-plugin:${hilt_version}")
     }
 }
 
@@ -32,6 +32,7 @@ plugins {
     id("com.android.library").version("7.3.1").apply(false)
     kotlin("android").version("1.7.10").apply(false)
     kotlin("multiplatform").version("1.7.10").apply(false)
+    id("com.google.dagger.hilt.android") version "2.44" apply false
 }
 
 tasks.register("clean", Delete::class) {

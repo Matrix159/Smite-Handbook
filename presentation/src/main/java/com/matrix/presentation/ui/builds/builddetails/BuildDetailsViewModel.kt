@@ -3,28 +3,25 @@ package com.matrix.presentation.ui.builds.builddetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix159.shared.data.models.BuildInformation
-import com.matrix159.shared.data.models.GodInformation
-import com.matrix159.shared.data.models.ItemInformation
-import com.matrix159.shared.data.models.Result
-import com.matrix159.shared.data.models.asResult
-import com.matrix159.shared.data.usecases.BuildsUseCase
-import com.matrix159.shared.data.usecases.GetLatestGodsUseCase
-import com.matrix159.shared.data.usecases.GetLatestItemsUseCase
 import com.matrix.presentation.ui.builds.navigation.BuildsNavigation
-import com.matrix159.shared.data.contracts.SmiteRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.matrix.shared.data.models.BuildInformation
+import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.models.Result
+import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.usecases.BuildsUseCase
+import com.matrix.shared.data.usecases.GetLatestGodsUseCase
+import com.matrix.shared.data.usecases.GetLatestItemsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class BuildDetailsViewModel @Inject constructor(
+//@HiltViewModel
+class BuildDetailsViewModel /*@Inject*/ constructor(
   private val buildsUseCase: BuildsUseCase = BuildsUseCase(),
-  getLatestGodsUseCase: GetLatestGodsUseCase,
-  getLatestItemsUseCase: GetLatestItemsUseCase,
+  getLatestGodsUseCase: GetLatestGodsUseCase = GetLatestGodsUseCase(),
+  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   private val buildId: Int =

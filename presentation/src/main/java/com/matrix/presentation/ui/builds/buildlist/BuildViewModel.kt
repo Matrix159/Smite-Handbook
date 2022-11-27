@@ -2,20 +2,18 @@ package com.matrix.presentation.ui.builds.buildlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix159.shared.data.models.BuildInformation
-import com.matrix159.shared.data.models.Result
-import com.matrix159.shared.data.models.asResult
-import com.matrix159.shared.data.usecases.BuildsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.matrix.shared.data.models.BuildInformation
+import com.matrix.shared.data.models.Result
+import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.usecases.BuildsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class BuildViewModel @Inject constructor(
-  private val buildsUseCase: BuildsUseCase,
+//@HiltViewModel
+class BuildViewModel /*@Inject*/ constructor(
+  private val buildsUseCase: BuildsUseCase = BuildsUseCase(),
 ) : ViewModel() {
 
   // The UI collects from this StateFlow to get its state updates

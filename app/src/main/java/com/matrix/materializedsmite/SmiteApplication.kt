@@ -3,9 +3,7 @@ package com.matrix.materializedsmite
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
-import com.matrix.data.service.PatchSyncWorker
+import com.matrix.shared.initKmmAppContext
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
@@ -18,8 +16,8 @@ class SmiteApplication : Application(), Configuration.Provider {
   @Inject
   lateinit var workerFactory: HiltWorkerFactory
 
-  @Inject
-  lateinit var workManager: WorkManager
+//  @Inject
+//  lateinit var workManager: WorkManager
 
   override fun getWorkManagerConfiguration() =
     Configuration.Builder()
@@ -32,14 +30,14 @@ class SmiteApplication : Application(), Configuration.Provider {
   override fun onCreate() {
     super.onCreate()
 
-    workManager.enqueueUniqueWork(
-      "PatchSyncWorker",
-      ExistingWorkPolicy.KEEP,
-      PatchSyncWorker.startUpSyncWork()
-//      PeriodicWorkRequestBuilder<PatchSyncWorker>(12, TimeUnit.HOURS)
-//        .setConstraints(constraints)
-//        .build()
-    )
+//    workManager.enqueueUniqueWork(
+//      "PatchSyncWorker",
+//      ExistingWorkPolicy.KEEP,
+//      PatchSyncWorker.startUpSyncWork()
+////      PeriodicWorkRequestBuilder<PatchSyncWorker>(12, TimeUnit.HOURS)
+////        .setConstraints(constraints)
+////        .build()
+//    )
 
 
     if (BuildConfig.DEBUG) {
@@ -48,5 +46,8 @@ class SmiteApplication : Application(), Configuration.Provider {
       //plant(CrashReportingTree())
     }
     // KMP Logging
+
+    // TESTING: AppContext from KMP
+    this.initKmmAppContext()
   }
 }

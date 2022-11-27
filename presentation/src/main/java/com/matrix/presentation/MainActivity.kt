@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import com.matrix.presentation.ui.theme.MaterializedSmiteTheme
-import com.matrix159.shared.Greeting
+import com.matrix.shared.Greeting
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

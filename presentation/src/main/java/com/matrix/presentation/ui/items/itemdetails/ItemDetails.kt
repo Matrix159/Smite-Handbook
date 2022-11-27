@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix159.shared.data.models.ItemInformation
+import com.matrix.shared.data.models.ItemInformation
 import com.matrix.presentation.R
 
 @Composable

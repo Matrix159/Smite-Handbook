@@ -7,10 +7,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -54,10 +53,11 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) { backStackEntry ->
-      val parentEntry = remember(backStackEntry) {
-        navController.getBackStackEntry(Screen.Builds.route)
-      }
-      val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+//      val parentEntry = remember(backStackEntry) {
+//        navController.getBackStackEntry(Screen.Builds.route)
+//      }
+      //val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+      val buildViewModel: BuildViewModel = viewModel()
       BuildOverviewScreen(
         buildViewModel,
         createBuild = {
@@ -81,7 +81,7 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val createBuildViewModel = hiltViewModel<CreateBuildViewModel>()
+      val createBuildViewModel: CreateBuildViewModel = viewModel()
 
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
@@ -100,7 +100,7 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val buildDetailsViewModel = hiltViewModel<BuildDetailsViewModel>()
+      val buildDetailsViewModel: BuildDetailsViewModel = viewModel()
       val coroutineScope = rememberCoroutineScope()
       BuildDetailsScreen(
         buildDetailsViewModel = buildDetailsViewModel,

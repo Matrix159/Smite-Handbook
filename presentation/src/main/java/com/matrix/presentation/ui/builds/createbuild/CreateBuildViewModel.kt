@@ -7,26 +7,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix159.shared.data.models.BuildInformation
-import com.matrix159.shared.data.models.GodInformation
-import com.matrix159.shared.data.models.ItemInformation
-import com.matrix159.shared.data.models.Result
-import com.matrix159.shared.data.models.asResult
-import com.matrix159.shared.data.usecases.BuildsUseCase
-import com.matrix159.shared.data.usecases.GetLatestGodsUseCase
-import com.matrix159.shared.data.usecases.GetLatestItemsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.matrix.shared.data.models.BuildInformation
+import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.models.Result
+import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.usecases.BuildsUseCase
+import com.matrix.shared.data.usecases.GetLatestGodsUseCase
+import com.matrix.shared.data.usecases.GetLatestItemsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class CreateBuildViewModel @Inject constructor(
-  private val buildsUseCase: BuildsUseCase,
-  getLatestGodsUseCase: GetLatestGodsUseCase,
-  getLatestItemsUseCase: GetLatestItemsUseCase,
+//@HiltViewModel
+class CreateBuildViewModel /*@Inject*/ constructor(
+  private val buildsUseCase: BuildsUseCase = BuildsUseCase(),
+  getLatestGodsUseCase: GetLatestGodsUseCase = GetLatestGodsUseCase(),
+  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
 ) : ViewModel() {
 
   private var selectedGod by mutableStateOf<GodInformation?>(null)

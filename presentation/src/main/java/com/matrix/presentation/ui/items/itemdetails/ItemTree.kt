@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix159.shared.data.models.ItemInformation
+import com.matrix.shared.data.models.ItemInformation
 import com.matrix.presentation.utils.ItemNode
 
 val itemPadding = 8.dp

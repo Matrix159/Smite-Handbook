@@ -6,8 +6,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -65,7 +65,7 @@ android {
 
 dependencies {
     implementation(project(":presentation"))
-    implementation(project(":data"))
+    //implementation(project(":data"))
     implementation(project(":shared"))
 
     implementation("androidx.core:core-ktx:1.9.0")
