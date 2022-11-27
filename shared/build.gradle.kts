@@ -6,14 +6,7 @@ plugins {
 }
 
 kotlin {
-  android {
-//        plugins {
-//            id("com.android.library")
-//            id("org.jetbrains.kotlin.android")
-//            id("kotlinx-serialization")
-//            //kotlin("kapt") version "1.7.21"
-//        }
-  }
+  android()
 
   listOf(
     iosX64(),

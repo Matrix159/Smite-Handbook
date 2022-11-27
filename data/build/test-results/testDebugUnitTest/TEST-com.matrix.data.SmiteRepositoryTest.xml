@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.matrix.data.SmiteRepositoryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2022-11-25T23:13:13" hostname="josh-e-mbp-165.lan" time="0.356">
+  <properties/>
+  <testcase name="getGods should populate and return two gods after syncing" classname="com.matrix.data.SmiteRepositoryTest" time="0.317"/>
+  <testcase name="Should return a new item list when patch changes" classname="com.matrix.data.SmiteRepositoryTest" time="0.031"/>
+  <testcase name="Should return a new god list when patch changes" classname="com.matrix.data.SmiteRepositoryTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

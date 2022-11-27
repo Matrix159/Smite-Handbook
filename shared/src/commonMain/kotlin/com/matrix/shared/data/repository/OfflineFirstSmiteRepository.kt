@@ -3,7 +3,7 @@ package com.matrix.shared.data.repository
 import co.touchlab.kermit.Logger
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.local.PatchVersionDataSourceImpl
-import com.matrix.shared.data.local.SmiteDatabaseLocalDataSource
+import com.matrix.shared.data.local.db.entity.BuildDbResult
 import com.matrix.shared.data.local.db.entity.BuildEntity
 import com.matrix.shared.data.local.db.entity.GodEntity
 import com.matrix.shared.data.local.db.entity.ItemEntity
@@ -26,7 +26,50 @@ import kotlinx.coroutines.withContext
 
 class OfflineFirstSmiteRepository constructor(
   private val networkDataSource: SmiteRemoteDataSource = SmiteApiRemoteDataSource(),
-  private val localDataSource: SmiteLocalDataSource = SmiteDatabaseLocalDataSource(),
+  private val localDataSource: SmiteLocalDataSource = object : SmiteLocalDataSource {
+    override suspend fun saveGods(gods: List<GodEntity>) {
+      TODO("Not yet implemented")
+    }
+
+    override fun getGods(): Flow<List<GodEntity>> {
+      return flow {
+        emptyList<GodEntity>()
+      }
+    }
+
+    override fun getGod(godId: Int): Flow<GodEntity> {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun saveItems(items: List<ItemEntity>) {
+      TODO("Not yet implemented")
+    }
+
+    override fun getItems(): Flow<List<ItemEntity>> {
+      TODO("Not yet implemented")
+    }
+
+    override fun getItem(itemId: Int): Flow<ItemEntity> {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>) {
+      TODO("Not yet implemented")
+    }
+
+    override fun getBuilds(): Flow<List<BuildDbResult>> {
+      TODO("Not yet implemented")
+    }
+
+    override fun getBuild(buildId: Int): Flow<BuildDbResult> {
+      TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteBuild(buildEntity: BuildEntity) {
+      TODO("Not yet implemented")
+    }
+
+  },// SmiteDatabaseLocalDataSource(),
   private val patchVersionDataSource: PatchVersionDataSource = PatchVersionDataSourceImpl(),
 ) : SmiteRepository {
 

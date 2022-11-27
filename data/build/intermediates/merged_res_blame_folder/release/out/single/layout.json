@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.matrix.data-merged_res-23:/layout/notification_template_part_chronometer.xml",
+        "source": "com.matrix.data-core-1.8.0-8:/layout/notification_template_part_chronometer.xml"
+    },
+    {
+        "merged": "com.matrix.data-merged_res-23:/layout/notification_template_part_time.xml",
+        "source": "com.matrix.data-core-1.8.0-8:/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "com.matrix.data-merged_res-23:/layout/custom_dialog.xml",
+        "source": "com.matrix.data-core-1.8.0-8:/layout/custom_dialog.xml"
+    }
+]

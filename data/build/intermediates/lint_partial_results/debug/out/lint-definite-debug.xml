@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 7.3.1" type="incidents">
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of io.ktor:ktor-client-android than 2.1.1 is available: 2.1.2">
+        <fix-replace
+            description="Change to 2.1.2"
+            family="Update versions"
+            oldString="2.1.1"
+            replacement="2.1.2"/>
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="47"
+            column="20"
+            startOffset="1112"
+            endLine="47"
+            endColumn="55"
+            endOffset="1147"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of io.ktor:ktor-client-content-negotiation than 2.1.1 is available: 2.1.2">
+        <fix-replace
+            description="Change to 2.1.2"
+            family="Update versions"
+            oldString="2.1.1"
+            replacement="2.1.2"/>
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="48"
+            column="20"
+            startOffset="1167"
+            endLine="48"
+            endColumn="67"
+            endOffset="1214"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of io.ktor:ktor-serialization-kotlinx-json than 2.1.1 is available: 2.1.2">
+        <fix-replace
+            description="Change to 2.1.2"
+            family="Update versions"
+            oldString="2.1.1"
+            replacement="2.1.2"/>
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="49"
+            column="20"
+            startOffset="1234"
+            endLine="49"
+            endColumn="67"
+            endOffset="1281"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of io.ktor:ktor-client-logging-jvm than 2.1.1 is available: 2.1.2">
+        <fix-replace
+            description="Change to 2.1.2"
+            family="Update versions"
+            oldString="2.1.1"
+            replacement="2.1.2"/>
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="50"
+            column="20"
+            startOffset="1301"
+            endLine="50"
+            endColumn="59"
+            endOffset="1340"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of com.google.dagger:hilt-android than 2.43.2 is available: 2.44">
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="53"
+            column="20"
+            startOffset="1373"
+            endLine="53"
+            endColumn="66"
+            endOffset="1419"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.test.ext:junit than 1.1.3 is available: 1.1.4">
+        <fix-replace
+            description="Change to 1.1.4"
+            family="Update versions"
+            oldString="1.1.3"
+            replacement="1.1.4"/>
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="90"
+            column="31"
+            startOffset="2853"
+            endLine="90"
+            endColumn="62"
+            endOffset="2884"/>
+    </incident>
+
+    <incident
+        id="GradleDependency"
+        severity="warning"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.4.0 is available: 3.5.0">
+        <fix-replace
+            description="Change to 3.5.0"
+            family="Update versions"
+            oldString="3.4.0"
+            replacement="3.5.0"/>
+        <location
+            file="${:data*projectDir}/build.gradle"
+            line="91"
+            column="31"
+            startOffset="2915"
+            endLine="91"
+            endColumn="75"
+            endOffset="2959"/>
+    </incident>
+
+</incidents>

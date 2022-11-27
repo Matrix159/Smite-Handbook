@@ -5,17 +5,13 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
-import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
-import com.matrix.presentation.ui.gods.goddetails.GodScreen
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 
@@ -42,7 +38,7 @@ fun NavGraphBuilder.godsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val godListViewModel = viewModel<GodListViewModel>()
+      val godListViewModel = viewModel<GodListViewModel>(factory = GodListViewModel.Factory)
 
       GodListScreen(
         godListViewModel,
