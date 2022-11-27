@@ -1,8 +1,0 @@
-com.matrix.data.service.PatchSyncWorker
-com.matrix.data.R
-com.matrix.data.local.db.AppDatabase
-com.matrix.data.local.db.AppDatabase_Impl
-com.matrix.data.R: R()
-com.matrix.data.local.db.AppDatabase_Impl: AppDatabase_Impl()
-com.matrix.data.local.db.AppDatabase: AppDatabase()
-com.matrix.data.service.PatchSyncWorker: PatchSyncWorker(android.content.Context,androidx.work.WorkerParameters,com.matrix.domain.contracts.SmiteRepository)
