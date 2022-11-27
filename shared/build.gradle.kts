@@ -2,7 +2,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   id("com.android.library")
-  kotlin("kapt")
+  //id("com.google.devtools.ksp")
 }
 
 kotlin {
@@ -58,27 +58,27 @@ kotlin {
 
         // Old data module deps below
         // hilt
-        implementation("com.google.dagger:hilt-android:${rootProject.extra.get("hilt_version")}")
-        configurations["kapt"].dependencies.add(
-          project.dependencies.create(
-            "com.google.dagger:hilt-android-compiler:${
-              rootProject.extra.get(
-                "hilt_version"
-              )
-            }"
-          )
-        )
+        //implementation("com.google.dagger:hilt-android:${rootProject.extra.get("hilt_version")}")
+//        configurations["kapt"].dependencies.add(
+//          project.dependencies.create(
+//            "com.google.dagger:hilt-android-compiler:${
+//              rootProject.extra.get(
+//                "hilt_version"
+//              )
+//            }"
+//          )
+//        )
         // two below are for working with WorkManager in hilt
-        implementation("androidx.hilt:hilt-work:${rootProject.extra.get("androidx_hilt_version")}")
-        configurations["kapt"].dependencies.add(
-          project.dependencies.create(
-            "androidx.hilt:hilt-compiler:${
-              rootProject.extra.get(
-                "androidx_hilt_version"
-              )
-            }"
-          )
-        )
+//        implementation("androidx.hilt:hilt-work:${rootProject.extra.get("androidx_hilt_version")}")
+//        configurations["kapt"].dependencies.add(
+//          project.dependencies.create(
+//            "androidx.hilt:hilt-compiler:${
+//              rootProject.extra.get(
+//                "androidx_hilt_version"
+//              )
+//            }"
+//          )
+//        )
 
 
 //                // timber for logging
@@ -86,7 +86,7 @@ kotlin {
 //
 //                // work manager
 //                // Kotlin + coroutines
-        implementation("androidx.work:work-runtime-ktx:${rootProject.extra.get("work_version")}")
+        //implementation("androidx.work:work-runtime-ktx:${rootProject.extra.get("work_version")}")
 //                // optional - Test helpers
 //                androidTestImplementation "androidx.work:work-testing:$work_version"
 //
@@ -99,16 +99,21 @@ kotlin {
 //
         // room db
         implementation("androidx.room:room-runtime:${rootProject.extra.get("room_version")}")
-        configurations["annotationProcessor"].dependencies.add(
-          project.dependencies.create(
-            "androidx.room:room-compiler:${
-              rootProject.extra.get(
-                "room_version"
-              )
-            }"
-          )
-        )
-        //annotationProcessor("androidx.room:room-compiler:${rootProject.extra.get("room_version")}")
+//        configurations.getByName("annotationProcessor").dependencies.add(
+//          org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
+//            "androidx.room",
+//            "room-compiler",
+//            "2.4.3"
+//          )
+//        )
+        //add("kspAndroid", project(":test-processor"))
+//        configurations.getByName("ksp").dependencies.add(
+//          org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
+//            "androidx.room",
+//            "room-compiler",
+//            "2.4.3"
+//          )
+//        )
         implementation("androidx.room:room-ktx:${rootProject.extra.get("room_version")}")
         // To use Kotlin annotation processing tool (kapt)
         //configurations["kapt"].dependencies.add(project.dependencies.create("androidx.room:room-compiler:${rootProject.extra.get("room_version")}"))
@@ -144,6 +149,14 @@ kotlin {
       iosSimulatorArm64Test.dependsOn(this)
     }
   }
+}
+
+dependencies {
+//  add("kspAndroid",  org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
+//    "androidx.room",
+//    "room-compiler",
+//    "2.4.3"
+//  ))
 }
 
 android {

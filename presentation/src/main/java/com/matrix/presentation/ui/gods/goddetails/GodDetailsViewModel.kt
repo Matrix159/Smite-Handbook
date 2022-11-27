@@ -14,10 +14,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-@HiltViewModel
-class GodDetailsViewModel @Inject constructor(
-  getGodUseCase: GetGodUseCase,
-  getGodSkinsUseCase: GetGodSkinsUseCase,
+/*@HiltViewModel*/
+class GodDetailsViewModel /*@Inject*/ constructor(
+  getGodUseCase: GetGodUseCase = GetGodUseCase(),
+  getGodSkinsUseCase: GetGodSkinsUseCase = GetGodSkinsUseCase(),
   savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 

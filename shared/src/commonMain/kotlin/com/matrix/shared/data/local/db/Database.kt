@@ -9,3 +9,5 @@ expect abstract class AppDatabase {
   abstract fun itemDao(): ItemDao
   abstract fun buildDao(): BuildDao
 }
+
+expect val smiteDatabase: AppDatabase

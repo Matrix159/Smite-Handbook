@@ -25,10 +25,10 @@ import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 import javax.inject.Inject
 
-@HiltViewModel
-class ItemDetailsViewModel @Inject constructor(
-  getLatestItemsUseCase: GetLatestItemsUseCase,
-  getItemUseCase: GetItemUseCase,
+//@HiltViewModel
+class ItemDetailsViewModel /*@Inject*/ constructor(
+  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
+  getItemUseCase: GetItemUseCase = GetItemUseCase(),
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 

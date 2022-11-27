@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 
 class OfflineFirstSmiteRepository constructor(
   private val networkDataSource: SmiteRemoteDataSource = SmiteApiRemoteDataSource(),
-  private val localDataSource: SmiteLocalDataSource = SmiteDatabaseLocalDataSource(TODO()),
+  private val localDataSource: SmiteLocalDataSource = SmiteDatabaseLocalDataSource(),
   private val patchVersionDataSource: PatchVersionDataSource = PatchVersionDataSourceImpl(),
 ) : SmiteRepository {
 

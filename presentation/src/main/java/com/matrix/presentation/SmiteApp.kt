@@ -65,8 +65,8 @@ fun SmiteApp() {
         }
     ) {
       godsGraph(screen = Screen.Gods, navController = navController)
-      itemsGraph(screen = Screen.Items, navController = navController)
-      buildsGraph(screen = Screen.Builds, navController = navController)
+      //itemsGraph(screen = Screen.Items, navController = navController)
+      //buildsGraph(screen = Screen.Builds, navController = navController)
     }
   }
 }

@@ -10,19 +10,19 @@ import timber.log.Timber.Forest.plant
 import javax.inject.Inject
 
 
-@HiltAndroidApp
-class SmiteApplication : Application(), Configuration.Provider {
+//@HiltAndroidApp
+class SmiteApplication : Application()/*, Configuration.Provider*/ {
 
-  @Inject
-  lateinit var workerFactory: HiltWorkerFactory
+  //@Inject
+  //lateinit var workerFactory: HiltWorkerFactory
 
 //  @Inject
 //  lateinit var workManager: WorkManager
 
-  override fun getWorkManagerConfiguration() =
-    Configuration.Builder()
-      .setWorkerFactory(workerFactory)
-      .build()
+//  override fun getWorkManagerConfiguration() =
+//    Configuration.Builder()
+//      .setWorkerFactory(workerFactory)
+//      .build()
 
 
   // Used to grab string resources from outside activities currently (secrets.xml)

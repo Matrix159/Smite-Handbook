@@ -10,3 +10,6 @@ actual abstract class AppDatabase {
   actual abstract fun itemDao(): ItemDao
   actual abstract fun buildDao(): BuildDao
 }
+
+
+actual val smiteDatabase: AppDatabase = TODO()

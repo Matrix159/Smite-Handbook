@@ -1,9 +1,11 @@
 package com.matrix.shared.data.local.db
 
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import com.matrix.shared.KmmAppContext
 import com.matrix.shared.data.local.db.dao.BuildDao
 import com.matrix.shared.data.local.db.dao.GodDao
 import com.matrix.shared.data.local.db.dao.ItemDao
@@ -35,6 +37,13 @@ actual abstract class AppDatabase : RoomDatabase() {
   actual abstract fun itemDao(): ItemDao
   actual abstract fun buildDao(): BuildDao
 }
+
+
+actual val smiteDatabase: AppDatabase = Room.databaseBuilder(
+  KmmAppContext.appContext.androidContext,
+  AppDatabase::class.java,
+  "smite-handbook-db"
+).build()
 
 class Converters {
   @TypeConverter

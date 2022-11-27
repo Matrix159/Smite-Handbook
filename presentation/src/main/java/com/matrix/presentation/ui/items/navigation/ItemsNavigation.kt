@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
@@ -45,7 +46,7 @@ fun NavGraphBuilder.itemsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val itemListViewModel = hiltViewModel<ItemListViewModel>()
+      val itemListViewModel = viewModel<ItemListViewModel>()
       ItemListScreen(
         itemListViewModel = itemListViewModel,
         itemClicked = {
@@ -68,7 +69,7 @@ fun NavGraphBuilder.itemsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val itemDetailsViewModel = hiltViewModel<ItemDetailsViewModel>()
+      val itemDetailsViewModel = viewModel<ItemDetailsViewModel>()
 
       ItemDetailsScreen(
         itemDetailsViewModel = itemDetailsViewModel,

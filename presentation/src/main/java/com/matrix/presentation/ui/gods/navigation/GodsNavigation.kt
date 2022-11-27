@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
@@ -41,7 +42,7 @@ fun NavGraphBuilder.godsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val godListViewModel = hiltViewModel<GodListViewModel>()
+      val godListViewModel = viewModel<GodListViewModel>()
 
       GodListScreen(
         godListViewModel,
@@ -56,27 +57,27 @@ fun NavGraphBuilder.godsGraph(
           .imePadding()
       )
     }
-    composable(
-      GodsNavigation.GodDetails.route,
-      arguments = listOf(navArgument(GodsNavigation.GodDetails.godIdArg) { type = NavType.StringType }),
-      enterTransition = {
-        when (initialState.destination.route) {
-          GodsNavigation.GodList.route -> expandIn(
-            expandFrom = Alignment.Center,
-          )
-          else -> fadeIn(defaultAnimationSpec)
-        }
-      },
-      exitTransition = {
-        when (targetState.destination.route) {
-          GodsNavigation.GodList.route -> scaleOut()
-          else -> fadeOut(animationSpec = defaultAnimationSpec)
-        }
-      }
-    ) {
-      val godListViewModel = hiltViewModel<GodDetailsViewModel>()
-
-      GodScreen(godListViewModel, modifier = Modifier.fillMaxSize())
-    }
+//    composable(
+//      GodsNavigation.GodDetails.route,
+//      arguments = listOf(navArgument(GodsNavigation.GodDetails.godIdArg) { type = NavType.StringType }),
+//      enterTransition = {
+//        when (initialState.destination.route) {
+//          GodsNavigation.GodList.route -> expandIn(
+//            expandFrom = Alignment.Center,
+//          )
+//          else -> fadeIn(defaultAnimationSpec)
+//        }
+//      },
+//      exitTransition = {
+//        when (targetState.destination.route) {
+//          GodsNavigation.GodList.route -> scaleOut()
+//          else -> fadeOut(animationSpec = defaultAnimationSpec)
+//        }
+//      }
+//    ) {
+//      val godListViewModel = viewModel<GodDetailsViewModel>()
+//
+//      GodScreen(godListViewModel, modifier = Modifier.fillMaxSize())
+//    }
   }
 }

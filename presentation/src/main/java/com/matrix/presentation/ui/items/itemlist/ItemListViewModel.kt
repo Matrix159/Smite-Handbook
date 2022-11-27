@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-@HiltViewModel
-class ItemListViewModel @Inject constructor(
-  getLatestItemsUseCase: GetLatestItemsUseCase,
+//@HiltViewModel
+class ItemListViewModel /*@Inject*/ constructor(
+  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
 ) : ViewModel() {
 
   var uiState: StateFlow<ItemListUiState> = getLatestItemsUseCase().asResult()

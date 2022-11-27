@@ -5,11 +5,12 @@ import com.matrix.shared.data.local.db.entity.BuildDbResult
 import com.matrix.shared.data.local.db.entity.BuildEntity
 import com.matrix.shared.data.local.db.entity.GodEntity
 import com.matrix.shared.data.local.db.entity.ItemEntity
+import com.matrix.shared.data.local.db.smiteDatabase
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
 class SmiteDatabaseLocalDataSource constructor(
-  private val database: AppDatabase
+  private val database: AppDatabase = smiteDatabase
 ) : SmiteLocalDataSource {
 
   override suspend fun saveGods(gods: List<GodEntity>) = database.godDao().insertAll(gods)
