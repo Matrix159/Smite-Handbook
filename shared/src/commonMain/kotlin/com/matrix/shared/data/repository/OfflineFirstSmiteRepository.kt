@@ -33,7 +33,7 @@ class OfflineFirstSmiteRepository constructor(
 
     override fun getGods(): Flow<List<GodEntity>> {
       return flow {
-        emptyList<GodEntity>()
+        emit(emptyList())
       }
     }
 

@@ -1,13 +1,15 @@
 package com.matrix.materializedsmite
 
 import android.app.Application
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
+import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
 import com.matrix.shared.initKmmAppContext
-import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
-import javax.inject.Inject
 
 
 //@HiltAndroidApp
@@ -49,5 +51,14 @@ class SmiteApplication : Application()/*, Configuration.Provider*/ {
 
     // TESTING: AppContext from KMP
     this.initKmmAppContext()
+
+    // Sync repository manually
+    val scope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { coroutineContext, throwable ->
+      Timber.e(throwable)
+    })
+    // TODO: Look into worker solutions for this for KMP
+    scope.launch {
+      OfflineFirstSmiteRepository().sync()
+    }
   }
 }

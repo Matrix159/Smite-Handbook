@@ -2,6 +2,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   id("com.android.library")
+  id("com.squareup.sqldelight")
   //id("com.google.devtools.ksp")
 }
 
@@ -19,15 +20,17 @@ kotlin {
   }
 
   val ktorVersion = "2.1.2"
-
+  val coroutinesVersion = "1.6.4"
+  val sqlDelightVersion = "1.5.3"
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
         implementation("io.ktor:ktor-client-core:$ktorVersion")
         implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
         implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
         implementation("io.ktor:ktor-client-logging:$ktorVersion")
+        implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
         // timber for logging
         //implementation("com.jakewharton.timber:timber:5.0.1")
         // Logging, using this until timber supports KMP
@@ -48,6 +51,7 @@ kotlin {
     val androidMain by getting {
       dependencies {
         implementation("io.ktor:ktor-client-android:$ktorVersion")
+        implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
 
         // Old data module deps below
         // hilt
@@ -130,6 +134,7 @@ kotlin {
 
       dependencies {
         implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+        implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
       }
     }
     val iosX64Test by getting
@@ -174,6 +179,12 @@ android {
       isMinifyEnabled = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
+  }
+}
+
+sqldelight {
+  database("SmiteHandbookDatabase") {
+    packageName = "com.matrix.sqldelight"
   }
 }
 
