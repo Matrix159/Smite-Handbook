@@ -1,16 +1,17 @@
 package com.matrix.shared.data.local
 
-import com.matrix.shared.data.local.db.AppDatabase
+import com.matrix.SmiteHandbookDatabase
+import com.matrix.shared.KmmAppContext
 import com.matrix.shared.data.local.db.entity.BuildDbResult
 import com.matrix.shared.data.local.db.entity.BuildEntity
 import com.matrix.shared.data.local.db.entity.GodEntity
 import com.matrix.shared.data.local.db.entity.ItemEntity
-import com.matrix.shared.data.local.db.smiteDatabase
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
+import com.matrix.shared.sqldelight.DatabaseDriverFactory
 import kotlinx.coroutines.flow.Flow
 
 class SmiteDatabaseLocalDataSource constructor(
-  private val database: AppDatabase = smiteDatabase
+  private val database: SmiteHandbookDatabase = KmmAppContext.app
 ) : SmiteLocalDataSource {
 
   override suspend fun saveGods(gods: List<GodEntity>) = database.godDao().insertAll(gods)

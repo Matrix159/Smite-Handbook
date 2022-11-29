@@ -1,3 +1,7 @@
 package com.matrix.shared
 
-expect class KmmAppContext private constructor()
+import com.matrix.SmiteHandbookDatabase
+
+expect class KmmAppContext private constructor() {
+  fun getDatabase(): SmiteHandbookDatabase
+}

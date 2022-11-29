@@ -52,6 +52,7 @@ kotlin {
       dependencies {
         implementation("io.ktor:ktor-client-android:$ktorVersion")
         implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
+        implementation("com.squareup.sqldelight:coroutines-extensions:$sqlDelightVersion")
 
         // Old data module deps below
         // hilt
@@ -184,7 +185,7 @@ android {
 
 sqldelight {
   database("SmiteHandbookDatabase") {
-    packageName = "com.matrix.sqldelight"
+    packageName = "com.matrix"
   }
 }
 

@@ -1,0 +1,12 @@
+insertBuild:
+INSERT INTO BuildEntity(id, name, godId)
+VALUES(?, ?, ?);
+
+selectAllBuilds:
+SELECT *
+FROM BuildEntity
+JOIN BuildItemCrossRef ON BuildEntity.id = BuildItemCrossRef.buildId;
+
+selectBuildById:
+SELECT * FROM BuildEntity
+WHERE id = ?;

@@ -1,3 +1,9 @@
 package com.matrix.shared
 
-actual class KmmAppContext private actual constructor()
+import com.matrix.SmiteHandbookDatabase
+
+actual class KmmAppContext private actual constructor() {
+  actual fun getDatabase(): SmiteHandbookDatabase {
+    TODO("Not yet implemented")
+  }
+}
