@@ -22,6 +22,8 @@ kotlin {
   val ktorVersion = "2.1.2"
   val coroutinesVersion = "1.6.4"
   val sqlDelightVersion = "1.5.3"
+  val koinVersion = "3.2.2"
+  val koinAndroidVersion = "3.3.0"
   sourceSets {
     val commonMain by getting {
       dependencies {
@@ -39,11 +41,19 @@ kotlin {
         // Settings
         implementation("com.russhwolf:multiplatform-settings:1.0.0-RC")
         //implementation("com.russhwolf:multiplatform-settings-datastore:1.0.0-RC")
+
+        // KOIN DI
+        // Koin Core features
+        api("io.insert-koin:koin-core:$koinVersion")
+        // Koin for JUnit 4
+        //implementation("io.insert-koin:koin-test-junit4:$koinVersion")
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
+        // Koin Test features
+        implementation("io.insert-koin:koin-test:$koinVersion")
         //For runBlockingTest, CoroutineDispatcher etc.
         //testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_coroutines_test")
       }
@@ -54,6 +64,10 @@ kotlin {
         implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
         implementation("com.squareup.sqldelight:coroutines-extensions:$sqlDelightVersion")
 
+        // Koin main features for Android
+        api("io.insert-koin:koin-android:$koinAndroidVersion")
+        // Jetpack WorkManager
+        api("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
         // Old data module deps below
         // hilt
         //implementation("com.google.dagger:hilt-android:${rootProject.extra.get("hilt_version")}")

@@ -11,7 +11,7 @@ import com.matrix.shared.sqldelight.DatabaseDriverFactory
 import kotlinx.coroutines.flow.Flow
 
 class SmiteDatabaseLocalDataSource constructor(
-  private val database: SmiteHandbookDatabase = KmmAppContext.app
+  private val database: SmiteHandbookDatabase
 ) : SmiteLocalDataSource {
 
   override suspend fun saveGods(gods: List<GodEntity>) = database.godDao().insertAll(gods)

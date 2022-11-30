@@ -1,13 +1,11 @@
 package com.matrix.materializedsmite
 
 import android.app.Application
-import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
+import com.matrix.shared.data.injection.appModule
 import com.matrix.shared.initKmmAppContext
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
 
@@ -48,17 +46,22 @@ class SmiteApplication : Application()/*, Configuration.Provider*/ {
       //plant(CrashReportingTree())
     }
     // KMP Logging
-
     // TESTING: AppContext from KMP
     this.initKmmAppContext()
 
-    // Sync repository manually
-    val scope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { coroutineContext, throwable ->
-      Timber.e(throwable)
-    })
-    // TODO: Look into worker solutions for this for KMP
-    scope.launch {
-      OfflineFirstSmiteRepository().sync()
+//    // Sync repository manually
+//    val scope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { coroutineContext, throwable ->
+//      Timber.e(throwable)
+//    })
+//    // TODO: Look into worker solutions for this for KMP
+//    scope.launch {
+//      OfflineFirstSmiteRepository().sync()
+//    }
+
+    startKoin {
+      androidContext(this@SmiteApplication)
+      androidLogger()
+      modules(appModule())
     }
   }
 }

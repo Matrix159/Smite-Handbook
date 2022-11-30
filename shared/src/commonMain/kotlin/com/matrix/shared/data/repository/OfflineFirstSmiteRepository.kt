@@ -25,52 +25,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class OfflineFirstSmiteRepository constructor(
-  private val networkDataSource: SmiteRemoteDataSource = SmiteApiRemoteDataSource(),
-  private val localDataSource: SmiteLocalDataSource = object : SmiteLocalDataSource {
-    override suspend fun saveGods(gods: List<GodEntity>) {
-      TODO("Not yet implemented")
-    }
-
-    override fun getGods(): Flow<List<GodEntity>> {
-      return flow {
-        emit(emptyList())
-      }
-    }
-
-    override fun getGod(godId: Int): Flow<GodEntity> {
-      TODO("Not yet implemented")
-    }
-
-    override suspend fun saveItems(items: List<ItemEntity>) {
-      TODO("Not yet implemented")
-    }
-
-    override fun getItems(): Flow<List<ItemEntity>> {
-      TODO("Not yet implemented")
-    }
-
-    override fun getItem(itemId: Int): Flow<ItemEntity> {
-      TODO("Not yet implemented")
-    }
-
-    override suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>) {
-      TODO("Not yet implemented")
-    }
-
-    override fun getBuilds(): Flow<List<BuildDbResult>> {
-      TODO("Not yet implemented")
-    }
-
-    override fun getBuild(buildId: Int): Flow<BuildDbResult> {
-      TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteBuild(buildEntity: BuildEntity) {
-      TODO("Not yet implemented")
-    }
-
-  },// SmiteDatabaseLocalDataSource(),
-  private val patchVersionDataSource: PatchVersionDataSource = PatchVersionDataSourceImpl(),
+  private val networkDataSource: SmiteRemoteDataSource,
+  private val localDataSource: SmiteLocalDataSource,
+  private val patchVersionDataSource: PatchVersionDataSource,
 ) : SmiteRepository {
 
   val logger by lazy { Logger.withTag(OfflineFirstSmiteRepository::class.simpleName!!) }
