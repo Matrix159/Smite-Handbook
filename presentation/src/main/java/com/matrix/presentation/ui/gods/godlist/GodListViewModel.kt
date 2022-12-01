@@ -1,24 +1,21 @@
 package com.matrix.presentation.ui.gods.godlist
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.models.GodInformation
 import com.matrix.shared.data.models.Result
 import com.matrix.shared.data.models.asResult
-import com.matrix.shared.data.usecases.GetLatestGodsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 //@HiltViewModel
-class GodListViewModel /*@Inject*/ constructor(
-  getLatestGodsUseCase: GetLatestGodsUseCase
+class GodListViewModel /*@Inject*/ (
+  smiteRepository: SmiteRepository
 ) : ViewModel() {
-  val uiState = getLatestGodsUseCase().asResult().map { result ->
+
+  val uiState = smiteRepository.getGods().asResult().map { result ->
     when (result) {
       is Result.Success -> {
         when (result.data.isEmpty()) {
@@ -43,16 +40,14 @@ class GodListViewModel /*@Inject*/ constructor(
 
 
   // Define ViewModel factory in a companion object
-  companion object {
-    val Factory: ViewModelProvider.Factory = viewModelFactory {
-      initializer {
-        val savedStateHandle = createSavedStateHandle()
-        GodListViewModel(
-          GetLatestGodsUseCase()
-        )
-      }
-    }
-  }
+//  companion object {
+//    val Factory: ViewModelProvider.Factory = viewModelFactory {
+//      initializer {
+//        val savedStateHandle = createSavedStateHandle()
+//        GodListViewModel()
+//      }
+//    }
+//  }
 
 }
 

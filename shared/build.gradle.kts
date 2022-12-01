@@ -66,8 +66,12 @@ kotlin {
 
         // Koin main features for Android
         api("io.insert-koin:koin-android:$koinAndroidVersion")
+        // Koin for Jetpack Compose
+        api("io.insert-koin:koin-androidx-compose:$koinAndroidVersion")
         // Jetpack WorkManager
         api("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
+        // Navigation Graph
+        api("io.insert-koin:koin-androidx-navigation:$koinAndroidVersion")
         // Old data module deps below
         // hilt
         //implementation("com.google.dagger:hilt-android:${rootProject.extra.get("hilt_version")}")

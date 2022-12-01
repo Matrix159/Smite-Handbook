@@ -7,14 +7,13 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matrix.presentation.ui.items.navigation.ItemsNavigation
+import com.matrix.presentation.utils.ItemNode
 import com.matrix.shared.data.models.ItemInformation
 import com.matrix.shared.data.models.Result
 import com.matrix.shared.data.models.asResult
 import com.matrix.shared.data.usecases.GetItemUseCase
 import com.matrix.shared.data.usecases.GetLatestItemsUseCase
-import com.matrix.presentation.ui.items.navigation.ItemsNavigation
-import com.matrix.presentation.utils.ItemNode
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -23,7 +22,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
-import javax.inject.Inject
 
 //@HiltViewModel
 class ItemDetailsViewModel /*@Inject*/ constructor(

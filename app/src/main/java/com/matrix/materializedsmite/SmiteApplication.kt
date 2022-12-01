@@ -1,8 +1,9 @@
 package com.matrix.materializedsmite
 
 import android.app.Application
-import com.matrix.shared.data.injection.appModule
-import com.matrix.shared.initKmmAppContext
+import com.matrix.presentation.injection.presentationKoinModule
+import com.matrix.shared.data.injection.androidKoinModule
+import com.matrix.shared.data.injection.appKoinModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -45,23 +46,12 @@ class SmiteApplication : Application()/*, Configuration.Provider*/ {
     } else {
       //plant(CrashReportingTree())
     }
-    // KMP Logging
-    // TESTING: AppContext from KMP
-    this.initKmmAppContext()
 
-//    // Sync repository manually
-//    val scope = CoroutineScope(Dispatchers.IO + CoroutineExceptionHandler { coroutineContext, throwable ->
-//      Timber.e(throwable)
-//    })
-//    // TODO: Look into worker solutions for this for KMP
-//    scope.launch {
-//      OfflineFirstSmiteRepository().sync()
-//    }
-
+    // TODO: Need to hook patch sync worker back up
     startKoin {
       androidContext(this@SmiteApplication)
       androidLogger()
-      modules(appModule())
+      modules(presentationKoinModule() + androidKoinModule() + appKoinModule())
     }
   }
 }

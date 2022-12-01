@@ -21,13 +21,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.matrix.shared.data.models.GodInformation
 import com.matrix.presentation.R
 import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.Pantheon
 import com.matrix.presentation.models.filters.Role
 import com.matrix.presentation.ui.components.filters.FilterModal
 import com.matrix.presentation.ui.components.filters.SearchPanel
+import com.matrix.shared.data.models.GodInformation
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)

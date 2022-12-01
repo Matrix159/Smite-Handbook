@@ -1,9 +1,9 @@
 package com.matrix.shared.data.network.interfaces
 
+import com.matrix.shared.data.model.PatchVersionInfo
 import com.matrix.shared.data.network.model.GodApiResult
 import com.matrix.shared.data.network.model.GodSkinApiResult
 import com.matrix.shared.data.network.model.ItemApiResult
-import com.matrix.shared.data.model.PatchVersionInfo
 
 
 interface SmiteRemoteDataSource {

@@ -9,9 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matrix.shared.data.models.ItemInformation
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
+import com.matrix.shared.data.models.ItemInformation
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable

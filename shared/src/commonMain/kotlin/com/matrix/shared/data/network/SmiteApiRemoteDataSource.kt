@@ -12,7 +12,7 @@ import io.ktor.client.request.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @OptIn(ExperimentalSerializationApi::class)
-class SmiteApiRemoteDataSource : SmiteRemoteDataSource {
+class SmiteApiRemoteDataSource() : SmiteRemoteDataSource {
   private val baseUrl = "https://smite-handbook.onrender.com"
   private val client: HttpClient = ktorHttpClient
 

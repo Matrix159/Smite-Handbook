@@ -53,9 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.matrix.shared.data.models.BuildInformation
-import com.matrix.shared.data.models.GodInformation
-import com.matrix.shared.data.models.ItemInformation
 import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
@@ -63,6 +60,9 @@ import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.extension.conditional
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailUiState
 import com.matrix.presentation.ui.items.itemdetails.ItemDetails
+import com.matrix.shared.data.models.BuildInformation
+import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.models.ItemInformation
 import java.lang.Integer.max
 
 @OptIn(

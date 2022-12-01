@@ -3,16 +3,18 @@ package com.matrix.presentation.ui.gods.goddetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matrix.presentation.ui.gods.navigation.GodsNavigation
 import com.matrix.shared.data.models.GodInformation
 import com.matrix.shared.data.models.GodSkinInformation
 import com.matrix.shared.data.models.Result
 import com.matrix.shared.data.models.asResult
 import com.matrix.shared.data.usecases.GetGodSkinsUseCase
 import com.matrix.shared.data.usecases.GetGodUseCase
-import com.matrix.presentation.ui.gods.navigation.GodsNavigation
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import javax.inject.Inject
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 
 /*@HiltViewModel*/
 class GodDetailsViewModel /*@Inject*/ constructor(
