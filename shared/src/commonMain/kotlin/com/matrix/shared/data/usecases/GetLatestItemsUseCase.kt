@@ -2,10 +2,13 @@ package com.matrix.shared.data.usecases
 
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.models.ItemInformation
-import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class GetLatestItemsUseCase constructor(private val smiteRepository: SmiteRepository = OfflineFirstSmiteRepository()) {
+class GetLatestItemsUseCase: KoinComponent {
+  private val smiteRepository by inject<SmiteRepository>()
+
   operator fun invoke(): Flow<List<ItemInformation>> = smiteRepository.getItems().map { items -> items.filter { it.activeFlag } }
 }
