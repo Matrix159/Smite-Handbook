@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.presentation.ui.items.itemlist.FilterableItemList
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

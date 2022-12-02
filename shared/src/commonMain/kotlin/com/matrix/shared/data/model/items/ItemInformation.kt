@@ -1,4 +1,7 @@
-package com.matrix.shared.data.models
+package com.matrix.shared.data.model.items
+
+import com.matrix.shared.data.model.shared.DescriptionValue
+import kotlinx.serialization.Serializable
 
 data class ItemInformation(
   val itemID: Int,
@@ -18,6 +21,7 @@ data class ItemInformation(
   val itemIconURL: String,
 )
 
+@Serializable
 data class ItemDescription(
   val description: String? = null,
   val menuItems: List<DescriptionValue>,

@@ -27,7 +27,7 @@ import com.matrix.presentation.models.filters.ItemType
 import com.matrix.presentation.ui.components.filters.FilterModal
 import com.matrix.presentation.ui.components.filters.ItemFilters
 import com.matrix.presentation.ui.components.filters.SearchPanel
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)

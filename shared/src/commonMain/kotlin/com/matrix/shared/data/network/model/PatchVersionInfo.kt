@@ -1,4 +1,4 @@
-package com.matrix.shared.data.model
+package com.matrix.shared.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

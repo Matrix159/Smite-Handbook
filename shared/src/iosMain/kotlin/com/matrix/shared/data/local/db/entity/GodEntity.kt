@@ -1,7 +1,7 @@
 package com.matrix.shared.data.local.db.entity
 
-import com.matrix.shared.data.models.DescriptionValue
-import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.model.shared.DescriptionValue
+import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.network.model.GodApiResult
 
 actual data class GodEntity actual constructor(

@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.model.gods.GodInformation
 
 @Composable
 fun Lore(god: GodInformation, modifier: Modifier = Modifier) {

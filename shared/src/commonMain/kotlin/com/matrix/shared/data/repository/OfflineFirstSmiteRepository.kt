@@ -7,10 +7,10 @@ import com.matrix.shared.data.local.db.entity.GodEntity
 import com.matrix.shared.data.local.db.entity.ItemEntity
 import com.matrix.shared.data.local.interfaces.PatchVersionDataSource
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
-import com.matrix.shared.data.models.BuildInformation
-import com.matrix.shared.data.models.GodInformation
-import com.matrix.shared.data.models.GodSkinInformation
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.builds.BuildInformation
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.skins.GodSkinInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

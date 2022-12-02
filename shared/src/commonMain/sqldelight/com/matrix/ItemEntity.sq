@@ -14,15 +14,19 @@ rootItemID,
 shortDesc,
 startingItem,
 type,
-itemIconURL
+itemIconURL,
+itemDescription
 )
-VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 selectAllItems:
-SELECT *
-FROM ItemEntity entity
-JOIN ItemDescription AS desc ON entity.id = desc.itemEntityId
-JOIN MenuItem AS menuItem ON desc.id = menuItem.itemDescriptionId;
+SELECT * FROM ItemEntity;
+-- SELECT entity.*, desc.description, desc.secondaryDescription,
+-- menuItem.description menuItemDescription,
+-- menuItem.value menuItemValue
+--FROM ItemEntity entity
+-- JOIN ItemDescription AS desc ON entity.id = desc.itemEntityId
+--JOIN MenuItem AS menuItem ON desc.id = menuItem.itemDescriptionId;
 
 selectItemById:
 SELECT * FROM ItemEntity

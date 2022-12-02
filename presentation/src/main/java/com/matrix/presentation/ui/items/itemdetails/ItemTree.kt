@@ -22,7 +22,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.presentation.utils.ItemNode
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 
 val itemPadding = 8.dp
 val iconSize = 48.dp

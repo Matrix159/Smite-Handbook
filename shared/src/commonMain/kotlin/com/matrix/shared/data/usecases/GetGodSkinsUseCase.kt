@@ -1,7 +1,7 @@
 package com.matrix.shared.data.usecases
 
 import com.matrix.shared.data.contracts.SmiteRepository
-import com.matrix.shared.data.models.GodSkinInformation
+import com.matrix.shared.data.model.skins.GodSkinInformation
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject

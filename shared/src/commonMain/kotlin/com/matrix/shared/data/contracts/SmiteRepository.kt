@@ -1,9 +1,9 @@
 package com.matrix.shared.data.contracts
 
-import com.matrix.shared.data.models.BuildInformation
-import com.matrix.shared.data.models.GodInformation
-import com.matrix.shared.data.models.GodSkinInformation
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.builds.BuildInformation
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.skins.GodSkinInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.Flow
 
 interface SmiteRepository {

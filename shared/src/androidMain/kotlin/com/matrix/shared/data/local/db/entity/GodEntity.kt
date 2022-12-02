@@ -3,12 +3,12 @@ package com.matrix.shared.data.local.db.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.matrix.shared.data.models.DescriptionValue
-import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.model.shared.DescriptionValue
+import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.network.model.GodApiResult
-import com.matrix.shared.data.models.Ability as DomainAbility
-import com.matrix.shared.data.models.AbilityDescription as DomainAbilityDescription
-import com.matrix.shared.data.models.DescriptionValue as DomainDescriptionValue
+import com.matrix.shared.data.model.Ability as DomainAbility
+import com.matrix.shared.data.model.AbilityDescription as DomainAbilityDescription
+import com.matrix.shared.data.model.shared.DescriptionValue as DomainDescriptionValue
 
 @Entity(tableName = "gods")
 actual data class GodEntity actual constructor(

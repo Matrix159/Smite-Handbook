@@ -1,3 +1,6 @@
+import com.matrix.shared.data.model.items.ItemDescription;
+import com.matrix.shared.data.model.gods.Ability;
+
 CREATE TABLE BuildEntity (
     id       INTEGER NOT NULL PRIMARY KEY,
     name     TEXT,
@@ -5,36 +8,61 @@ CREATE TABLE BuildEntity (
 );
 
 CREATE TABLE ItemEntity (
-    id       INTEGER NOT NULL PRIMARY KEY,
-    patchVersion     TEXT,
-    activeFlag    INTEGER AS Boolean NOT NULL,
-    childItemID INTEGER AS Int NOT NULL,
-    deviceName TEXT NOT NULL,
-    glyph INTEGER AS Boolean NOT NULL,
-    iconID INTEGER AS Int NOT NULL,
-    itemTier INTEGER AS Int NOT NULL,
-    price INTEGER AS Int NOT NULL,
-    restrictedRoles TEXT NOT NULL,
-    rootItemID INTEGER AS Int NOT NULL,
-    shortDesc TEXT NOT NULL,
-    startingItem INTEGER AS Boolean NOT NULL,
-    type TEXT NOT NULL,
-    itemIconURL TEXT NOT NULL
+    id                  INTEGER NOT NULL PRIMARY KEY,
+    patchVersion        TEXT,
+    activeFlag          INTEGER AS Boolean NOT NULL,
+    childItemID         INTEGER AS Int NOT NULL,
+    deviceName          TEXT NOT NULL,
+    glyph               INTEGER AS Boolean NOT NULL,
+    iconID              INTEGER AS Int NOT NULL,
+    itemTier            INTEGER AS Int NOT NULL,
+    price               INTEGER AS Int NOT NULL,
+    restrictedRoles     TEXT NOT NULL,
+    rootItemID          INTEGER AS Int NOT NULL,
+    shortDesc           TEXT NOT NULL,
+    startingItem        INTEGER AS Boolean NOT NULL,
+    type                TEXT NOT NULL,
+    itemIconURL         TEXT NOT NULL,
+    itemDescription     TEXT AS ItemDescription NOT NULL
 );
 
-CREATE TABLE ItemDescription (
-    id INTEGER NOT NULL PRIMARY KEY,
-    description TEXT,
-    secondaryDescription TEXT,
-    itemEntityId INTEGER AS Int NOT NULL REFERENCES ItemEntity(id) ON DELETE CASCADE
+CREATE TABLE GodEntity (
+    id                  INTEGER NOT NULL PRIMARY KEY,
+    patchVersion        TEXT,
+    abilityDetails1     TEXT AS Ability NOT NULL,
+    abilityDetails2     TEXT AS Ability NOT NULL,
+    abilityDetails3     TEXT AS Ability NOT NULL,
+    abilityDetails4     TEXT AS Ability NOT NULL,
+    abilityDetails5     TEXT AS Ability NOT NULL,
+    activeFlag          INTEGER AS Boolean NOT NULL,
+    childItemID         INTEGER AS Int NOT NULL,
+    deviceName          TEXT NOT NULL,
+    glyph               INTEGER AS Boolean NOT NULL,
+    iconID              INTEGER AS Int NOT NULL,
+    itemTier            INTEGER AS Int NOT NULL,
+    price               INTEGER AS Int NOT NULL,
+    restrictedRoles     TEXT NOT NULL,
+    rootItemID          INTEGER AS Int NOT NULL,
+    shortDesc           TEXT NOT NULL,
+    startingItem        INTEGER AS Boolean NOT NULL,
+    type                TEXT NOT NULL,
+    itemIconURL         TEXT NOT NULL,
+    itemDescription     TEXT AS ItemDescription NOT NULL
 );
 
-CREATE TABLE MenuItem (
-    id INTEGER NOT NULL PRIMARY KEY,
-    description TEXT NOT NULL,
-    value TEXT NOT NULL,
-    itemDescriptionId INTEGER REFERENCES ItemDescription(id) ON DELETE CASCADE
-);
+--CREATE TABLE ItemDescription (
+--    id INTEGER NOT NULL PRIMARY KEY,
+--    description TEXT,
+--    secondaryDescription TEXT,
+--    itemEntityId INTEGER AS Int NOT NULL REFERENCES ItemEntity(id) ON DELETE CASCADE
+--);
+--
+--CREATE TABLE MenuItem (
+--    id INTEGER NOT NULL PRIMARY KEY,
+--    description TEXT NOT NULL,
+--    value TEXT NOT NULL,
+--    itemDescriptionId INTEGER REFERENCES ItemDescription(id) ON DELETE CASCADE
+--);
 
 CREATE TABLE BuildItemCrossRef (
    buildId  INTEGER NOT NULL REFERENCES BuildEntity(id) ON DELETE CASCADE,

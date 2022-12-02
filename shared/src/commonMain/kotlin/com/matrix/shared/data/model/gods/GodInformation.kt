@@ -1,4 +1,4 @@
-package com.matrix.shared.data.models
+package com.matrix.shared.data.model.gods
 
 data class GodInformation(
   val id: Int,
@@ -149,19 +149,6 @@ data class GodInformation(
 }
 
 
-data class AbilityDescription(
-  val cooldown: String,
-  val cost: String,
-  val description: String,
-  val menuItems: List<DescriptionValue>,
-  val rankItems: List<DescriptionValue>
-)
 
-data class Ability(
-  val id: Long,
-  val description: AbilityDescription,
-  val summary: String,
-  val url: String
-)
 
 

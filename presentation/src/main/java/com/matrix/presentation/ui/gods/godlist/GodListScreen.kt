@@ -10,7 +10,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.model.gods.GodInformation
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable

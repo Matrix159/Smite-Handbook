@@ -3,9 +3,9 @@ package com.matrix.presentation.ui.gods.godlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.shared.data.contracts.SmiteRepository
-import com.matrix.shared.data.models.GodInformation
-import com.matrix.shared.data.models.Result
-import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

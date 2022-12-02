@@ -33,6 +33,7 @@ kotlin {
         implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
         implementation("io.ktor:ktor-client-logging:$ktorVersion")
         implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
+        implementation("com.squareup.sqldelight:coroutines-extensions:$sqlDelightVersion")
         // timber for logging
         //implementation("com.jakewharton.timber:timber:5.0.1")
         // Logging, using this until timber supports KMP
@@ -62,7 +63,6 @@ kotlin {
       dependencies {
         implementation("io.ktor:ktor-client-android:$ktorVersion")
         implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
-        implementation("com.squareup.sqldelight:coroutines-extensions:$sqlDelightVersion")
 
         // Koin main features for Android
         api("io.insert-koin:koin-android:$koinAndroidVersion")

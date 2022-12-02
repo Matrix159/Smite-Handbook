@@ -1,6 +1,6 @@
 package com.matrix.presentation.utils
 
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 
 
 class ItemNode(var value: ItemInformation) {

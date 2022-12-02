@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.presentation.ui.gods.navigation.GodsNavigation
-import com.matrix.shared.data.models.GodInformation
-import com.matrix.shared.data.models.GodSkinInformation
-import com.matrix.shared.data.models.Result
-import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.skins.GodSkinInformation
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.usecases.GetGodSkinsUseCase
 import com.matrix.shared.data.usecases.GetGodUseCase
 import kotlinx.coroutines.flow.SharingStarted

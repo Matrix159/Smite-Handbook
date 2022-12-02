@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.presentation.R
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 
 @Composable
 fun ItemDetails(

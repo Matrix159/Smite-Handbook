@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import com.matrix.shared.data.models.BuildInformation
+import com.matrix.shared.data.model.builds.BuildInformation
 
 @Entity(tableName = "builds")
 actual data class BuildEntity actual constructor(

@@ -1,24 +1,23 @@
 package com.matrix.shared.data.local.interfaces
 
-import com.matrix.shared.data.local.db.entity.BuildDbResult
-import com.matrix.shared.data.local.db.entity.BuildEntity
-import com.matrix.shared.data.local.db.entity.GodEntity
-import com.matrix.shared.data.local.db.entity.ItemEntity
+import com.matrix.BuildEntity
+import com.matrix.ItemEntity
 import kotlinx.coroutines.flow.Flow
 
+// TODO UPDATE THE TYPES BELOW
 interface SmiteLocalDataSource {
   /**
    * Saves the god list and patch version to the local data source
    * @param gods List of god entities to save
    */
-  suspend fun saveGods(gods: List<GodEntity>)
+  suspend fun saveGods(gods: List<ItemEntity>)
 
   /**
    * Retrieves the saved god list with an attach smite patch version
    */
-  fun getGods(): Flow<List<GodEntity>>
+  fun getGods(): Flow<List<ItemEntity>>
 
-  fun getGod(godId: Int): Flow<GodEntity>
+  fun getGod(godId: Int): Flow<ItemEntity>
 
   /**
    * Saves the item list and patch version to the local data source
@@ -33,9 +32,9 @@ interface SmiteLocalDataSource {
   fun getItem(itemId: Int): Flow<ItemEntity>
 
   suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>)
-  fun getBuilds(): Flow<List<BuildDbResult>>
+  fun getBuilds(): Flow<List<BuildEntity>>
 
-  fun getBuild(buildId: Int): Flow<BuildDbResult>
+  fun getBuild(buildId: Int): Flow<BuildEntity>
 
   suspend fun deleteBuild(buildEntity: BuildEntity)
 }

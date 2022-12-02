@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.shared.data.models.GodInformation
+import com.matrix.shared.data.model.gods.GodInformation
 import java.util.Locale
 import kotlin.math.abs
 

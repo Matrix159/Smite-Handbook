@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.presentation.ui.items.navigation.ItemsNavigation
 import com.matrix.presentation.utils.ItemNode
-import com.matrix.shared.data.models.ItemInformation
-import com.matrix.shared.data.models.Result
-import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.model.items.ItemInformation
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.usecases.GetItemUseCase
 import com.matrix.shared.data.usecases.GetLatestItemsUseCase
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,4 +1,4 @@
-package com.matrix.shared.data.models
+package com.matrix.shared.data.model.skins
 
 data class GodSkinInformation(
   val godIconURL: String,

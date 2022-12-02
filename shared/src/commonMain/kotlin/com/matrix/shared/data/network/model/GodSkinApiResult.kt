@@ -1,6 +1,6 @@
 package com.matrix.shared.data.network.model
 
-import com.matrix.shared.data.models.GodSkinInformation
+import com.matrix.shared.data.model.skins.GodSkinInformation
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

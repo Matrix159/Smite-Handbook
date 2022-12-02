@@ -1,10 +1,10 @@
 package com.matrix.shared.data.network
 
-import com.matrix.shared.data.model.PatchVersionInfo
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.shared.data.network.model.GodApiResult
 import com.matrix.shared.data.network.model.GodSkinApiResult
 import com.matrix.shared.data.network.model.ItemApiResult
+import com.matrix.shared.data.network.model.PatchVersionInfo
 import com.matrix.shared.network.ktorHttpClient
 import io.ktor.client.*
 import io.ktor.client.call.*

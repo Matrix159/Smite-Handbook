@@ -2,7 +2,7 @@ package com.matrix.data.fakes
 
 import com.matrix.data.builder.getMockGodApiResult
 import com.matrix.data.builder.getMockItemApiResult
-import com.matrix.shared.data.model.PatchVersionInfo
+import com.matrix.shared.data.network.model.PatchVersionInfo
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.shared.data.network.model.GodApiResult
 import com.matrix.shared.data.network.model.GodSkinApiResult

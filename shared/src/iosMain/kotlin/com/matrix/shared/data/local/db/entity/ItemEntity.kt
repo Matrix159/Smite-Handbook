@@ -1,9 +1,9 @@
 package com.matrix.shared.data.local.db.entity
 
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.network.model.ItemApiResult
-import com.matrix.shared.data.models.DescriptionValue as DomainDescriptionValue
-import com.matrix.shared.data.models.ItemDescription as DomainItemDescription
+import com.matrix.shared.data.model.shared.DescriptionValue as DomainDescriptionValue
+import com.matrix.shared.data.model.items.ItemDescription as DomainItemDescription
 
 actual data class ItemEntity actual constructor(
   actual val id: Int,

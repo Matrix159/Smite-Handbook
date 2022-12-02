@@ -1,6 +1,6 @@
 package com.matrix.shared.data.local.db.entity
 
-import com.matrix.shared.data.models.BuildInformation
+import com.matrix.shared.data.model.builds.BuildInformation
 
 actual data class BuildEntity actual constructor(
   actual val id: Int?,

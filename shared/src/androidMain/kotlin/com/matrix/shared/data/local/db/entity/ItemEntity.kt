@@ -3,10 +3,10 @@ package com.matrix.shared.data.local.db.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.network.model.ItemApiResult
-import com.matrix.shared.data.models.DescriptionValue as DomainDescriptionValue
-import com.matrix.shared.data.models.ItemDescription as DomainItemDescription
+import com.matrix.shared.data.model.shared.DescriptionValue as DomainDescriptionValue
+import com.matrix.shared.data.model.items.ItemDescription as DomainItemDescription
 
 @Entity(tableName = "items")
 actual data class ItemEntity actual constructor(

@@ -60,9 +60,9 @@ import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.extension.conditional
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailUiState
 import com.matrix.presentation.ui.items.itemdetails.ItemDetails
-import com.matrix.shared.data.models.BuildInformation
-import com.matrix.shared.data.models.GodInformation
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.builds.BuildInformation
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import java.lang.Integer.max
 
 @OptIn(

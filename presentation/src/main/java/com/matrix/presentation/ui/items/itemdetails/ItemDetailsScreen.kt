@@ -13,7 +13,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.shared.data.models.ItemInformation
+import com.matrix.shared.data.model.items.ItemInformation
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.matrix.shared.data.models
+package com.matrix.shared.data.model
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

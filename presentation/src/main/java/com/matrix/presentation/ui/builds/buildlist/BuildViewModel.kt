@@ -2,9 +2,9 @@ package com.matrix.presentation.ui.builds.buildlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.shared.data.models.BuildInformation
-import com.matrix.shared.data.models.Result
-import com.matrix.shared.data.models.asResult
+import com.matrix.shared.data.model.builds.BuildInformation
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.usecases.BuildsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
