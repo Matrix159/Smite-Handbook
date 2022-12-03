@@ -1,10 +1,8 @@
 package com.matrix.shared.data.repository
 
 import co.touchlab.kermit.Logger
+import com.matrix.GodEntity
 import com.matrix.shared.data.contracts.SmiteRepository
-import com.matrix.shared.data.local.db.entity.BuildEntity
-import com.matrix.shared.data.local.db.entity.GodEntity
-import com.matrix.shared.data.local.db.entity.ItemEntity
 import com.matrix.shared.data.local.interfaces.PatchVersionDataSource
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.shared.data.model.builds.BuildInformation
@@ -12,6 +10,8 @@ import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.skins.GodSkinInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
+import com.matrix.shared.data.model.toDomain
+import com.matrix.shared.data.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -44,32 +44,29 @@ class OfflineFirstSmiteRepository constructor(
   override fun getItem(itemId: Int): Flow<ItemInformation> =
     localDataSource.getItem(itemId).map { it.toDomain() }
 
+  override fun getBuilds(): Flow<List<BuildInformation>> = flow {}
+    //localDataSource.getBuilds().map { list -> list.map { it.toDomain() } }
 
-
-
-  override fun getBuilds(): Flow<List<BuildInformation>> =
-    localDataSource.getBuilds().map { list -> list.map { it.toDomain() } }
-
-  override fun getBuild(buildId: Int): Flow<BuildInformation> =
-    localDataSource.getBuild(buildId).map { it.toDomain() }
+  override fun getBuild(buildId: Int): Flow<BuildInformation> = flow {}
+    //localDataSource.getBuild(buildId).map { it.toDomain() }
 
   override suspend fun createBuild(buildInformation: BuildInformation) {
-    localDataSource.createBuild(
-      buildEntity = BuildEntity(
-        id = buildInformation.id,
-        godId = buildInformation.god.id,
-        name = buildInformation.name
-      ),
-      itemIds = buildInformation.items.map { it.itemID })
+//    localDataSource.createBuild(
+//      buildEntity = BuildEntity(
+//        id = buildInformation.id,
+//        godId = buildInformation.god.id,
+//        name = buildInformation.name
+//      ),
+//      itemIds = buildInformation.items.map { it.itemID })
   }
 
   override suspend fun deleteBuild(buildInformation: BuildInformation) {
-    localDataSource.deleteBuild(
-      BuildEntity(
-        id = buildInformation.id,
-        godId = buildInformation.god.id
-      )
-    )
+//    localDataSource.deleteBuild(
+//      BuildEntity(
+//        id = buildInformation.id,
+//        godId = buildInformation.god.id
+//      )
+//    )
   }
 
   override suspend fun sync() = withContext(Dispatchers.Default) {
@@ -98,7 +95,7 @@ class OfflineFirstSmiteRepository constructor(
     val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
     val newData = networkDataSource.getGods()
     localDataSource.saveGods(newData.map {
-      GodEntity.fromApi(it, patchVersion = currentPatchVersion)
+      it.toEntity()
     })
     logger.d("Saved new god data to local storage")
   }
@@ -107,7 +104,7 @@ class OfflineFirstSmiteRepository constructor(
     val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
     val newData = networkDataSource.getItems()
     localDataSource.saveItems(newData.map {
-      ItemEntity.fromApi(it, patchVersion = currentPatchVersion)
+      it.toEntity()
     })
     logger.d("Saved new item data to local storage")
   }

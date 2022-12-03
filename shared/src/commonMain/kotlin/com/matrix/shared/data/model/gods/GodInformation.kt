@@ -1,7 +1,7 @@
 package com.matrix.shared.data.model.gods
 
 data class GodInformation(
-  val id: Int,
+  val id: Long,
   val abilityDetails1: Ability,
   val abilityDetails2: Ability,
   val abilityDetails3: Ability,

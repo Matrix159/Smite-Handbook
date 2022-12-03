@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.shared.data.model.Ability
-import com.matrix.shared.data.model.AbilityDescription
+import com.matrix.shared.data.model.gods.Ability
+import com.matrix.shared.data.model.gods.AbilityDescription
 
 @Composable
 fun AbilityCard(

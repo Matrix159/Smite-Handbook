@@ -27,6 +27,6 @@ package com.matrix.shared.data.local.db.entity
 //  val god: GodEntity
 //  val items: List<ItemEntity>
 //
-//  fun toDomain(): BuildInformation
+//  fun com.matrix.shared.data.model.toDomain(): BuildInformation
 //}
 

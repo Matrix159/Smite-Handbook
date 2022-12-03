@@ -13,11 +13,11 @@ class ItemNode(var value: ItemInformation) {
     node.parent = this
   }
 
-  fun findChildren(itemsGroupedByTier: Map<Int, List<ItemInformation>>): ItemNode {
+  fun findChildren(itemsGroupedByTier: Map<Long, List<ItemInformation>>): ItemNode {
     val currentTier = this.value.itemTier
 
-    if (itemsGroupedByTier.containsKey(currentTier + 1)) {
-      itemsGroupedByTier[currentTier + 1]!!
+    if (itemsGroupedByTier.containsKey((currentTier + 1).toLong())) {
+      itemsGroupedByTier[(currentTier + 1).toLong()]!!
         .filter { it.childItemID == this.value.itemID }
         .forEach {
           addChild(ItemNode(it).findChildren(itemsGroupedByTier))

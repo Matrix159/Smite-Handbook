@@ -171,7 +171,7 @@ fun BuildDetailsScreen(
                 val requiredWidth = max(textFieldPlaceable.height, textPlaceable.width)
                 val requiredHeight = max(textFieldPlaceable.height, textPlaceable.height)
                 layout(requiredWidth, requiredHeight) {
-                  when (editDetailState.inEditMode) {
+                  when (inEditMode) {
                     // Center the placeables
                     true -> textFieldPlaceable.place(
                       x = (requiredWidth - textFieldPlaceable.width) / 2,

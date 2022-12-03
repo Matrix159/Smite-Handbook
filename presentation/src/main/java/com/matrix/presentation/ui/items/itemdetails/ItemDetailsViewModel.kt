@@ -77,7 +77,7 @@ class ItemDetailsViewModel /*@Inject*/ constructor(
     itemInformationList.filter { item -> item.itemTier == 1 }.forEach {
       baseNodes.add(ItemNode(it))
     }
-    val itemsGroupedByTier = itemInformationList.groupBy { it.itemTier }
+    val itemsGroupedByTier = itemInformationList.groupBy { it.itemTier.toLong() }
     baseNodes.forEach { node ->
       node.findChildren(itemsGroupedByTier)
     }

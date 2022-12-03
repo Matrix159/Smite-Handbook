@@ -1,6 +1,7 @@
 package com.matrix.shared.data.local
 
 import com.matrix.BuildEntity
+import com.matrix.GodEntity
 import com.matrix.ItemEntity
 import com.matrix.SmiteHandbookDatabase
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
@@ -13,15 +14,15 @@ class SmiteDatabaseLocalDataSource constructor(
   private val database: SmiteHandbookDatabase,
 ) : SmiteLocalDataSource {
 
-  override suspend fun saveGods(gods: List<ItemEntity>) {} //database.godDao().insertAll(gods)
+  override suspend fun saveGods(gods: List<GodEntity>) {} //database.godDao().insertAll(gods)
 
-  override fun getGods(): Flow<List<ItemEntity>> = flow {
+  override fun getGods(): Flow<List<GodEntity>> = flow {
     emit(
       emptyList()
     )
   } // database.godDao().getAll()
 
-  override fun getGod(godId: Int): Flow<ItemEntity> = flow {
+  override fun getGod(godId: Int): Flow<GodEntity> = flow {
     //GodEntity()
     //database.godDao().getGod(godId)
   }
@@ -33,7 +34,7 @@ class SmiteDatabaseLocalDataSource constructor(
   override suspend fun createBuild(buildEntity: BuildEntity, itemIds: List<Int>) {}
     //database.buildDao().createBuild(buildEntity, itemIds)
 
-  override fun getBuilds(): Flow<List<BuildEntity>> = flow{}// database.buildDao().getAll()
+  override fun getBuilds(): Flow<List<BuildEntity>> = flow{}//database.buildEntityQueries.selectAllBuilds().asFlow().mapToList()
   override fun getBuild(buildId: Int): Flow<BuildEntity> = flow{} //database.buildDao().getBuild(buildId)
 
   override suspend fun deleteBuild(buildEntity: BuildEntity) {}

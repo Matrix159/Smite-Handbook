@@ -3,9 +3,11 @@ INSERT INTO BuildEntity(id, name, godId)
 VALUES(?, ?, ?);
 
 selectAllBuilds:
-SELECT *
-FROM BuildEntity
-JOIN BuildItemCrossRef ON BuildEntity.id = BuildItemCrossRef.buildId;
+SELECT buildEntity.*, godEntity.*
+FROM BuildEntity AS buildEntity
+JOIN GodEntity AS godEntity ON godEntity.id = buildEntity.godId;
+--JOIN BuildItemCrossRef AS crossRef ON buildEntity.id = crossRef.buildId
+--JOIN ItemEntity AS itemEntity ON crossRef.itemId = itemEntity.id;
 
 selectBuildById:
 SELECT * FROM BuildEntity

@@ -108,7 +108,7 @@ fun SwipeToDeleteCard(
           it.swipeable(
             swipeableState,
             anchors = anchors,
-            thresholds = { state1, state2 ->
+            thresholds = { _, _ ->
               FractionalThreshold(0.8f)
             },
             // This doesn't really seem to have an affect on swiping...

@@ -1,7 +1,6 @@
 insertItem:
 INSERT INTO ItemEntity(
 id,
-patchVersion,
 activeFlag,
 childItemID,
 deviceName,
@@ -17,7 +16,7 @@ type,
 itemIconURL,
 itemDescription
 )
-VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 selectAllItems:
 SELECT * FROM ItemEntity;

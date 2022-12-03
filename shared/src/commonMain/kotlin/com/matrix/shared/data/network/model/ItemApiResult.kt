@@ -9,7 +9,7 @@ data class ItemApiResult(
   val activeFlag: String,
 
   @SerialName("ChildItemId")
-  val childItemID: Int,
+  val childItemID: Long,
 
   @SerialName("DeviceName")
   val deviceName: String,
@@ -27,7 +27,7 @@ data class ItemApiResult(
   val itemDescription: ItemDescription,
 
   @SerialName("ItemId")
-  val itemID: Int,
+  val itemID: Long,
 
   @SerialName("ItemTier")
   val itemTier: Int,

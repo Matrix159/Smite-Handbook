@@ -4,9 +4,9 @@ import com.matrix.shared.data.model.shared.DescriptionValue
 import kotlinx.serialization.Serializable
 
 data class ItemInformation(
-  val itemID: Int,
+  val itemID: Long,
   val activeFlag: Boolean,
-  val childItemID: Int,
+  val childItemID: Long,
   val deviceName: String,
   val glyph: Boolean,
   val iconID: Int,

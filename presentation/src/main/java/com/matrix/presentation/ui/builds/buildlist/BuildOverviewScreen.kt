@@ -51,7 +51,7 @@ import timber.log.Timber
 fun BuildOverviewScreen(
   viewModel: BuildViewModel,
   createBuild: () -> Unit,
-  goToBuildDetails: (buildId: Int) -> Unit,
+  goToBuildDetails: (buildId: Long) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(

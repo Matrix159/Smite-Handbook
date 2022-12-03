@@ -114,7 +114,7 @@ data class GodApiResult(
 
   @SerialName("godIcon_URL") val godIconURL: String,
 
-  val id: Int,
+  val id: Long,
   val latestGod: String,
 
   @SerialName("ret_msg") val retMsg: String?

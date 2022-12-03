@@ -85,7 +85,7 @@ package com.matrix.shared.data.local.db.entity
 //  val latestGod: Boolean
 //
 //  //region conversions
-//  fun toDomain(): GodInformation
+//  fun com.matrix.shared.data.model.toDomain(): GodInformation
 //
 //  companion object {
 //    fun fromApi(god: GodApiResult, patchVersion: String?): GodEntity

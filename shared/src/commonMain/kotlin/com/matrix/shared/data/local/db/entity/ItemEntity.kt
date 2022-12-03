@@ -34,7 +34,7 @@ package com.matrix.shared.data.local.db.entity
 //  val startingItem: Boolean
 //  val type: String
 //  val itemIconURL: String
-//  fun toDomain(): ItemInformation
+//  fun com.matrix.shared.data.model.toDomain(): ItemInformation
 //
 //  companion object {
 //    fun fromApi(itemApiResult: ItemApiResult, patchVersion: String?): ItemEntity

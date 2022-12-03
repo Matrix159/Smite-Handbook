@@ -26,7 +26,7 @@ fun BuildOverviewCard(
   buildInformation: BuildInformation,
   modifier: Modifier = Modifier,
   onDelete: () -> Unit,
-  goToBuildDetails: (id: Int) -> Unit,
+  goToBuildDetails: (id: Long) -> Unit,
 ) {
   SwipeToDeleteCard(onDelete = onDelete, modifier = modifier) {
     Card(onClick = { goToBuildDetails(buildInformation.id!!) }) {
