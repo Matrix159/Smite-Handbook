@@ -1,12 +1,12 @@
-package com.matrix.data.fakes
+package com.matrix.shared.data.fakes
 
-import com.matrix.data.builder.getMockGodApiResult
-import com.matrix.data.builder.getMockItemApiResult
-import com.matrix.shared.data.network.model.PatchVersionInfo
+import com.matrix.shared.data.builder.getMockGodApiResult
+import com.matrix.shared.data.builder.getMockItemApiResult
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.shared.data.network.model.GodApiResult
 import com.matrix.shared.data.network.model.GodSkinApiResult
 import com.matrix.shared.data.network.model.ItemApiResult
+import com.matrix.shared.data.network.model.PatchVersionInfo
 
 class SmiteRemoteDataSourceFake: SmiteRemoteDataSource {
   private var godsToReturn = mutableListOf(getMockGodApiResult(1), getMockGodApiResult(2))
@@ -14,7 +14,7 @@ class SmiteRemoteDataSourceFake: SmiteRemoteDataSource {
   private var currentPatchVersionInfo = PatchVersionInfo("9.7")
   override suspend fun getGods(): List<GodApiResult> = godsToReturn
 
-  override suspend fun getGodSkins(godId: Int): List<GodSkinApiResult> {
+  override suspend fun getGodSkins(godId: Long): List<GodSkinApiResult> {
     TODO("Not yet implemented")
   }
 

@@ -65,7 +65,7 @@ fun CreateBuildScreen(
   modifier: Modifier = Modifier,
 ) {
 
-  val buildUiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
+  val _buildUiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
 
   val focusManager = LocalFocusManager.current
 
@@ -90,7 +90,7 @@ fun CreateBuildScreen(
   ) {
     // Creating local variables to get around the open getter error
 
-    when (val buildUiState = buildUiState) {
+    when (val buildUiState = _buildUiState) {
       is CreateBuildUiState.Error -> ErrorText(buildUiState.exception)
       is CreateBuildUiState.Loading -> Loader()
       is CreateBuildUiState.Success -> {

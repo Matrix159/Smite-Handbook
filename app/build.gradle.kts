@@ -61,6 +61,10 @@ android {
         }
     }
     namespace = "com.matrix.materializedsmite"
+
+    lint {
+        abortOnError=false
+    }
 }
 
 dependencies {

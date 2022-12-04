@@ -1,4 +1,4 @@
-package com.matrix.data.fakes
+package com.matrix.shared.data.fakes
 
 import com.matrix.shared.data.local.interfaces.PatchVersionDataSource
 import kotlinx.coroutines.flow.Flow

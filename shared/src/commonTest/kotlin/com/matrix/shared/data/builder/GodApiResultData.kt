@@ -1,4 +1,4 @@
-package com.matrix.data.builder
+package com.matrix.shared.data.builder
 
 import com.matrix.shared.data.network.model.Ability
 import com.matrix.shared.data.network.model.AbilityDescription
@@ -6,7 +6,7 @@ import com.matrix.shared.data.network.model.AbilityItemDescription
 import com.matrix.shared.data.network.model.GodApiResult
 import com.matrix.shared.data.network.model.LowerDescriptionValue
 
-fun getMockGodApiResult(id: Int) = GodApiResult(
+fun getMockGodApiResult(id: Long) = GodApiResult(
   id = id,
   ability1 = "ability1 test",
   ability2 = "ability2 test",

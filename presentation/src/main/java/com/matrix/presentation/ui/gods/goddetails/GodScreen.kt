@@ -35,7 +35,7 @@ fun GodScreen(
   godDetailsViewModel: GodDetailsViewModel,
   modifier: Modifier = Modifier
 ) {
-  val godDetailsUiState by godDetailsViewModel.godDetailsUiState.collectAsStateWithLifecycle()
+  val _godDetailsUiState by godDetailsViewModel.godDetailsUiState.collectAsStateWithLifecycle()
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
 
@@ -90,7 +90,7 @@ fun GodScreen(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier
   ) {
-    when (val godDetailsUiState = godDetailsUiState) {
+    when (val godDetailsUiState = _godDetailsUiState) {
       GodDetailsUiState.Loading -> Loader()
       is GodDetailsUiState.Error -> ErrorText(godDetailsUiState.exception.toString())
       is GodDetailsUiState.Success -> {

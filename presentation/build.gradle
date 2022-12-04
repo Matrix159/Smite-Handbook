@@ -48,6 +48,10 @@ android {
         }
     }
     namespace 'com.matrix.presentation'
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

@@ -1,15 +1,15 @@
 package com.matrix.shared.data.builder
 
-import com.matrix.shared.data.network.model.ItemApiResult
-import com.matrix.shared.data.network.model.ItemDescription
-import com.matrix.shared.data.network.model.UpperDescriptionValue
+import com.matrix.shared.data.model.items.ItemDescription
+import com.matrix.shared.data.model.items.ItemInformation
+import com.matrix.shared.data.model.shared.DescriptionValue
 
-fun getMockItemApiResult(id: Long) = ItemApiResult(
+fun getMockItemInformation(id: Long) = ItemInformation(
   itemID = id,
-  activeFlag = "activeFlag test",
+  activeFlag = true,
   childItemID = 1,
   deviceName = "deviceName test",
-  glyph = "glyph test",
+  glyph = true,
   iconID = 1,
   itemDescription = getMockItemDescription(),
   itemTier = 1,
@@ -19,17 +19,17 @@ fun getMockItemApiResult(id: Long) = ItemApiResult(
   shortDesc = "shortDesc test",
   startingItem = true,
   type = "type test",
-  itemIconURL = "itemIconURL test",
-  retMsg = "retMsg test"
+  itemIconURL = "itemIconURL test"
 )
 
 private fun getMockItemDescription() = ItemDescription(
   description = "description test",
-  menuItems = listOf(getMockUpperDescriptionValue()),
+  menuItems = listOf(getMockDescriptionValue()),
   secondaryDescription = "secondaryDescription test"
 )
 
-private fun getMockUpperDescriptionValue() = UpperDescriptionValue(
+
+private fun getMockDescriptionValue() = DescriptionValue(
   description = "description test",
   value = "value test"
 )

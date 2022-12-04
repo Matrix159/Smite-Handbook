@@ -1,13 +1,12 @@
-package com.matrix.data.builder
+package com.matrix.shared.data.builder
 
-import com.matrix.shared.data.local.db.entity.Ability
-import com.matrix.shared.data.local.db.entity.AbilityDescription
-import com.matrix.shared.data.local.db.entity.GodEntity
-import com.matrix.shared.data.local.db.model.DescriptionValue
+import com.matrix.GodEntity
+import com.matrix.shared.data.model.gods.Ability
+import com.matrix.shared.data.model.gods.AbilityDescription
+import com.matrix.shared.data.model.shared.DescriptionValue
 
-fun getMockGodEntity(id: Int) = GodEntity(
+fun getMockGodEntity(id: Long) = GodEntity(
   id = id,
-  patchVersion = "patchVersion test",
   abilityDetails1 = getMockAbility(),
   abilityDetails2 = getMockAbility(),
   abilityDetails3 = getMockAbility(),

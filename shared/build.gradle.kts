@@ -24,6 +24,8 @@ kotlin {
   val sqlDelightVersion = "1.5.3"
   val koinVersion = "3.2.2"
   val koinAndroidVersion = "3.3.0"
+  val kotlinxCoroutinesTest = "1.6.4"
+  val jUnitVersion = "4.13.2"
   sourceSets {
     val commonMain by getting {
       dependencies {
@@ -53,10 +55,11 @@ kotlin {
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
+        //implementation("junit:junit:$jUnitVersion")
         // Koin Test features
         implementation("io.insert-koin:koin-test:$koinVersion")
         //For runBlockingTest, CoroutineDispatcher etc.
-        //testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_coroutines_test")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
       }
     }
     val androidMain by getting {
@@ -97,45 +100,9 @@ kotlin {
 //        )
 
 
-//                // timber for logging
-//                implementation "com.jakewharton.timber:timber:5.0.1"
-//
-//                // work manager
-//                // Kotlin + coroutines
-        //implementation("androidx.work:work-runtime-ktx:${rootProject.extra.get("work_version")}")
-//                // optional - Test helpers
-//                androidTestImplementation "androidx.work:work-testing:$work_version"
-//
         // data store
         implementation("androidx.datastore:datastore-preferences:${rootProject.extra.get("datastore_version")}")
-//
-//                // app startup
-//                implementation "androidx.startup:startup-runtime:1.1.1"
-//
-//
-        // room db
-        implementation("androidx.room:room-runtime:${rootProject.extra.get("room_version")}")
-//        configurations.getByName("annotationProcessor").dependencies.add(
-//          org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
-//            "androidx.room",
-//            "room-compiler",
-//            "2.4.3"
-//          )
-//        )
-        //add("kspAndroid", project(":test-processor"))
-//        configurations.getByName("ksp").dependencies.add(
-//          org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
-//            "androidx.room",
-//            "room-compiler",
-//            "2.4.3"
-//          )
-//        )
-        implementation("androidx.room:room-ktx:${rootProject.extra.get("room_version")}")
-        // To use Kotlin annotation processing tool (kapt)
-        //configurations["kapt"].dependencies.add(project.dependencies.create("androidx.room:room-compiler:${rootProject.extra.get("room_version")}"))
-        //kapt("androidx.room:room-compiler:${rootProject.extra.get("room_version")}")
-        // optional - Test helpers
-        //testImplementation("androidx.room:room-testing:${rootProject.extra.get("room_version")}")
+
 //
 //                testImplementation "junit:junit:$junit_version"
 //                testImplementation "io.mockk:mockk:$mockk_version"
@@ -179,6 +146,7 @@ dependencies {
 android {
   namespace = "com.matrix.shared"
   compileSdk = 33
+  sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
   defaultConfig {
     minSdk = 26
     targetSdk = 33
@@ -198,6 +166,10 @@ android {
       isMinifyEnabled = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
+  }
+
+  lint {
+    abortOnError=false
   }
 }
 

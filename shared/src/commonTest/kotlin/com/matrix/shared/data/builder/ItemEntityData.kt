@@ -1,12 +1,11 @@
-package com.matrix.data.builder
+package com.matrix.shared.data.builder
 
-import com.matrix.shared.data.local.db.entity.ItemDescription
-import com.matrix.shared.data.local.db.entity.ItemEntity
-import com.matrix.shared.data.local.db.model.DescriptionValue
+import com.matrix.ItemEntity
+import com.matrix.shared.data.model.items.ItemDescription
+import com.matrix.shared.data.model.shared.DescriptionValue
 
-fun getMockItemEntity(id: Int) = ItemEntity(
+fun getMockItemEntity(id: Long) = ItemEntity(
   id = id,
-  patchVersion = "patchVersion test",
   activeFlag = true,
   childItemID = 1,
   deviceName = "deviceName test",

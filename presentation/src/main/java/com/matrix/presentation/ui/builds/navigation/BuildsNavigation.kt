@@ -52,7 +52,7 @@ fun NavGraphBuilder.buildsGraph(
       BuildsNavigation.Builds.route,
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) { backStackEntry ->
+    ) { _ ->
 //      val parentEntry = remember(backStackEntry) {
 //        navController.getBackStackEntry(Screen.Builds.route)
 //      }

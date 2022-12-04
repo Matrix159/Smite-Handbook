@@ -1,18 +1,18 @@
-package com.matrix.data
+package com.matrix.shared.data
 
-import com.matrix.data.builder.getMockGodEntity
-import com.matrix.data.builder.getMockItemEntity
-import com.matrix.data.fakes.PatchVersionDataSourceFake
-import com.matrix.data.fakes.SmiteLocalDataSourceFake
-import com.matrix.data.fakes.SmiteRemoteDataSourceFake
+import com.matrix.shared.data.builder.getMockGodInformation
+import com.matrix.shared.data.builder.getMockItemInformation
+import com.matrix.shared.data.fakes.PatchVersionDataSourceFake
+import com.matrix.shared.data.fakes.SmiteLocalDataSourceFake
+import com.matrix.shared.data.fakes.SmiteRemoteDataSourceFake
 import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /**
  * Tests the SmiteRepository implementation in the data layer
@@ -25,7 +25,7 @@ class SmiteRepositoryTest {
 
   private lateinit var repository: OfflineFirstSmiteRepository
 
-  @Before
+  @BeforeTest
   fun before() {
     remoteDataSource = SmiteRemoteDataSourceFake()
     localDataSource = SmiteLocalDataSourceFake()
@@ -51,7 +51,7 @@ class SmiteRepositoryTest {
     val secondPatch = "9.8"
 
     // Setup existing gods
-    localDataSource.saveGods(listOf(getMockGodEntity(1), getMockGodEntity(2)))
+    localDataSource.saveGods(listOf(getMockGodInformation(1), getMockGodInformation(2)))
     patchVersionDataSource.setPatchVersion(firstPatch)
     val firstGodList = repository.getGods().first()
 
@@ -71,7 +71,7 @@ class SmiteRepositoryTest {
     val secondPatch = "9.8"
 
     // Setup existing items
-    localDataSource.saveItems(listOf(getMockItemEntity(1), getMockItemEntity(2)))
+    localDataSource.saveItems(listOf(getMockItemInformation(1), getMockItemInformation(2)))
     patchVersionDataSource.setPatchVersion(firstPatch)
     val firstItemList = repository.getItems().first()
 
