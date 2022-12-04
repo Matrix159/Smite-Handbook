@@ -204,6 +204,7 @@ android {
 sqldelight {
   database("SmiteHandbookDatabase") {
     packageName = "com.matrix"
+    dialect = "sqlite:3.25"
   }
 }
 

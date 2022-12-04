@@ -1,7 +1,5 @@
 package com.matrix.shared
 
-interface Platform {
+expect class Platform() {
     val name: String
 }
-
-expect fun getPlatform(): Platform

@@ -8,5 +8,5 @@ import org.koin.core.component.inject
 
 class GetGodUseCase: KoinComponent {
   private val smiteRepository by inject<SmiteRepository>()
-  operator fun invoke(godId: Int): Flow<GodInformation> = smiteRepository.getGod(godId)
+  operator fun invoke(godId: Long): Flow<GodInformation> = smiteRepository.getGod(godId)
 }

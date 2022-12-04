@@ -8,6 +8,6 @@ import org.koin.core.component.inject
 
 class GetGodSkinsUseCase: KoinComponent {
   private val smiteRepository by inject<SmiteRepository>()
-  operator fun invoke(godId: Int): Flow<List<GodSkinInformation>> =
+  operator fun invoke(godId: Long): Flow<List<GodSkinInformation>> =
     smiteRepository.getGodSkins(godId)
 }

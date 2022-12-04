@@ -1,33 +1,30 @@
-insertItem:
-INSERT INTO ItemEntity(
-id,
-activeFlag,
-childItemID,
-deviceName,
-glyph,
-iconID,
-itemTier,
-price,
-restrictedRoles,
-rootItemID,
-shortDesc,
-startingItem,
-type,
-itemIconURL,
-itemDescription
-)
-VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+upsertItem:
+    INSERT OR REPLACE INTO ItemEntity(
+        id,
+        activeFlag,
+        childItemID,
+        deviceName,
+        glyph,
+        iconID,
+        itemTier,
+        price,
+        restrictedRoles,
+        rootItemID,
+        shortDesc,
+        startingItem,
+        type,
+        itemIconURL,
+        itemDescription
+    )
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 selectAllItems:
-SELECT * FROM ItemEntity;
--- SELECT entity.*, desc.description, desc.secondaryDescription,
--- menuItem.description menuItemDescription,
--- menuItem.value menuItemValue
---FROM ItemEntity entity
--- JOIN ItemDescription AS desc ON entity.id = desc.itemEntityId
---JOIN MenuItem AS menuItem ON desc.id = menuItem.itemDescriptionId;
+SELECT * FROM ItemEntity WHERE activeFlag = ?;
 
 selectItemById:
 SELECT * FROM ItemEntity
 WHERE id = ?;
+
+deleteItemById:
+DELETE FROM ItemEntity WHERE id = ?;
 

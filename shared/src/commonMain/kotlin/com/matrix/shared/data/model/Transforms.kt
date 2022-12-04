@@ -2,6 +2,8 @@ package com.matrix.shared.data.model
 
 import com.matrix.GodEntity
 import com.matrix.ItemEntity
+import com.matrix.SelectAllBuilds
+import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.Ability
 import com.matrix.shared.data.model.gods.AbilityDescription
 import com.matrix.shared.data.model.gods.GodInformation
@@ -175,8 +177,8 @@ internal fun GodEntity.toDomain(): GodInformation =
     latestGod = this.latestGod,
   )
 
-internal fun GodApiResult.toEntity(): GodEntity =
-  GodEntity(
+internal fun GodApiResult.toDomain(): GodInformation =
+  GodInformation(
     id = this.id,
     abilityDetails1 = Ability(
       id = this.abilityDetails1.id,
@@ -354,7 +356,8 @@ internal fun ItemEntity.toDomain(): ItemInformation =
           description = it.description,
           value = it.value
         )
-      }
+      },
+      secondaryDescription = this.itemDescription.secondaryDescription
     ),
     itemTier = this.itemTier,
     price = this.price,
@@ -366,9 +369,9 @@ internal fun ItemEntity.toDomain(): ItemInformation =
     itemIconURL = this.itemIconURL
   )
 
-internal fun ItemApiResult.toEntity(): ItemEntity =
-  ItemEntity(
-      id = this.itemID,
+internal fun ItemApiResult.toDomain(): ItemInformation =
+  ItemInformation(
+      itemID = this.itemID,
       activeFlag = this.activeFlag == "y",
       childItemID = this.childItemID,
       deviceName = this.deviceName,
@@ -381,7 +384,8 @@ internal fun ItemApiResult.toEntity(): ItemEntity =
             description = it.description,
             value = it.value
           )
-        }
+        },
+        secondaryDescription = this.itemDescription.secondaryDescription
       ),
       itemTier = this.itemTier,
       price = this.price,
@@ -393,11 +397,193 @@ internal fun ItemApiResult.toEntity(): ItemEntity =
       itemIconURL = this.itemIconURL
     )
 
-
-//fun BuildEntity.toDomain(): BuildInformation =
-//  BuildInformation(
-//    id = this.id,
-//    name = this.name,
-//    god = god.toDomain(),
-//    items = items.map { it.toDomain() },
-//  )
+internal fun List<SelectAllBuilds>.toDomain(): List<BuildInformation> {
+  return this.groupBy { it.id }.map { (buildId, results) ->
+    val firstResult = results.first()
+    BuildInformation(
+      id = buildId,
+      name = firstResult.name,
+      god = GodInformation(
+        id = firstResult.id_,
+        abilityDetails1 = Ability(
+          id = firstResult.abilityDetails1.id,
+          description = AbilityDescription(
+            cooldown = firstResult.abilityDetails1.description.cooldown,
+            cost = firstResult.abilityDetails1.description.cost,
+            description = firstResult.abilityDetails1.description.description,
+            menuItems = firstResult.abilityDetails1.description.menuItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+            rankItems = firstResult.abilityDetails1.description.rankItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+          ),
+          summary = firstResult.abilityDetails1.summary,
+          url = firstResult.abilityDetails1.url
+        ),
+        abilityDetails2 = Ability(
+          id = firstResult.abilityDetails2.id,
+          description = AbilityDescription(
+            cooldown = firstResult.abilityDetails2.description.cooldown,
+            cost = firstResult.abilityDetails2.description.cost,
+            description = firstResult.abilityDetails2.description.description,
+            menuItems = firstResult.abilityDetails2.description.menuItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+            rankItems = firstResult.abilityDetails2.description.rankItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+          ),
+          summary = firstResult.abilityDetails2.summary,
+          url = firstResult.abilityDetails2.url
+        ),
+        abilityDetails3 = Ability(
+          id = firstResult.abilityDetails3.id,
+          description = AbilityDescription(
+            cooldown = firstResult.abilityDetails3.description.cooldown,
+            cost = firstResult.abilityDetails3.description.cost,
+            description = firstResult.abilityDetails3.description.description,
+            menuItems = firstResult.abilityDetails3.description.menuItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+            rankItems = firstResult.abilityDetails3.description.rankItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+          ),
+          summary = firstResult.abilityDetails3.summary,
+          url = firstResult.abilityDetails3.url
+        ),
+        abilityDetails4 = Ability(
+          id = firstResult.abilityDetails4.id,
+          description = AbilityDescription(
+            cooldown = firstResult.abilityDetails4.description.cooldown,
+            cost = firstResult.abilityDetails4.description.cost,
+            description = firstResult.abilityDetails4.description.description,
+            menuItems = firstResult.abilityDetails4.description.menuItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+            rankItems = firstResult.abilityDetails4.description.rankItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+          ),
+          summary = firstResult.abilityDetails4.summary,
+          url = firstResult.abilityDetails4.url
+        ),
+        abilityDetails5 = Ability(
+          id = firstResult.abilityDetails5.id,
+          description = AbilityDescription(
+            cooldown = firstResult.abilityDetails5.description.cooldown,
+            cost = firstResult.abilityDetails5.description.cost,
+            description = firstResult.abilityDetails5.description.description,
+            menuItems = firstResult.abilityDetails5.description.menuItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+            rankItems = firstResult.abilityDetails5.description.rankItems.map {
+              DescriptionValue(
+                it.description,
+                it.value
+              )
+            },
+          ),
+          summary = firstResult.abilityDetails5.summary,
+          url = firstResult.abilityDetails5.url
+        ),
+        basicAttack = AbilityDescription(
+          cooldown = firstResult.basicAttack.cooldown,
+          cost = firstResult.basicAttack.cost,
+          description = firstResult.basicAttack.description,
+          menuItems = firstResult.basicAttack.menuItems.map {
+            DescriptionValue(
+              it.description,
+              it.value
+            )
+          },
+          rankItems = firstResult.basicAttack.rankItems.map {
+            DescriptionValue(
+              it.description,
+              it.value
+            )
+          },
+        ),
+        attackSpeed = firstResult.attackSpeed,
+        attackSpeedPerLevel = firstResult.attackSpeedPerLevel,
+        autoBanned = firstResult.autoBanned,
+        cons = firstResult.cons,
+        hp5PerLevel = firstResult.hp5PerLevel,
+        health = firstResult.health,
+        healthPerFive = firstResult.healthPerFive,
+        healthPerLevel = firstResult.healthPerLevel,
+        lore = firstResult.lore,
+        mp5PerLevel = firstResult.mp5PerLevel,
+        magicProtection = firstResult.magicProtection,
+        magicProtectionPerLevel = firstResult.magicProtectionPerLevel,
+        magicalPower = firstResult.magicalPower,
+        magicalPowerPerLevel = firstResult.magicalPowerPerLevel,
+        mana = firstResult.mana,
+        manaPerFive = firstResult.manaPerFive,
+        manaPerLevel = firstResult.manaPerLevel,
+        name = firstResult.name_,
+        onFreeRotation = firstResult.onFreeRotation,
+        pantheon = firstResult.pantheon,
+        physicalPower = firstResult.physicalPower,
+        physicalPowerPerLevel = firstResult.physicalPowerPerLevel,
+        physicalProtection = firstResult.physicalProtection,
+        physicalProtectionPerLevel = firstResult.physicalProtectionPerLevel,
+        pros = firstResult.pros,
+        roles = firstResult.roles,
+        speed = firstResult.speed,
+        title = firstResult.title,
+        type = firstResult.type,
+        godCardURL = firstResult.godCardURL,
+        godIconURL = firstResult.godIconURL,
+        latestGod = firstResult.latestGod,
+      ),
+      items = results.map {
+        ItemInformation(
+          itemID = it.id__,
+          activeFlag = it.activeFlag,
+          childItemID = it.childItemID,
+          deviceName = it.deviceName,
+          glyph = it.glyph,
+          iconID = it.iconID,
+          itemTier = it.itemTier,
+          price = it.price,
+          restrictedRoles = it.restrictedRoles,
+          rootItemID = it.rootItemID,
+          shortDesc = it.shortDesc,
+          startingItem = it.startingItem,
+          type = it.type_,
+          itemIconURL = it.itemIconURL,
+          itemDescription = it.itemDescription
+        )
+      }
+    )
+  }
+}

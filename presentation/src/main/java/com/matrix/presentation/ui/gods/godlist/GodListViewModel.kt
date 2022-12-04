@@ -3,9 +3,9 @@ package com.matrix.presentation.ui.gods.godlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.shared.data.contracts.SmiteRepository
-import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
+import com.matrix.shared.data.model.gods.GodInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -37,18 +37,6 @@ class GodListViewModel /*@Inject*/ (
     started = SharingStarted.WhileSubscribed(5000),
     initialValue = GodListUiState.Loading
   )
-
-
-  // Define ViewModel factory in a companion object
-//  companion object {
-//    val Factory: ViewModelProvider.Factory = viewModelFactory {
-//      initializer {
-//        val savedStateHandle = createSavedStateHandle()
-//        GodListViewModel()
-//      }
-//    }
-//  }
-
 }
 
 sealed interface GodListUiState {

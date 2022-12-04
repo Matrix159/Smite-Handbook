@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -21,11 +20,12 @@ import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
 import com.matrix.presentation.ui.builds.builddetails.BuildDetailsScreen
 import com.matrix.presentation.ui.builds.builddetails.BuildDetailsViewModel
+import com.matrix.presentation.ui.builds.buildlist.BuildListViewModel
 import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
-import com.matrix.presentation.ui.builds.buildlist.BuildViewModel
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 sealed interface BuildsNavigation: Route {
   object Builds : BuildsNavigation {
@@ -57,9 +57,9 @@ fun NavGraphBuilder.buildsGraph(
 //        navController.getBackStackEntry(Screen.Builds.route)
 //      }
       //val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
-      val buildViewModel: BuildViewModel = viewModel()
+      val buildListViewModel: BuildListViewModel = koinViewModel()
       BuildOverviewScreen(
-        buildViewModel,
+        buildListViewModel,
         createBuild = {
           navController.navigate(BuildsNavigation.CreateBuilds.route) {
             launchSingleTop = true
@@ -81,7 +81,7 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val createBuildViewModel: CreateBuildViewModel = viewModel()
+      val createBuildViewModel: CreateBuildViewModel = koinViewModel()
 
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
@@ -100,7 +100,7 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val buildDetailsViewModel: BuildDetailsViewModel = viewModel()
+      val buildDetailsViewModel: BuildDetailsViewModel = koinViewModel()
       val coroutineScope = rememberCoroutineScope()
       BuildDetailsScreen(
         buildDetailsViewModel = buildDetailsViewModel,

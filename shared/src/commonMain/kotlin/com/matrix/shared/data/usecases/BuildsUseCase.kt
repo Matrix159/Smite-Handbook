@@ -12,7 +12,7 @@ class BuildsUseCase: KoinComponent {
     return smiteRepository.getBuilds()
   }
 
-  fun getBuild(buildId: Int): Flow<BuildInformation> {
+  fun getBuild(buildId: Long): Flow<BuildInformation> {
     return smiteRepository.getBuild(buildId)
   }
 

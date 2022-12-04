@@ -49,7 +49,7 @@ import timber.log.Timber
 )
 @Composable
 fun BuildOverviewScreen(
-  viewModel: BuildViewModel,
+  viewModel: BuildListViewModel,
   createBuild: () -> Unit,
   goToBuildDetails: (buildId: Long) -> Unit,
   modifier: Modifier = Modifier,
@@ -123,6 +123,7 @@ fun BuildOverviewScreen(
                     onDelete = {
                       visible = false
                       coroutineScope.launch {
+                        // Give it time to animate out of view before deleting
                         delay(300)
                         viewModel.deleteBuild(build)
                         val snackbarResult = snackbarHostState.showSnackbar(

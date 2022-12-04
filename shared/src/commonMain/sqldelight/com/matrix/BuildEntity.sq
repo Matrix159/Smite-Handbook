@@ -1,14 +1,23 @@
-insertBuild:
-INSERT INTO BuildEntity(id, name, godId)
-VALUES(?, ?, ?);
+upsertBuild:
+    INSERT OR REPLACE INTO BuildEntity(id, name, godId)
+    VALUES(:buildId, :buildName, :godId);
+    --ON CONFLICT(id) DO UPDATE
+    --SET name=excluded.name, godId=excluded.godId;
+
+
+insertBuildItems:
+    INSERT INTO BuildItemCrossRef(buildId, itemId)
+    VALUES(:buildId, :itemId);
+
+lastInsertRowId:
+    SELECT last_insert_rowid();
 
 selectAllBuilds:
-SELECT buildEntity.*, godEntity.*
-FROM BuildEntity AS buildEntity
-JOIN GodEntity AS godEntity ON godEntity.id = buildEntity.godId;
---JOIN BuildItemCrossRef AS crossRef ON buildEntity.id = crossRef.buildId
---JOIN ItemEntity AS itemEntity ON crossRef.itemId = itemEntity.id;
+    SELECT buildEntity.*, godEntity.*, itemEntity.*
+    FROM BuildEntity AS buildEntity
+    JOIN GodEntity AS godEntity ON godEntity.id = buildEntity.godId
+    JOIN BuildItemCrossRef AS crossRef ON buildEntity.id = crossRef.buildId
+    JOIN ItemEntity AS itemEntity ON crossRef.itemId = itemEntity.id;
 
-selectBuildById:
-SELECT * FROM BuildEntity
-WHERE id = ?;
+deleteBuildById:
+    DELETE FROM BuildEntity WHERE id = ?;

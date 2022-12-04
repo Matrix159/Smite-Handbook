@@ -7,14 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matrix.shared.data.contracts.SmiteRepository
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
-import com.matrix.shared.data.model.Result
-import com.matrix.shared.data.model.asResult
-import com.matrix.shared.data.usecases.BuildsUseCase
-import com.matrix.shared.data.usecases.GetLatestGodsUseCase
-import com.matrix.shared.data.usecases.GetLatestItemsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -22,9 +20,7 @@ import kotlinx.coroutines.flow.stateIn
 
 //@HiltViewModel
 class CreateBuildViewModel /*@Inject*/ constructor(
-  private val buildsUseCase: BuildsUseCase = BuildsUseCase(),
-  getLatestGodsUseCase: GetLatestGodsUseCase = GetLatestGodsUseCase(),
-  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
+  private val smiteRepository: SmiteRepository
 ) : ViewModel() {
 
   private var selectedGod by mutableStateOf<GodInformation?>(null)
@@ -33,8 +29,8 @@ class CreateBuildViewModel /*@Inject*/ constructor(
 
   // The UI collects from this StateFlow to get its state updates
   val uiState: StateFlow<CreateBuildUiState> = combine(
-    getLatestGodsUseCase().asResult(),
-    getLatestItemsUseCase().asResult(),
+    smiteRepository.getGods().asResult(),
+    smiteRepository.getItems().asResult(),
     snapshotFlow { selectedGod },
     snapshotFlow { selectedItems },
     snapshotFlow { buildName }
@@ -83,7 +79,7 @@ class CreateBuildViewModel /*@Inject*/ constructor(
 
   suspend fun createBuild() {
     if (selectedGod != null && selectedItems.isNotEmpty()) {
-      buildsUseCase.createBuild(
+      smiteRepository.createBuild(
         BuildInformation(
           god = selectedGod!!,
           name = when {

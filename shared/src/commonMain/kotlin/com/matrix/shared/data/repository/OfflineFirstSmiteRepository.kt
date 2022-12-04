@@ -1,23 +1,20 @@
 package com.matrix.shared.data.repository
 
 import co.touchlab.kermit.Logger
-import com.matrix.GodEntity
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.local.interfaces.PatchVersionDataSource
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
-import com.matrix.shared.data.model.skins.GodSkinInformation
 import com.matrix.shared.data.model.items.ItemInformation
-import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
+import com.matrix.shared.data.model.skins.GodSkinInformation
 import com.matrix.shared.data.model.toDomain
-import com.matrix.shared.data.model.toEntity
+import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,44 +26,27 @@ class OfflineFirstSmiteRepository constructor(
 
   val logger by lazy { Logger.withTag(OfflineFirstSmiteRepository::class.simpleName!!) }
 
-  override fun getGods(): Flow<List<GodInformation>> =
-    localDataSource.getGods().map { entityList -> entityList.map { it.toDomain() } }
+  override fun getGods(): Flow<List<GodInformation>> = localDataSource.getGods()
 
-  override fun getGod(godId: Int): Flow<GodInformation> =
-    localDataSource.getGod(godId).map { it.toDomain() }
+  override fun getGod(godId: Long): Flow<GodInformation> = localDataSource.getGod(godId)
 
-  override fun getGodSkins(godId: Int): Flow<List<GodSkinInformation>> =
+  override fun getGodSkins(godId: Long): Flow<List<GodSkinInformation>> =
     flow { emit(networkDataSource.getGodSkins(godId).map { it.toDomain() }) }
 
-  override fun getItems(): Flow<List<ItemInformation>> =
-    localDataSource.getItems().map { entityList -> entityList.map { it.toDomain() } }
+  override fun getItems(): Flow<List<ItemInformation>> = localDataSource.getItems()
 
-  override fun getItem(itemId: Int): Flow<ItemInformation> =
-    localDataSource.getItem(itemId).map { it.toDomain() }
+  override fun getItem(itemId: Long): Flow<ItemInformation> = localDataSource.getItem(itemId)
 
-  override fun getBuilds(): Flow<List<BuildInformation>> = flow {}
-    //localDataSource.getBuilds().map { list -> list.map { it.toDomain() } }
+  override fun getBuilds(): Flow<List<BuildInformation>> = localDataSource.getBuilds()
 
-  override fun getBuild(buildId: Int): Flow<BuildInformation> = flow {}
-    //localDataSource.getBuild(buildId).map { it.toDomain() }
+  override fun getBuild(buildId: Long): Flow<BuildInformation> = localDataSource.getBuild(buildId)
 
-  override suspend fun createBuild(buildInformation: BuildInformation) {
-//    localDataSource.createBuild(
-//      buildEntity = BuildEntity(
-//        id = buildInformation.id,
-//        godId = buildInformation.god.id,
-//        name = buildInformation.name
-//      ),
-//      itemIds = buildInformation.items.map { it.itemID })
-  }
+  override suspend fun createBuild(buildInformation: BuildInformation) = localDataSource.saveBuild(buildInformation)
 
   override suspend fun deleteBuild(buildInformation: BuildInformation) {
-//    localDataSource.deleteBuild(
-//      BuildEntity(
-//        id = buildInformation.id,
-//        godId = buildInformation.god.id
-//      )
-//    )
+    buildInformation.id?.let {
+      localDataSource.deleteBuild(it)
+    }
   }
 
   override suspend fun sync() = withContext(Dispatchers.Default) {
@@ -92,19 +72,19 @@ class OfflineFirstSmiteRepository constructor(
   }
 
   private suspend fun syncGods() = withContext(Dispatchers.Default) {
-    val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
+    //val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
     val newData = networkDataSource.getGods()
     localDataSource.saveGods(newData.map {
-      it.toEntity()
+      it.toDomain()
     })
     logger.d("Saved new god data to local storage")
   }
 
   private suspend fun syncItems() = withContext(Dispatchers.Default) {
-    val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
+    //val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
     val newData = networkDataSource.getItems()
     localDataSource.saveItems(newData.map {
-      it.toEntity()
+      it.toDomain()
     })
     logger.d("Saved new item data to local storage")
   }

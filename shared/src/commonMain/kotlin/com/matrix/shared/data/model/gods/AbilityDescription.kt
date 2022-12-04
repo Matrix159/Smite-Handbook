@@ -1,7 +1,9 @@
 package com.matrix.shared.data.model.gods
 
 import com.matrix.shared.data.model.shared.DescriptionValue
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AbilityDescription(
   val cooldown: String,
   val cost: String,

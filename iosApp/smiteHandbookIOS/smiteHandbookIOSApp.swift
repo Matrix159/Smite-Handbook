@@ -6,9 +6,18 @@
 //
 
 import SwiftUI
+import shared
 
 @main
 struct smiteHandbookIOSApp: App {
+    
+    init() {
+        KoinKt.doInitKoin()
+        SmiteRepositoryHelper().sync { error in
+            print(error)
+        }
+        //Greeting().greeting()
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()

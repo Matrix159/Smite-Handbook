@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
@@ -20,6 +19,7 @@ import com.matrix.presentation.ui.items.itemdetails.ItemDetailsScreen
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailsViewModel
 import com.matrix.presentation.ui.items.itemlist.ItemListScreen
 import com.matrix.presentation.ui.items.itemlist.ItemListViewModel
+import org.koin.androidx.compose.koinViewModel
 
 sealed class ItemsNavigation : Route {
   object ItemList : ItemsNavigation() {
@@ -45,7 +45,7 @@ fun NavGraphBuilder.itemsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val itemListViewModel = viewModel<ItemListViewModel>()
+      val itemListViewModel = koinViewModel<ItemListViewModel>()
       ItemListScreen(
         itemListViewModel = itemListViewModel,
         itemClicked = {
@@ -68,7 +68,7 @@ fun NavGraphBuilder.itemsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val itemDetailsViewModel = viewModel<ItemDetailsViewModel>()
+      val itemDetailsViewModel = koinViewModel<ItemDetailsViewModel>()
 
       ItemDetailsScreen(
         itemDetailsViewModel = itemDetailsViewModel,
@@ -77,7 +77,9 @@ fun NavGraphBuilder.itemsGraph(
             popUpTo(ItemsNavigation.ItemList.route)
           }
         },
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(16.dp)
       )
     }
   }

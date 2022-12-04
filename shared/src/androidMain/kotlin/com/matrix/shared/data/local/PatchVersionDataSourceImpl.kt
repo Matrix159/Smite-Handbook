@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "smite-handbook-store")
 
-class PatchVersionDataSourceImpl(val context: Context) : PatchVersionDataSource {
+actual class PatchVersionDataSourceImpl(val context: Context) : PatchVersionDataSource {
   private val PATCH_VERSION_KEY = stringPreferencesKey("PATCH_VERSION_KEY")
 
   override suspend fun setPatchVersion(patchVersion: String) {

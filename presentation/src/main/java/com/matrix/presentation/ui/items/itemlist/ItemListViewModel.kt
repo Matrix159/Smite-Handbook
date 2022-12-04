@@ -2,10 +2,10 @@ package com.matrix.presentation.ui.items.itemlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.shared.data.model.items.ItemInformation
+import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
-import com.matrix.shared.data.usecases.GetLatestItemsUseCase
+import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.stateIn
 
 //@HiltViewModel
 class ItemListViewModel /*@Inject*/ constructor(
-  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
+  smiteRepository: SmiteRepository,
 ) : ViewModel() {
 
-  var uiState: StateFlow<ItemListUiState> = getLatestItemsUseCase().asResult()
+  var uiState: StateFlow<ItemListUiState> = smiteRepository.getItems().asResult()
     .map { result ->
       when (result) {
         is Result.Success -> {

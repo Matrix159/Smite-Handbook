@@ -5,12 +5,15 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
+import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
+import com.matrix.presentation.ui.gods.goddetails.GodScreen
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -53,27 +56,27 @@ fun NavGraphBuilder.godsGraph(
           .imePadding()
       )
     }
-//    composable(
-//      GodsNavigation.GodDetails.route,
-//      arguments = listOf(navArgument(GodsNavigation.GodDetails.godIdArg) { type = NavType.StringType }),
-//      enterTransition = {
-//        when (initialState.destination.route) {
-//          GodsNavigation.GodList.route -> expandIn(
-//            expandFrom = Alignment.Center,
-//          )
-//          else -> fadeIn(defaultAnimationSpec)
-//        }
-//      },
-//      exitTransition = {
-//        when (targetState.destination.route) {
-//          GodsNavigation.GodList.route -> scaleOut()
-//          else -> fadeOut(animationSpec = defaultAnimationSpec)
-//        }
-//      }
-//    ) {
-//      val godListViewModel = viewModel<GodDetailsViewModel>()
-//
-//      GodScreen(godListViewModel, modifier = Modifier.fillMaxSize())
-//    }
+    composable(
+      GodsNavigation.GodDetails.route,
+      arguments = listOf(navArgument(GodsNavigation.GodDetails.godIdArg) { type = NavType.StringType }),
+      enterTransition = {
+        when (initialState.destination.route) {
+          GodsNavigation.GodList.route -> expandIn(
+            expandFrom = Alignment.Center,
+          )
+          else -> fadeIn(defaultAnimationSpec)
+        }
+      },
+      exitTransition = {
+        when (targetState.destination.route) {
+          GodsNavigation.GodList.route -> scaleOut()
+          else -> fadeOut(animationSpec = defaultAnimationSpec)
+        }
+      }
+    ) {
+      val godListViewModel = koinViewModel<GodDetailsViewModel>()
+
+      GodScreen(godListViewModel, modifier = Modifier.fillMaxSize())
+    }
   }
 }

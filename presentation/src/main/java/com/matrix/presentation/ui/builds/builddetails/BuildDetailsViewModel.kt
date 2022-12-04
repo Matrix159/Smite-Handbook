@@ -4,14 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.presentation.ui.builds.navigation.BuildsNavigation
+import com.matrix.shared.data.contracts.SmiteRepository
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
-import com.matrix.shared.data.model.Result
-import com.matrix.shared.data.model.asResult
-import com.matrix.shared.data.usecases.BuildsUseCase
-import com.matrix.shared.data.usecases.GetLatestGodsUseCase
-import com.matrix.shared.data.usecases.GetLatestItemsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -19,18 +17,16 @@ import kotlinx.coroutines.launch
 
 //@HiltViewModel
 class BuildDetailsViewModel /*@Inject*/ constructor(
-  private val buildsUseCase: BuildsUseCase = BuildsUseCase(),
-  getLatestGodsUseCase: GetLatestGodsUseCase = GetLatestGodsUseCase(),
-  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
+  private val smiteRepository: SmiteRepository,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-  private val buildId: Int =
-    (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toInt()
+  private val buildId: Long =
+    (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toLong()
 
   val uiState = combine(
-    buildsUseCase.getBuild(buildId).asResult(),
-    getLatestGodsUseCase().asResult(),
-    getLatestItemsUseCase().asResult(),
+    smiteRepository.getBuild(buildId).asResult(),
+    smiteRepository.getGods().asResult(),
+    smiteRepository.getItems().asResult(),
   ) { build, latestGods, latestItems ->
     if (build is Result.Success && latestGods is Result.Success && latestItems is Result.Success) {
       BuildDetailsUiState.Success(
@@ -52,11 +48,11 @@ class BuildDetailsViewModel /*@Inject*/ constructor(
   )
 
   suspend fun deleteBuild(buildInformation: BuildInformation) {
-    buildsUseCase.deleteBuild(buildInformation)
+    smiteRepository.deleteBuild(buildInformation)
   }
 
   fun saveBuild(buildInformation: BuildInformation) = viewModelScope.launch {
-    buildsUseCase.createBuild(buildInformation)
+    smiteRepository.createBuild(buildInformation)
   }
 }
 

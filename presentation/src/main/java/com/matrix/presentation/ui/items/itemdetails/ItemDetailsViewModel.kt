@@ -9,11 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.presentation.ui.items.navigation.ItemsNavigation
 import com.matrix.presentation.utils.ItemNode
-import com.matrix.shared.data.model.items.ItemInformation
+import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
-import com.matrix.shared.data.usecases.GetItemUseCase
-import com.matrix.shared.data.usecases.GetLatestItemsUseCase
+import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -25,17 +24,16 @@ import timber.log.Timber
 
 //@HiltViewModel
 class ItemDetailsViewModel /*@Inject*/ constructor(
-  getLatestItemsUseCase: GetLatestItemsUseCase = GetLatestItemsUseCase(),
-  getItemUseCase: GetItemUseCase = GetItemUseCase(),
+  smiteRepository: SmiteRepository,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-  private val selectedItemId: Int =
-    (checkNotNull(savedStateHandle[ItemsNavigation.ItemDetails.itemIdArg]) as String).toInt()
+  private val selectedItemId: Long =
+    (checkNotNull(savedStateHandle[ItemsNavigation.ItemDetails.itemIdArg]) as String).toLong()
 
   val uiState: StateFlow<ItemDetailUiState> =
     combine(
-      getItemUseCase(selectedItemId),
+      smiteRepository.getItem(selectedItemId),
       snapshotFlow { baseNodeState },
       ::Pair
     )
@@ -64,7 +62,7 @@ class ItemDetailsViewModel /*@Inject*/ constructor(
   private var baseNodeState by mutableStateOf<List<ItemNode>>(emptyList())
 
   init {
-    getLatestItemsUseCase()
+    smiteRepository.getItems()
       .onEach {
         Timber.d("calculated base nodes")
         baseNodeState = createBaseNodes(it)

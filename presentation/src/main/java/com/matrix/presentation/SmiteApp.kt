@@ -21,7 +21,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.matrix.presentation.ui.builds.navigation.buildsGraph
 import com.matrix.presentation.ui.gods.navigation.godsGraph
+import com.matrix.presentation.ui.items.navigation.itemsGraph
 import com.matrix.presentation.ui.navigation.SmiteNavigationBar
 
 
@@ -71,8 +73,8 @@ fun SmiteApp() {
         }
     ) {
       godsGraph(screen = Screen.Gods, navController = navController)
-      //itemsGraph(screen = Screen.Items, navController = navController)
-      //buildsGraph(screen = Screen.Builds, navController = navController)
+      itemsGraph(screen = Screen.Items, navController = navController)
+      buildsGraph(screen = Screen.Builds, navController = navController)
     }
   }
 }

@@ -19,7 +19,7 @@ class SmiteApiRemoteDataSource() : SmiteRemoteDataSource {
   override suspend fun getGods(): List<GodApiResult> =
     client.get("$baseUrl/gods").body()
 
-  override suspend fun getGodSkins(godId: Int): List<GodSkinApiResult> =
+  override suspend fun getGodSkins(godId: Long): List<GodSkinApiResult> =
     client.get("$baseUrl/godskins/${godId}").body()
 
   override suspend fun getItems(): List<ItemApiResult> = client.get("$baseUrl/items").body()

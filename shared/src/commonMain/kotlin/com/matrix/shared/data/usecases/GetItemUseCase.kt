@@ -8,5 +8,5 @@ import org.koin.core.component.inject
 
 class GetItemUseCase: KoinComponent {
   private val smiteRepository by inject<SmiteRepository>()
-  operator fun invoke(itemId: Int): Flow<ItemInformation> = smiteRepository.getItem(itemId)
+  operator fun invoke(itemId: Long): Flow<ItemInformation> = smiteRepository.getItem(itemId)
 }
