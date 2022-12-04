@@ -1,5 +1,7 @@
 package com.matrix.shared.data
 
+import co.touchlab.kermit.CommonWriter
+import co.touchlab.kermit.Logger
 import com.matrix.shared.data.builder.getMockGodInformation
 import com.matrix.shared.data.builder.getMockItemInformation
 import com.matrix.shared.data.fakes.PatchVersionDataSourceFake
@@ -27,6 +29,8 @@ class SmiteRepositoryTest {
 
   @BeforeTest
   fun before() {
+    // Needed so that the Kermit logger doesn't try to use platform-dependent loggers
+    Logger.setLogWriters(CommonWriter())
     remoteDataSource = SmiteRemoteDataSourceFake()
     localDataSource = SmiteLocalDataSourceFake()
     patchVersionDataSource = PatchVersionDataSourceFake()

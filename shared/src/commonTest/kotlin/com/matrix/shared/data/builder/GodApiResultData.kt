@@ -25,7 +25,7 @@ fun getMockGodApiResult(id: Long) = GodApiResult(
   abilityDetails5 = getMockAbility(),
   attackSpeed = 1.0,
   attackSpeedPerLevel = 1.0,
-  autoBanned = "autoBanned test",
+  autoBanned = "n",
   cons = "cons test",
   hp5PerLevel = 1.0,
   health = 1,
@@ -41,7 +41,7 @@ fun getMockGodApiResult(id: Long) = GodApiResult(
   manaPerFive = 1.0,
   manaPerLevel = 1.0,
   name = "name test",
-  onFreeRotation = "onFreeRotation test",
+  onFreeRotation = "n",
   pantheon = "pantheon test",
   physicalPower = 1,
   physicalPowerPerLevel = 1.0,
@@ -51,7 +51,7 @@ fun getMockGodApiResult(id: Long) = GodApiResult(
   roles = "roles test",
   speed = 1,
   title = "title test",
-  type = "type test",
+  type = "god",
   abilityDescription1 = getMockAbilityDescription(),
   abilityDescription2 = getMockAbilityDescription(),
   abilityDescription3 = getMockAbilityDescription(),
@@ -65,7 +65,7 @@ fun getMockGodApiResult(id: Long) = GodApiResult(
   godAbility5URL = "godAbility5URL test",
   godCardURL = "godCardURL test",
   godIconURL = "godIconURL test",
-  latestGod = "latestGod test",
+  latestGod = "n",
   retMsg = "retMsg test"
 )
 
@@ -81,8 +81,8 @@ private fun getMockAbility() = Ability(
 )
 
 private fun getMockAbilityItemDescription() = AbilityItemDescription(
-  cooldown = "cooldown test",
-  cost = "cost test",
+  cooldown = "40",
+  cost = "60",
   description = "description test",
   menuitems = listOf(getMockLowerDescriptionValue()),
   rankitems = listOf(getMockLowerDescriptionValue())

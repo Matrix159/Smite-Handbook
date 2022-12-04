@@ -6,10 +6,10 @@ import com.matrix.shared.data.network.model.UpperDescriptionValue
 
 fun getMockItemApiResult(id: Long) = ItemApiResult(
   itemID = id,
-  activeFlag = "activeFlag test",
+  activeFlag = "y",
   childItemID = 1,
   deviceName = "deviceName test",
-  glyph = "glyph test",
+  glyph = "y",
   iconID = 1,
   itemDescription = getMockItemDescription(),
   itemTier = 1,
@@ -18,7 +18,7 @@ fun getMockItemApiResult(id: Long) = ItemApiResult(
   rootItemID = 1,
   shortDesc = "shortDesc test",
   startingItem = true,
-  type = "type test",
+  type = "item",
   itemIconURL = "itemIconURL test",
   retMsg = "retMsg test"
 )

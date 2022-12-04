@@ -1,4 +1,4 @@
-package com.matrix.shared.data.di
+package com.matrix.shared.di
 
 import org.koin.core.module.Module
 

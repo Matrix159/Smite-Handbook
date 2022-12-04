@@ -1,4 +1,4 @@
-package com.matrix.shared.data.di
+package com.matrix.shared.di
 
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.local.SmiteDatabaseLocalDataSource

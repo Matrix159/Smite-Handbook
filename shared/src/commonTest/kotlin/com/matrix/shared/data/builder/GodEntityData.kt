@@ -48,8 +48,8 @@ fun getMockGodEntity(id: Long) = GodEntity(
 )
 
 private fun getMockAbilityDescription() = AbilityDescription(
-  cooldown = "cooldown test",
-  cost = "cost test",
+  cooldown = "60",
+  cost = "60",
   description = "description test",
   menuItems = listOf(getMockDescriptionValue()),
   rankItems = listOf(getMockDescriptionValue())

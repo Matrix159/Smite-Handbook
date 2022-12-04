@@ -3,7 +3,7 @@ package com.matrix.materializedsmite
 import android.app.Application
 import com.matrix.presentation.injection.presentationKoinModule
 import com.matrix.shared.data.contracts.SmiteRepository
-import com.matrix.shared.data.di.initKoin
+import com.matrix.shared.di.initKoin
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

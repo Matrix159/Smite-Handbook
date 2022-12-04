@@ -41,15 +41,15 @@ fun getMockGodInformation(id: Long) = GodInformation(
   roles = "roles test",
   speed = 1,
   title = "title test",
-  type = "type test",
+  type = "god",
   godCardURL = "godCardURL test",
   godIconURL = "godIconURL test",
   latestGod = true
 )
 
 private fun getMockAbilityDescription() = AbilityDescription(
-  cooldown = "cooldown test",
-  cost = "cost test",
+  cooldown = "60",
+  cost = "60",
   description = "description test",
   menuItems = listOf(getMockDescriptionValue()),
   rankItems = listOf(getMockDescriptionValue())

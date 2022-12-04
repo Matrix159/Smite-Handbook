@@ -1,4 +1,4 @@
-package com.matrix.shared.data.di
+package com.matrix.shared.di
 
 import com.matrix.shared.data.local.PatchVersionDataSourceImpl
 import com.matrix.shared.data.local.interfaces.PatchVersionDataSource

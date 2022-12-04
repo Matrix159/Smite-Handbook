@@ -1,13 +1,10 @@
 package com.matrix.shared.data.fakes
 
-import com.matrix.BuildItemCrossRef
-import com.matrix.GodEntity
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class SmiteLocalDataSourceFake : SmiteLocalDataSource {
@@ -23,7 +20,8 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
     localGods.addAll(distinctEntities)
   }
 
-  override fun getGods(): Flow<List<GodInformation>> = flowOf(localGods)
+  // Make sure to return copies of the lists to avoid using the references to them
+  override fun getGods(): Flow<List<GodInformation>> = flowOf(localGods.map { it.copy() })
   override fun getGod(godId: Long): Flow<GodInformation> {
     TODO("Not yet implemented")
   }
@@ -35,8 +33,9 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
     localItems.addAll(distinctEntities)
   }
 
+  // Make sure to return copies of the lists to avoid using the references to them
   override fun getItems(isActive: Boolean): Flow<List<ItemInformation>> =
-    flowOf(localItems.filter { it.activeFlag == isActive })
+    flowOf(localItems.filter { it.activeFlag == isActive }.map { it.copy() })
 
   override fun getItem(itemId: Long): Flow<ItemInformation> {
     TODO("Not yet implemented")
@@ -44,36 +43,39 @@ class SmiteLocalDataSourceFake : SmiteLocalDataSource {
 
   override suspend fun saveBuild(buildInformation: BuildInformation) {
     // Mimic inserting with a REPLACE policy on conflict
-    val lastId: Int = localBuilds.maxBy { it.godId }.godId
-    val newBuildEntity = buildEntity.copy(id = lastId + 1)
-    localBuilds.add(newBuildEntity)
-    val distinctBuildEntities = localBuilds.distinctBy { it.id }
-    localBuilds.clear()
-    localBuilds.addAll(distinctBuildEntities)
-    itemIds.forEach {
-      localBuildItemCrossRef.add(BuildItemCrossRef(newBuildEntity.id!!, it))
+    val foundBuild = localBuilds.find { it.id != null && it.id == buildInformation.id }
+    foundBuild?.let {
+      localBuilds.remove(foundBuild)
     }
-    val distinctBuildItemCrossRef = localBuildItemCrossRef.distinctBy { it.buildId to it.itemId }
-    localBuildItemCrossRef.clear()
-    localBuildItemCrossRef.addAll(distinctBuildItemCrossRef)
+    localBuilds.add(buildInformation)
+//    val lastId: Int = localBuilds.maxBy { it.godId }.godId
+//    val newBuildEntity = buildEntity.copy(id = lastId + 1)
+//    localBuilds.add(newBuildEntity)
+//    val distinctBuildEntities = localBuilds.distinctBy { it.id }
+//    localBuilds.clear()
+//    localBuilds.addAll(distinctBuildEntities)
+//    itemIds.forEach {
+//      localBuildItemCrossRef.add(BuildItemCrossRef(newBuildEntity.id!!, it))
+//    }
+//    val distinctBuildItemCrossRef = localBuildItemCrossRef.distinctBy { it.buildId to it.itemId }
+//    localBuildItemCrossRef.clear()
+//    localBuildItemCrossRef.addAll(distinctBuildItemCrossRef)
   }
 
-  override fun getBuilds(): Flow<List<BuildInformation>> = flow {
-    val buildDbResults = localBuilds.map { build ->
-      val god: GodEntity = localGods.find { god -> god.id == build.godId }!!
-      val itemIds: List<Int> = localBuildItemCrossRef
-        .filter { ref -> ref.buildId == build.id }
-        .map { it.itemId }
-
-      return@map BuildDbResult(
-        build = build,
-        god = god,
-        items = localItems.filter { itemIds.contains(it.id) }
-      )
-
-    }
-    emit(buildDbResults)
-  }
+  override fun getBuilds(): Flow<List<BuildInformation>> = flowOf( localBuilds.map { it.copy() })
+//    val buildDbResults = localBuilds.map { build ->
+//      val god: GodEntity = localGods.find { god -> god.id == build.godId }!!
+//      val itemIds: List<Int> = localBuildItemCrossRef
+//        .filter { ref -> ref.buildId == build.id }
+//        .map { it.itemId }
+//
+//      return@map BuildDbResult(
+//        build = build,
+//        god = god,
+//        items = localItems.filter { itemIds.contains(it.id) }
+//      )
+//
+//    }
 
   override fun getBuild(buildId: Long): Flow<BuildInformation> {
     TODO("Not yet implemented")
