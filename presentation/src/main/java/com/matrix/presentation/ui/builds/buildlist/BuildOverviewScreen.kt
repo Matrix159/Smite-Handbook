@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -47,9 +49,9 @@ import timber.log.Timber
 )
 @Composable
 fun BuildOverviewScreen(
-  viewModel: BuildViewModel,
+  viewModel: BuildListViewModel,
   createBuild: () -> Unit,
-  goToBuildDetails: (buildId: Int) -> Unit,
+  goToBuildDetails: (buildId: Long) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Column(
@@ -84,10 +86,13 @@ fun BuildOverviewScreen(
             }
           },
           snackbarHost = { SnackbarHost(snackbarHostState) },
+          contentWindowInsets = WindowInsets(0, 0, 0, 0),
           modifier = Modifier.fillMaxSize()
-        ) {
+        ) { paddingValues ->
           if (state.builds.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier
+              .fillMaxSize()
+              .padding(paddingValues)) {
               Text(
                 text = "No builds available",
                 style = MaterialTheme.typography.displaySmall,
@@ -98,6 +103,7 @@ fun BuildOverviewScreen(
             LazyColumn(
               contentPadding = PaddingValues(16.dp),
               verticalArrangement = Arrangement.spacedBy(16.dp),
+              modifier = Modifier.padding(paddingValues)
             ) {
               items(state.builds, key = { it.id!! }) { build ->
                 var visible by remember { mutableStateOf(true) }
@@ -117,6 +123,7 @@ fun BuildOverviewScreen(
                     onDelete = {
                       visible = false
                       coroutineScope.launch {
+                        // Give it time to animate out of view before deleting
                         delay(300)
                         viewModel.deleteBuild(build)
                         val snackbarResult = snackbarHostState.showSnackbar(

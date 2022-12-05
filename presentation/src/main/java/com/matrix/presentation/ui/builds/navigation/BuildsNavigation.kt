@@ -7,20 +7,25 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
+import com.matrix.presentation.ui.builds.builddetails.BuildDetailsScreen
+import com.matrix.presentation.ui.builds.builddetails.BuildDetailsViewModel
+import com.matrix.presentation.ui.builds.buildlist.BuildListViewModel
 import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
-import com.matrix.presentation.ui.builds.buildlist.BuildViewModel
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 sealed interface BuildsNavigation: Route {
   object Builds : BuildsNavigation {
@@ -47,23 +52,23 @@ fun NavGraphBuilder.buildsGraph(
       BuildsNavigation.Builds.route,
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) { backStackEntry ->
-      val parentEntry = remember(backStackEntry) {
-        navController.getBackStackEntry(Screen.Builds.route)
-      }
-      val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+    ) { _ ->
+//      val parentEntry = remember(backStackEntry) {
+//        navController.getBackStackEntry(Screen.Builds.route)
+//      }
+      //val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
+      val buildListViewModel: BuildListViewModel = koinViewModel()
       BuildOverviewScreen(
-        buildViewModel,
+        buildListViewModel,
         createBuild = {
           navController.navigate(BuildsNavigation.CreateBuilds.route) {
             launchSingleTop = true
           }
         },
         goToBuildDetails = {
-          // no-op for now until I finish this
-//          navController.navigate(BuildsNavigation.BuildDetails.createNavigationRoute(it.toString())) {
-//            launchSingleTop = true
-//          }
+          navController.navigate(BuildsNavigation.BuildDetails.createNavigationRoute(it.toString())) {
+            launchSingleTop = true
+          }
         },
         modifier = Modifier
           .fillMaxSize()
@@ -76,9 +81,10 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val createBuildViewModel = hiltViewModel<CreateBuildViewModel>()
+      val createBuildViewModel: CreateBuildViewModel = koinViewModel()
+
       CreateBuildScreen(
-        createBuildViewModel,
+        createBuildViewModel = createBuildViewModel,
         done = {
           navController.popBackStack()
         },
@@ -88,20 +94,28 @@ fun NavGraphBuilder.buildsGraph(
           .imePadding()
       )
     }
-//    composable(
-//      BuildsNavigation.BuildDetails.route,
-//      arguments = listOf(navArgument(BuildsNavigation.BuildDetails.buildIdArg) { type = NavType.StringType }),
-//      enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
-//      exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-//    ) {
-//      val buildDetailsViewModel = hiltViewModel<BuildDetailsViewModel>()
-//      BuildDetailsScreen(
-//        buildDetailsViewModel = buildDetailsViewModel,
-//        modifier = Modifier
-//          .fillMaxSize()
-//          .statusBarsPadding()
-//          .imePadding()
-//      )
-//    }
+    composable(
+      BuildsNavigation.BuildDetails.route,
+      arguments = listOf(navArgument(BuildsNavigation.BuildDetails.buildIdArg) { type = NavType.StringType }),
+      enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+      exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+    ) {
+      val buildDetailsViewModel: BuildDetailsViewModel = koinViewModel()
+      val coroutineScope = rememberCoroutineScope()
+      BuildDetailsScreen(
+        buildDetailsViewModel = buildDetailsViewModel,
+        onDeleteBuild = { build ->
+          coroutineScope.launch {
+            // Delete after navigating to avoid the ViewModel possibly loading a non-existent build
+            navController.popBackStack()
+            buildDetailsViewModel.deleteBuild(build)
+          }
+        },
+        modifier = Modifier
+          .fillMaxSize()
+          .statusBarsPadding()
+          .imePadding()
+      )
+    }
   }
 }

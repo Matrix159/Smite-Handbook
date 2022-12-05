@@ -8,9 +8,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matrix.domain.models.GodInformation
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
+import com.matrix.shared.data.model.gods.GodInformation
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -19,7 +19,7 @@ fun GodListScreen(
   godClicked: (godInformation: GodInformation) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val uiState by godListViewModel.godListUiState.collectAsStateWithLifecycle()
+  val uiState by godListViewModel.uiState.collectAsStateWithLifecycle()
 
   Column(
     verticalArrangement = Arrangement.Center,
@@ -31,13 +31,10 @@ fun GodListScreen(
       is GodListUiState.Error -> ErrorText(godListUiState.exception.toString())
       is GodListUiState.Success -> {
         FilterableGodList(
-          uiState = godListUiState,
-          godClicked = godClicked,
-          updateAppliedGodFilters = godListViewModel::updateAppliedFilters,
-          updateSearchText = godListViewModel::updateSearchText
+          gods = godListUiState.gods,
+          godSelected = godClicked,
         )
       }
     }
   }
-
 }

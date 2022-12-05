@@ -1,5 +1,7 @@
 package com.matrix.presentation.ui.builds.createbuild
 
+import GodSelectionView
+import ItemSelectionView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,16 +25,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -53,13 +52,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.ItemInformation
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
-import com.matrix.presentation.ui.gods.godlist.GodList
-import com.matrix.presentation.ui.items.itemlist.ItemList
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
@@ -70,12 +65,12 @@ fun CreateBuildScreen(
   modifier: Modifier = Modifier,
 ) {
 
-  var showGodList by rememberSaveable {
-    mutableStateOf(false)
-  }
-  var showItemList by rememberSaveable {
-    mutableStateOf(false)
-  }
+  val _buildUiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
+
+  val focusManager = LocalFocusManager.current
+
+  var showGodList by rememberSaveable { mutableStateOf(false) }
+  var showItemList by rememberSaveable { mutableStateOf(false) }
 
   BackHandler {
     if (showGodList) {
@@ -88,16 +83,15 @@ fun CreateBuildScreen(
     }
   }
 
-  val uiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
-  val focusManager = LocalFocusManager.current
-
   Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center,
     modifier = modifier
   ) {
-    when (val createBuildUiState = uiState) {
-      is CreateBuildUiState.Error -> ErrorText(createBuildUiState.exception)
+    // Creating local variables to get around the open getter error
+
+    when (val buildUiState = _buildUiState) {
+      is CreateBuildUiState.Error -> ErrorText(buildUiState.exception)
       is CreateBuildUiState.Loading -> Loader()
       is CreateBuildUiState.Success -> {
         Box(
@@ -116,13 +110,15 @@ fun CreateBuildScreen(
               stepNumber = 1,
               modifier = Modifier.fillMaxWidth()
             ) { paddingValues ->
-              if (createBuildUiState.selectedGod != null) {
+              if (buildUiState.selectedGod != null) {
                 GodTitleCard(
-                  godImageUrl = createBuildUiState.selectedGod.godIconURL,
-                  godName = createBuildUiState.selectedGod.name,
-                  godTitle = createBuildUiState.selectedGod.title,
+                  godImageUrl = buildUiState.selectedGod.godIconURL,
+                  godName = buildUiState.selectedGod.name,
+                  godTitle = buildUiState.selectedGod.title,
                   onClick = { showGodList = true },
-                  modifier = Modifier.padding(paddingValues)
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues)
                 )
               } else {
                 Button(onClick = { showGodList = true }, modifier = Modifier.padding(paddingValues)) {
@@ -135,7 +131,7 @@ fun CreateBuildScreen(
               stepNumber = 2,
               modifier = Modifier.fillMaxWidth()
             ) {paddingValues ->
-              if (createBuildUiState.selectedItems.isNotEmpty()) {
+              if (buildUiState.selectedItems.isNotEmpty()) {
                 Row(
                   horizontalArrangement = Arrangement.Start,
                   verticalAlignment = Alignment.CenterVertically,
@@ -149,7 +145,7 @@ fun CreateBuildScreen(
                     .clip(MaterialTheme.shapes.medium)
                     .clickable { showItemList = true }
                 ) {
-                  for (item in createBuildUiState.selectedItems) {
+                  for (item in buildUiState.selectedItems) {
                     AsyncImage(
                       model = item.itemIconURL,
                       contentDescription = item.deviceName,
@@ -168,14 +164,15 @@ fun CreateBuildScreen(
               }
             }
             Step(
-              title = "Give it a Name",
+              title = "Give It a Name",
               stepNumber = 3,
               isLast = true,
               modifier = Modifier.fillMaxWidth()
             ) {paddingValues ->
               TextField(
-                value = createBuildUiState.buildName,
+                value = buildUiState.buildName,
                 onValueChange = createBuildViewModel::updateBuildName,
+                singleLine = true,
                 modifier = Modifier
                   .padding(paddingValues)
                   .fillMaxWidth(),
@@ -188,27 +185,29 @@ fun CreateBuildScreen(
           }
           if (showGodList) {
             GodSelectionView(
-              availableGods = createBuildUiState.gods,
+              gods = buildUiState.gods,
               godSelected = {
                 showGodList = false
                 createBuildViewModel.setGod(it)
-              }
+              },
+              modifier = Modifier.fillMaxSize()
             )
           }
           if (showItemList) {
             ItemSelectionView(
-              availableItems = createBuildUiState.items,
-              selectedItems = createBuildUiState.selectedItems,
+              items = buildUiState.items,
+              selectedItems = buildUiState.selectedItems,
               addSelectedItem = createBuildViewModel::addSelectedItem,
-              removeSelectedItem = createBuildViewModel::removeSelectedItem
+              removeSelectedItem = createBuildViewModel::removeSelectedItem,
+              modifier = Modifier.fillMaxSize()
             )
           }
           // The FAB shouldn't show on the god list view, but do show as long as we have a
           // selected god/items or are selecting items
           if (
             !showGodList &&
-            ((showItemList && createBuildUiState.selectedItems.isNotEmpty()) ||
-              (createBuildUiState.selectedGod != null && createBuildUiState.selectedItems.isNotEmpty()))
+            ((showItemList && buildUiState.selectedItems.isNotEmpty()) ||
+              (buildUiState.selectedGod != null && buildUiState.selectedItems.isNotEmpty()))
           ) {
             val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(
@@ -225,7 +224,6 @@ fun CreateBuildScreen(
               modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
-              //.safeDrawingPadding()
             ) {
               Icon(Icons.Default.Done, contentDescription = null)
             }
@@ -278,70 +276,6 @@ fun Step(
           .width(1.dp)
       )
       content(PaddingValues(horizontal = 24.dp, vertical = 8.dp))
-    }
-  }
-}
-
-@Composable
-fun GodSelectionView(
-  availableGods: List<GodInformation>,
-  godSelected: (god: GodInformation) -> Unit,
-  modifier: Modifier = Modifier,
-) {
-  Surface(modifier = modifier) {
-    GodList(
-      gods = availableGods,
-      godClicked = godSelected,
-      modifier = Modifier.fillMaxSize()
-    )
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ItemSelectionView(
-  availableItems: List<ItemInformation>,
-  selectedItems: List<ItemInformation>,
-  addSelectedItem: (item: ItemInformation) -> Unit,
-  removeSelectedItem: (item: ItemInformation) -> Unit,
-  modifier: Modifier = Modifier,
-) {
-  Surface(modifier = modifier) {
-    Column {
-      if (selectedItems.isNotEmpty()) {
-        Row(
-          horizontalArrangement = Arrangement.Start,
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.secondaryContainer)
-            //.height(88.dp)
-            .padding(4.dp)
-            .fillMaxWidth()
-        ) {
-          for (item in selectedItems) {
-            Box(modifier = Modifier) {
-              AsyncImage(
-                model = item.itemIconURL,
-                contentDescription = item.deviceName,
-                modifier = Modifier
-                  .padding(8.dp)
-                  .size(48.dp)
-              )
-              Badge(modifier = Modifier
-                .align(Alignment.TopEnd)
-                .clickable { removeSelectedItem(item) }
-              ) {
-                Icon(Icons.Default.Close, contentDescription = "remove")
-              }
-            }
-          }
-        }
-      }
-      ItemList(
-        items = availableItems,
-        itemClicked = addSelectedItem,
-        modifier = Modifier.weight(1f)
-      )
     }
   }
 }

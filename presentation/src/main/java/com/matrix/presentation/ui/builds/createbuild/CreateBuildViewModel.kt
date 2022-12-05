@@ -7,26 +7,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.BuildInformation
-import com.matrix.domain.models.GodInformation
-import com.matrix.domain.models.ItemInformation
-import com.matrix.domain.models.Result
-import com.matrix.domain.models.asResult
-import com.matrix.domain.usecases.BuildsUseCase
-import com.matrix.domain.usecases.GetLatestGodsUseCase
-import com.matrix.domain.usecases.GetLatestItemsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.matrix.shared.data.contracts.SmiteRepository
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
+import com.matrix.shared.data.model.builds.BuildInformation
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class CreateBuildViewModel @Inject constructor(
-  private val buildsUseCase: BuildsUseCase,
-  private val getLatestGodsUseCase: GetLatestGodsUseCase,
-  private val getLatestItemsUseCase: GetLatestItemsUseCase,
+//@HiltViewModel
+class CreateBuildViewModel /*@Inject*/ constructor(
+  private val smiteRepository: SmiteRepository
 ) : ViewModel() {
 
   private var selectedGod by mutableStateOf<GodInformation?>(null)
@@ -35,16 +29,16 @@ class CreateBuildViewModel @Inject constructor(
 
   // The UI collects from this StateFlow to get its state updates
   val uiState: StateFlow<CreateBuildUiState> = combine(
-    getLatestGodsUseCase().asResult(),
-    getLatestItemsUseCase().asResult(),
+    smiteRepository.getGods().asResult(),
+    smiteRepository.getItems().asResult(),
     snapshotFlow { selectedGod },
     snapshotFlow { selectedItems },
     snapshotFlow { buildName }
   ) { latestGods, latestItems, selectedGod, selectedItems, buildName ->
     if (latestGods is Result.Success && latestItems is Result.Success) {
       CreateBuildUiState.Success(
-        gods = latestGods.data.sortedBy { it.name },
-        items = latestItems.data.sortedBy { it.deviceName },
+        gods = latestGods.data,
+        items = latestItems.data,
         selectedGod = selectedGod,
         selectedItems = selectedItems,
         buildName = buildName
@@ -68,10 +62,7 @@ class CreateBuildViewModel @Inject constructor(
   }
 
   fun addSelectedItem(item: ItemInformation) {
-    // Builds should only have 6 total items and no duplicates
-    if (selectedItems.size < 6 && !selectedItems.contains(item)) {
-      selectedItems.add(item)
-    }
+    selectedItems.add(item)
   }
 
   fun removeSelectedItem(item: ItemInformation) {
@@ -88,7 +79,7 @@ class CreateBuildViewModel @Inject constructor(
 
   suspend fun createBuild() {
     if (selectedGod != null && selectedItems.isNotEmpty()) {
-      buildsUseCase.createBuild(
+      smiteRepository.createBuild(
         BuildInformation(
           god = selectedGod!!,
           name = when {

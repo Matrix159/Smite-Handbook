@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.matrix.domain.models.GodInformation
+import com.matrix.shared.data.model.gods.GodInformation
 
 @Composable
 fun GodList(

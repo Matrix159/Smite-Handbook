@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.matrix.domain.models.BuildInformation
 import com.matrix.presentation.ui.components.SwipeToDeleteCard
+import com.matrix.shared.data.model.builds.BuildInformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,10 +26,10 @@ fun BuildOverviewCard(
   buildInformation: BuildInformation,
   modifier: Modifier = Modifier,
   onDelete: () -> Unit,
-  goToBuildDetails: (id: Int) -> Unit,
+  goToBuildDetails: (id: Long) -> Unit,
 ) {
   SwipeToDeleteCard(onDelete = onDelete, modifier = modifier) {
-    Card(/* removed until details screen onClick = { goToBuildDetails(buildInformation.id!!) })*/) {
+    Card(onClick = { goToBuildDetails(buildInformation.id!!) }) {
       Column {
         Row(
           verticalAlignment = Alignment.CenterVertically,

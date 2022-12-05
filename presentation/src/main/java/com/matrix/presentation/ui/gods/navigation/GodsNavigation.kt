@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import com.google.accompanist.navigation.animation.composable
 import com.matrix.presentation.Screen
@@ -17,6 +16,7 @@ import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
 import com.matrix.presentation.ui.gods.goddetails.GodScreen
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
+import org.koin.androidx.compose.koinViewModel
 
 sealed class GodsNavigation: Route {
   object GodList: GodsNavigation() {
@@ -41,7 +41,7 @@ fun NavGraphBuilder.godsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
-      val godListViewModel = hiltViewModel<GodListViewModel>()
+      val godListViewModel = koinViewModel<GodListViewModel>()
 
       GodListScreen(
         godListViewModel,
@@ -74,7 +74,7 @@ fun NavGraphBuilder.godsGraph(
         }
       }
     ) {
-      val godListViewModel = hiltViewModel<GodDetailsViewModel>()
+      val godListViewModel = koinViewModel<GodDetailsViewModel>()
 
       GodScreen(godListViewModel, modifier = Modifier.fillMaxSize())
     }

@@ -3,44 +3,64 @@ package com.matrix.presentation.ui.builds.builddetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.BuildInformation
-import com.matrix.domain.models.Result
-import com.matrix.domain.models.asResult
-import com.matrix.domain.usecases.BuildsUseCase
 import com.matrix.presentation.ui.builds.navigation.BuildsNavigation
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.matrix.shared.data.contracts.SmiteRepository
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
+import com.matrix.shared.data.model.builds.BuildInformation
+import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
-@HiltViewModel
-class BuildDetailsViewModel @Inject constructor(
-  buildsUseCase: BuildsUseCase,
+//@HiltViewModel
+class BuildDetailsViewModel /*@Inject*/ constructor(
+  private val smiteRepository: SmiteRepository,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-  private val buildId: Int =
-    (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toInt()
+  private val buildId: Long =
+    (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toLong()
 
-  val uiState = buildsUseCase
-    .getBuild(buildId)
-    .asResult()
-    .map { result ->
-      when (result) {
-        Result.Loading -> BuildDetailsUiState.Loading
-        is Result.Error -> BuildDetailsUiState.Error(result.exception)
-        is Result.Success -> BuildDetailsUiState.Success(result.data)
-      }
-    }.stateIn(
-      scope = viewModelScope,
-      started = SharingStarted.WhileSubscribed(5_000),
-      initialValue = BuildDetailsUiState.Loading
-    )
+  val uiState = combine(
+    smiteRepository.getBuild(buildId).asResult(),
+    smiteRepository.getGods().asResult(),
+    smiteRepository.getItems().asResult(),
+  ) { build, latestGods, latestItems ->
+    if (build is Result.Success && latestGods is Result.Success && latestItems is Result.Success) {
+      BuildDetailsUiState.Success(
+        buildInformation = build.data,
+        allGods = latestGods.data,
+        allItems = latestItems.data
+      )
+    } else if (build is Result.Loading || latestGods is Result.Loading || latestItems is Result.Loading) {
+      BuildDetailsUiState.Loading
+    } else if (build is Result.Loading || latestGods is Result.Error && latestItems is Result.Error) {
+      BuildDetailsUiState.Error(Exception("An error occurred while loading build information."))
+    } else {
+      BuildDetailsUiState.Error(null)
+    }
+  }.stateIn(
+    scope = viewModelScope,
+    started = SharingStarted.WhileSubscribed(5_000),
+    initialValue = BuildDetailsUiState.Loading
+  )
+
+  suspend fun deleteBuild(buildInformation: BuildInformation) {
+    smiteRepository.deleteBuild(buildInformation)
+  }
+
+  fun saveBuild(buildInformation: BuildInformation) = viewModelScope.launch {
+    smiteRepository.createBuild(buildInformation)
+  }
 }
 
 sealed interface BuildDetailsUiState {
   data class Success(
     val buildInformation: BuildInformation,
+    val allGods: List<GodInformation>,
+    val allItems: List<ItemInformation>,
   ) : BuildDetailsUiState
 
   data class Error(val exception: Throwable?) : BuildDetailsUiState

@@ -1,0 +1,54 @@
+upsertGod:
+    INSERT OR REPLACE INTO GodEntity(
+        id,
+        abilityDetails1,
+        abilityDetails2,
+        abilityDetails3,
+        abilityDetails4,
+        abilityDetails5,
+        basicAttack,
+        attackSpeed,
+        attackSpeedPerLevel,
+        autoBanned,
+        cons,
+        hp5PerLevel,
+        health,
+        healthPerFive,
+        healthPerLevel,
+        lore,
+        mp5PerLevel,
+        magicProtection,
+        magicProtectionPerLevel,
+        magicalPower,
+        magicalPowerPerLevel,
+        mana,
+        manaPerFive,
+        manaPerLevel,
+        name,
+        onFreeRotation,
+        pantheon,
+        physicalPower,
+        physicalPowerPerLevel,
+        physicalProtection,
+        physicalProtectionPerLevel,
+        pros,
+        roles,
+        speed,
+        title,
+        type,
+        godIconURL,
+        godCardURL,
+        latestGod
+    )
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+selectAllGods:
+SELECT * FROM GodEntity;
+
+selectGodById:
+SELECT * FROM GodEntity
+WHERE id = ?;
+
+deleteGodById:
+DELETE FROM GodEntity WHERE id = ?;
+

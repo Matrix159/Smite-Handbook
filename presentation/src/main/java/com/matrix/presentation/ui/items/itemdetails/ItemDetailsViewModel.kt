@@ -7,31 +7,33 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matrix.domain.models.ItemInformation
-import com.matrix.domain.models.Result
-import com.matrix.domain.models.asResult
-import com.matrix.domain.usecases.GetItemUseCase
-import com.matrix.domain.usecases.GetLatestItemsUseCase
 import com.matrix.presentation.ui.items.navigation.ItemsNavigation
 import com.matrix.presentation.utils.ItemNode
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import com.matrix.shared.data.contracts.SmiteRepository
+import com.matrix.shared.data.model.Result
+import com.matrix.shared.data.model.asResult
+import com.matrix.shared.data.model.items.ItemInformation
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class ItemDetailsViewModel @Inject constructor(
-  getLatestItemsUseCase: GetLatestItemsUseCase,
-  getItemUseCase: GetItemUseCase,
+//@HiltViewModel
+class ItemDetailsViewModel /*@Inject*/ constructor(
+  smiteRepository: SmiteRepository,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-  private val selectedItemId: Int =
-    (checkNotNull(savedStateHandle[ItemsNavigation.ItemDetails.itemIdArg]) as String).toInt()
+  private val selectedItemId: Long =
+    (checkNotNull(savedStateHandle[ItemsNavigation.ItemDetails.itemIdArg]) as String).toLong()
 
   val uiState: StateFlow<ItemDetailUiState> =
     combine(
-      getItemUseCase(selectedItemId),
+      smiteRepository.getItem(selectedItemId),
       snapshotFlow { baseNodeState },
       ::Pair
     )
@@ -60,20 +62,20 @@ class ItemDetailsViewModel @Inject constructor(
   private var baseNodeState by mutableStateOf<List<ItemNode>>(emptyList())
 
   init {
-    getLatestItemsUseCase()
+    smiteRepository.getItems()
       .onEach {
         Timber.d("calculated base nodes")
         baseNodeState = createBaseNodes(it)
       }.launchIn(viewModelScope)
   }
 
-  fun createBaseNodes(itemInformationList: List<ItemInformation>): List<ItemNode> {
+  private fun createBaseNodes(itemInformationList: List<ItemInformation>): List<ItemNode> {
     // Set up the item tree's via a node structure
     val baseNodes = mutableListOf<ItemNode>()
     itemInformationList.filter { item -> item.itemTier == 1 }.forEach {
       baseNodes.add(ItemNode(it))
     }
-    val itemsGroupedByTier = itemInformationList.groupBy { it.itemTier }
+    val itemsGroupedByTier = itemInformationList.groupBy { it.itemTier.toLong() }
     baseNodes.forEach { node ->
       node.findChildren(itemsGroupedByTier)
     }
