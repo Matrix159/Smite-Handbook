@@ -5,7 +5,7 @@ import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.Flow
 
-interface SmiteLocalDataSource {
+internal interface SmiteLocalDataSource {
   /**
    * Saves the god list and patch version to the local data source
    * @param gods List of god entities to save

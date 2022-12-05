@@ -6,11 +6,11 @@ import com.matrix.SmiteHandbookDatabase
 import com.matrix.shared.data.local.getAdapter
 import com.squareup.sqldelight.db.SqlDriver
 
-expect class DatabaseDriverFactory {
+internal expect class DatabaseDriverFactory {
   fun createDriver(): SqlDriver
 }
 
-fun createDatabase(driverFactory: DatabaseDriverFactory): SmiteHandbookDatabase {
+internal fun createDatabase(driverFactory: DatabaseDriverFactory): SmiteHandbookDatabase {
   val driver = driverFactory.createDriver()
   return SmiteHandbookDatabase(
     driver,

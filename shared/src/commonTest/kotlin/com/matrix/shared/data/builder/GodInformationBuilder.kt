@@ -5,7 +5,7 @@ import com.matrix.shared.data.model.gods.AbilityDescription
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.shared.DescriptionValue
 
-fun getMockGodInformation(id: Long) = GodInformation(
+internal fun getMockGodInformation(id: Long) = GodInformation(
   id = id,
   abilityDetails1 = getMockAbility(),
   abilityDetails2 = getMockAbility(),

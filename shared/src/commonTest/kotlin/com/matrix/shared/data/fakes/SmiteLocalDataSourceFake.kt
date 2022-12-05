@@ -7,7 +7,7 @@ import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class SmiteLocalDataSourceFake : SmiteLocalDataSource {
+internal class SmiteLocalDataSourceFake : SmiteLocalDataSource {
   private val localGods = mutableListOf<GodInformation>()
   private val localItems = mutableListOf<ItemInformation>()
   private val localBuilds = mutableListOf<BuildInformation>()

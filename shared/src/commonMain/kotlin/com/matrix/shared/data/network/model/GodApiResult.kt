@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GodApiResult(
+internal data class GodApiResult(
   @SerialName("Ability1") val ability1: String,
 
   @SerialName("Ability2") val ability2: String,

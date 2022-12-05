@@ -4,7 +4,7 @@ import com.matrix.shared.data.network.model.ItemApiResult
 import com.matrix.shared.data.network.model.ItemDescription
 import com.matrix.shared.data.network.model.UpperDescriptionValue
 
-fun getMockItemApiResult(id: Long) = ItemApiResult(
+internal fun getMockItemApiResult(id: Long) = ItemApiResult(
   itemID = id,
   activeFlag = "y",
   childItemID = 1,

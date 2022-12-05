@@ -4,7 +4,7 @@ import com.matrix.ItemEntity
 import com.matrix.shared.data.model.items.ItemDescription
 import com.matrix.shared.data.model.shared.DescriptionValue
 
-fun getMockItemEntity(id: Long) = ItemEntity(
+internal fun getMockItemEntity(id: Long) = ItemEntity(
   id = id,
   activeFlag = true,
   childItemID = 1,

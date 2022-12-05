@@ -17,12 +17,12 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-inline fun <reified T : Any> getAdapter() = object : ColumnAdapter<T, String> {
+internal inline fun <reified T : Any> getAdapter() = object : ColumnAdapter<T, String> {
   override fun decode(databaseValue: String) = Json.decodeFromString<T>(databaseValue)
   override fun encode(value: T) = Json.encodeToString(value)
 }
 
-class SmiteDatabaseLocalDataSource constructor(
+internal class SmiteDatabaseLocalDataSource constructor(
   databaseDriverFactory: DatabaseDriverFactory,
 ) : SmiteLocalDataSource {
 

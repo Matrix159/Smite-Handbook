@@ -13,7 +13,7 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 
-fun commonModule() = module {
+internal fun commonModule() = module {
   single<SmiteLocalDataSource>{ SmiteDatabaseLocalDataSource(get()) }
   factory<SmiteRemoteDataSource> { SmiteApiRemoteDataSource() }
   factory<SmiteRepository> { OfflineFirstSmiteRepository(get(), get(), get()) }

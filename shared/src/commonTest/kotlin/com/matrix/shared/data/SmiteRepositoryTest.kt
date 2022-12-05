@@ -8,7 +8,6 @@ import com.matrix.shared.data.fakes.PatchVersionDataSourceFake
 import com.matrix.shared.data.fakes.SmiteLocalDataSourceFake
 import com.matrix.shared.data.fakes.SmiteRemoteDataSourceFake
 import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -19,8 +18,7 @@ import kotlin.test.assertTrue
 /**
  * Tests the SmiteRepository implementation in the data layer
  */
-@OptIn(ExperimentalCoroutinesApi::class)
-class SmiteRepositoryTest {
+internal class SmiteRepositoryTest {
   private lateinit var remoteDataSource: SmiteRemoteDataSourceFake
   private lateinit var localDataSource: SmiteLocalDataSourceFake
   private lateinit var patchVersionDataSource: PatchVersionDataSourceFake

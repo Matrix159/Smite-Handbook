@@ -6,7 +6,7 @@ import com.matrix.shared.data.network.model.ItemApiResult
 import com.matrix.shared.data.network.model.PatchVersionInfo
 
 
-interface SmiteRemoteDataSource {
+internal interface SmiteRemoteDataSource {
   suspend fun getGods(): List<GodApiResult>
 
   suspend fun getGodSkins(godId: Long): List<GodSkinApiResult>

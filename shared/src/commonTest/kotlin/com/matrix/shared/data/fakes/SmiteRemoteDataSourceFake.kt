@@ -8,7 +8,7 @@ import com.matrix.shared.data.network.model.GodSkinApiResult
 import com.matrix.shared.data.network.model.ItemApiResult
 import com.matrix.shared.data.network.model.PatchVersionInfo
 
-class SmiteRemoteDataSourceFake: SmiteRemoteDataSource {
+internal class SmiteRemoteDataSourceFake: SmiteRemoteDataSource {
   private var godsToReturn = mutableListOf(getMockGodApiResult(1), getMockGodApiResult(2))
   private var itemsToReturn = mutableListOf(getMockItemApiResult(1), getMockItemApiResult(2))
   private var currentPatchVersionInfo = PatchVersionInfo("9.7")

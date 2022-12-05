@@ -4,7 +4,7 @@ import com.matrix.shared.data.local.interfaces.PatchVersionDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-actual class PatchVersionDataSourceImpl : PatchVersionDataSource {
+internal actual class PatchVersionDataSourceImpl : PatchVersionDataSource {
   var _patchVersion: String? = null
 
   override suspend fun setPatchVersion(patchVersion: String) {

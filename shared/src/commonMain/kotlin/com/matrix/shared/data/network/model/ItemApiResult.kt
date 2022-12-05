@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ItemApiResult(
+internal data class ItemApiResult(
   @SerialName("ActiveFlag")
   val activeFlag: String,
 
