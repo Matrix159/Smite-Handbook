@@ -185,3 +185,4 @@ kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarge
     binaryOptions["memoryModel"] = "experimental"
   }
 }
+
