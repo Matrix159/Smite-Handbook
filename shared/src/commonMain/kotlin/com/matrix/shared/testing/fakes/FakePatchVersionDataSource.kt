@@ -1,10 +1,10 @@
-package com.matrix.shared.data.fakes
+package com.matrix.shared.testing.fakes
 
 import com.matrix.shared.data.local.interfaces.PatchVersionDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-internal class PatchVersionDataSourceFake: PatchVersionDataSource {
+internal class FakePatchVersionDataSource: PatchVersionDataSource {
   private var localPatchVersion: String? = null
 
   override suspend fun setPatchVersion(patchVersion: String) {

@@ -1,11 +1,11 @@
-package com.matrix.shared.data.builder
+package com.matrix.shared.testing.builder
 
 import com.matrix.shared.data.model.gods.Ability
 import com.matrix.shared.data.model.gods.AbilityDescription
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.shared.DescriptionValue
 
-internal fun getMockGodInformation(id: Long) = GodInformation(
+fun getMockGodInformation(id: Long) = GodInformation(
   id = id,
   abilityDetails1 = getMockAbility(),
   abilityDetails2 = getMockAbility(),

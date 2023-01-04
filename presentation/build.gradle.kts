@@ -59,6 +59,7 @@ val coilVersion = "2.2.1"
 val composeVersion = "1.3.1"
 val lifecycleVersion = "2.6.0-alpha03"
 val lottieVersion = "5.2.0"
+val kotlinxCoroutinesTest = "1.6.4"
 
 dependencies {
     implementation(project(":shared"))
@@ -104,9 +105,17 @@ dependencies {
     // timber
     implementation("com.jakewharton.timber:timber:5.0.1")
     // base test dependencies
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    testImplementation(project(":shared"))
+    testImplementation(kotlin("test"))
+    //testImplementation("junit:junit:4.13.2")
+    //For runBlockingTest, CoroutineDispatcher etc.
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
+    androidTestImplementation(project(":shared"))
+    androidTestImplementation("androidx.test.ext:junit:1.1.4")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    // Needed for createAndroidComposeRule, but not createComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
 }

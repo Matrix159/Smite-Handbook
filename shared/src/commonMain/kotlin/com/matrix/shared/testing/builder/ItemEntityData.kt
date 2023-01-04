@@ -1,11 +1,11 @@
-package com.matrix.shared.data.builder
+package com.matrix.shared.testing.builder
 
+import com.matrix.ItemEntity
 import com.matrix.shared.data.model.items.ItemDescription
-import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.model.shared.DescriptionValue
 
-internal fun getMockItemInformation(id: Long) = ItemInformation(
-  itemID = id,
+internal fun getMockItemEntity(id: Long) = ItemEntity(
+  id = id,
   activeFlag = true,
   childItemID = 1,
   deviceName = "deviceName test",

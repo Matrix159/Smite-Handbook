@@ -68,20 +68,24 @@ android {
 }
 
 dependencies {
+    //val hiltVersion: String by rootProject.extra
+    val workVersion: String by rootProject.extra
+    //val androidXHiltVersion: String by rootProject.extra
     implementation(project(":presentation"))
-    //implementation(project(":data"))
     implementation(project(":shared"))
 
     implementation("androidx.core:core-ktx:1.9.0")
 
     // hilt (base)
-    implementation("com.google.dagger:hilt-android:${rootProject.extra.get("hilt_version")}")
-    kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra.get("hilt_version")}")
+//    implementation("com.google.dagger:hilt-android:${hiltVersion}")
+//    kapt("com.google.dagger:hilt-android-compiler:${hiltVersion}")
     // hilt with androidx
-    implementation("androidx.hilt:hilt-navigation-compose:${rootProject.extra.get("androidx_hilt_version")}")
-    implementation("androidx.hilt:hilt-work:${rootProject.extra.get("androidx_hilt_version")}")
-    implementation("androidx.work:work-runtime-ktx:${rootProject.extra.get("work_version")}")
-    kapt("androidx.hilt:hilt-compiler:${rootProject.extra.get("androidx_hilt_version")}")
+//    implementation("androidx.hilt:hilt-navigation-compose:${androidXHiltVersion}")
+//    implementation("androidx.hilt:hilt-work:${androidXHiltVersion}")
+//    kapt("androidx.hilt:hilt-compiler:${androidXHiltVersion}")
+
+    // Work manager
+    implementation("androidx.work:work-runtime-ktx:${workVersion}")
 
     // timber
     implementation("com.jakewharton.timber:timber:5.0.1")

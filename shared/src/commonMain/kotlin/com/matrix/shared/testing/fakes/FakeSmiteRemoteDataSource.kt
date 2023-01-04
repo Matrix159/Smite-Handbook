@@ -1,14 +1,14 @@
-package com.matrix.shared.data.fakes
+package com.matrix.shared.testing.fakes
 
-import com.matrix.shared.data.builder.getMockGodApiResult
-import com.matrix.shared.data.builder.getMockItemApiResult
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import com.matrix.shared.data.network.model.GodApiResult
 import com.matrix.shared.data.network.model.GodSkinApiResult
 import com.matrix.shared.data.network.model.ItemApiResult
 import com.matrix.shared.data.network.model.PatchVersionInfo
+import com.matrix.shared.testing.builder.getMockGodApiResult
+import com.matrix.shared.testing.builder.getMockItemApiResult
 
-internal class SmiteRemoteDataSourceFake: SmiteRemoteDataSource {
+internal class FakeSmiteRemoteDataSource: SmiteRemoteDataSource {
   private var godsToReturn = mutableListOf(getMockGodApiResult(1), getMockGodApiResult(2))
   private var itemsToReturn = mutableListOf(getMockItemApiResult(1), getMockItemApiResult(2))
   private var currentPatchVersionInfo = PatchVersionInfo("9.7")

@@ -1,4 +1,4 @@
-package com.matrix.shared.data.builder
+package com.matrix.shared.testing.builder
 
 import com.matrix.shared.data.network.model.Ability
 import com.matrix.shared.data.network.model.AbilityDescription

@@ -1,4 +1,4 @@
-package com.matrix.shared.data.fakes
+package com.matrix.shared.testing.fakes
 
 import com.matrix.shared.data.local.interfaces.SmiteLocalDataSource
 import com.matrix.shared.data.model.builds.BuildInformation
@@ -7,7 +7,7 @@ import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-internal class SmiteLocalDataSourceFake : SmiteLocalDataSource {
+internal class FakeSmiteLocalDataSource : SmiteLocalDataSource {
   private val localGods = mutableListOf<GodInformation>()
   private val localItems = mutableListOf<ItemInformation>()
   private val localBuilds = mutableListOf<BuildInformation>()

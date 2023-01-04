@@ -1,4 +1,4 @@
-package com.matrix.shared.data.builder
+package com.matrix.shared.testing.builder
 
 import com.matrix.shared.data.network.model.ItemApiResult
 import com.matrix.shared.data.network.model.ItemDescription

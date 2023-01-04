@@ -2,12 +2,13 @@ package com.matrix.shared.data
 
 import co.touchlab.kermit.CommonWriter
 import co.touchlab.kermit.Logger
-import com.matrix.shared.data.builder.getMockGodInformation
-import com.matrix.shared.data.builder.getMockItemInformation
-import com.matrix.shared.data.fakes.PatchVersionDataSourceFake
-import com.matrix.shared.data.fakes.SmiteLocalDataSourceFake
-import com.matrix.shared.data.fakes.SmiteRemoteDataSourceFake
 import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
+import com.matrix.shared.testing.builder.getMockGodInformation
+import com.matrix.shared.testing.builder.getMockItemInformation
+import com.matrix.shared.testing.fakes.FakePatchVersionDataSource
+import com.matrix.shared.testing.fakes.FakeSmiteLocalDataSource
+import com.matrix.shared.testing.fakes.FakeSmiteRemoteDataSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -18,10 +19,11 @@ import kotlin.test.assertTrue
 /**
  * Tests the SmiteRepository implementation in the data layer
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class SmiteRepositoryTest {
-  private lateinit var remoteDataSource: SmiteRemoteDataSourceFake
-  private lateinit var localDataSource: SmiteLocalDataSourceFake
-  private lateinit var patchVersionDataSource: PatchVersionDataSourceFake
+  private lateinit var remoteDataSource: FakeSmiteRemoteDataSource
+  private lateinit var localDataSource: FakeSmiteLocalDataSource
+  private lateinit var patchVersionDataSource: FakePatchVersionDataSource
 
   private lateinit var repository: OfflineFirstSmiteRepository
 
@@ -29,9 +31,9 @@ internal class SmiteRepositoryTest {
   fun before() {
     // Needed so that the Kermit logger doesn't try to use platform-dependent loggers
     Logger.setLogWriters(CommonWriter())
-    remoteDataSource = SmiteRemoteDataSourceFake()
-    localDataSource = SmiteLocalDataSourceFake()
-    patchVersionDataSource = PatchVersionDataSourceFake()
+    remoteDataSource = FakeSmiteRemoteDataSource()
+    localDataSource = FakeSmiteLocalDataSource()
+    patchVersionDataSource = FakePatchVersionDataSource()
     repository = OfflineFirstSmiteRepository(remoteDataSource, localDataSource, patchVersionDataSource)
   }
 

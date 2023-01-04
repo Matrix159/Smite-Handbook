@@ -8,8 +8,8 @@ buildscript {
     set("coil_version", "2.2.1")
     set("compose_version", "1.3.1")
     set("datastore_version", "1.0.0")
-    set("hilt_version", hilt_version)
-    set("androidx_hilt_version", "1.0.0")
+    set("hiltVersion", hilt_version)
+    set("androidXHiltVersion", "1.0.0")
     //set("junit_version", "4.13.2")
     set("kotlin_version", kotlin_version)
     //set("kotlinx_coroutines_test", "1.6.4")
@@ -17,7 +17,7 @@ buildscript {
     set("lottie_version", "5.2.0")
     set("mockk_version", "1.12.8")
     set("room_version", "2.4.3")
-    set("work_version", "2.7.1")
+    set("workVersion", "2.7.1")
   }
 
   dependencies {

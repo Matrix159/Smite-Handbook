@@ -10,10 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-//@HiltViewModel
-class GodListViewModel /*@Inject*/ (
-  smiteRepository: SmiteRepository
-) : ViewModel() {
+class GodListViewModel (smiteRepository: SmiteRepository) : ViewModel() {
 
   val uiState = smiteRepository.getGods().asResult().map { result ->
     when (result) {

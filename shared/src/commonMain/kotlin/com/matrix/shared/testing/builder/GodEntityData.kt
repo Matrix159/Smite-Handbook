@@ -1,4 +1,4 @@
-package com.matrix.shared.data.builder
+package com.matrix.shared.testing.builder
 
 import com.matrix.GodEntity
 import com.matrix.shared.data.model.gods.Ability

@@ -25,9 +25,9 @@
         <!-- If you want to disable android.startup completely. -->
         <!-- Read here for more information why we need to do this:
         https://developer.android.com/jetpack/androidx/releases/work#2.6.0-alpha01 -->
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove"/>
+<!--        <provider-->
+<!--            android:name="androidx.startup.InitializationProvider"-->
+<!--            android:authorities="${applicationId}.androidx-startup"-->
+<!--            tools:node="remove"/>-->
     </application>
 </manifest>

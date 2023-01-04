@@ -18,5 +18,4 @@ fun presentationKoinModule() = module {
   viewModelOf(::BuildListViewModel)
   viewModelOf(::CreateBuildViewModel)
   viewModelOf(::BuildDetailsViewModel)
-
 }
