@@ -22,9 +22,7 @@ internal class FakeSmiteLocalDataSource : SmiteLocalDataSource {
 
   // Make sure to return copies of the lists to avoid using the references to them
   override fun getGods(): Flow<List<GodInformation>> = flowOf(localGods.map { it.copy() })
-  override fun getGod(godId: Long): Flow<GodInformation> {
-    TODO("Not yet implemented")
-  }
+  override fun getGod(godId: Long): Flow<GodInformation> = flowOf(localGods.first { it.id == godId })
 
   override suspend fun saveItems(items: List<ItemInformation>) {
     localItems.addAll(items)
@@ -37,9 +35,7 @@ internal class FakeSmiteLocalDataSource : SmiteLocalDataSource {
   override fun getItems(isActive: Boolean): Flow<List<ItemInformation>> =
     flowOf(localItems.filter { it.activeFlag == isActive }.map { it.copy() })
 
-  override fun getItem(itemId: Long): Flow<ItemInformation> {
-    TODO("Not yet implemented")
-  }
+  override fun getItem(itemId: Long): Flow<ItemInformation> = flowOf(localItems.first { it.itemID == itemId })
 
   override suspend fun saveBuild(buildInformation: BuildInformation) {
     // Mimic inserting with a REPLACE policy on conflict
@@ -77,9 +73,7 @@ internal class FakeSmiteLocalDataSource : SmiteLocalDataSource {
 //
 //    }
 
-  override fun getBuild(buildId: Long): Flow<BuildInformation> {
-    TODO("Not yet implemented")
-  }
+  override fun getBuild(buildId: Long): Flow<BuildInformation> = flowOf(localBuilds.first { it.id == buildId })
 
   override suspend fun deleteBuild(buildId: Long) {
     localBuilds.removeAll { it.id == buildId }

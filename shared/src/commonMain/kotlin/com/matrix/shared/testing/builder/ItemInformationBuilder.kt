@@ -3,8 +3,7 @@ package com.matrix.shared.testing.builder
 import com.matrix.shared.data.model.items.ItemDescription
 import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.model.shared.DescriptionValue
-
-internal fun getMockItemInformation(id: Long) = ItemInformation(
+fun getMockItemInformation(id: Long) = ItemInformation(
   itemID = id,
   activeFlag = true,
   childItemID = 1,

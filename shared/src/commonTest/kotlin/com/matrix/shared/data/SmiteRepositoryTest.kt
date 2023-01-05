@@ -3,6 +3,7 @@ package com.matrix.shared.data
 import co.touchlab.kermit.CommonWriter
 import co.touchlab.kermit.Logger
 import com.matrix.shared.data.repository.OfflineFirstSmiteRepository
+import com.matrix.shared.testing.builder.getMockBuildInformation
 import com.matrix.shared.testing.builder.getMockGodInformation
 import com.matrix.shared.testing.builder.getMockItemInformation
 import com.matrix.shared.testing.fakes.FakePatchVersionDataSource
@@ -14,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlin.test.assertTrue
 
 /**
@@ -24,7 +26,6 @@ internal class SmiteRepositoryTest {
   private lateinit var remoteDataSource: FakeSmiteRemoteDataSource
   private lateinit var localDataSource: FakeSmiteLocalDataSource
   private lateinit var patchVersionDataSource: FakePatchVersionDataSource
-
   private lateinit var repository: OfflineFirstSmiteRepository
 
   @BeforeTest
@@ -50,7 +51,7 @@ internal class SmiteRepositoryTest {
   }
 
   @Test
-  fun `Should return a new god list when patch changes`() = runTest {
+  fun `getGods should return a new god list when patch changes`() = runTest {
     val firstPatch = "9.7"
     val secondPatch = "9.8"
 
@@ -70,7 +71,46 @@ internal class SmiteRepositoryTest {
   }
 
   @Test
-  fun `Should return a new item list when patch changes`() = runTest {
+  fun `getGod returns result for valid ID`() = runTest {
+    val id = 1L
+    localDataSource.saveGods(listOf(getMockGodInformation(id)))
+    val godResult = repository.getGod(id).first()
+    assertEquals(id, godResult.id)
+  }
+
+  @Test
+  fun `getGod throws error for invalid ID`() = runTest {
+    val id = -1L
+    assertFails { repository.getGod(id).first() }
+  }
+
+  @Test
+  fun `getGodSkins returns two results for ID - 1`() = runTest {
+    val id = 1L
+    val results = repository.getGodSkins(id).first()
+    assertEquals(2, results.size)
+  }
+
+  @Test
+  fun `getGodSkins returns empty list for nonexistent ID`() = runTest {
+    val id = -1L
+    val results = repository.getGodSkins(id).first()
+    assertTrue(results.isEmpty())
+  }
+
+  @Test
+  fun `getItems should populate and return two items after syncing`() = runTest {
+    // verify local is empty before the retrieval
+    assertTrue(localDataSource.getItems().first().isEmpty())
+    repository.sync()
+    val results = repository.getItems().first()
+    // verify local was updated
+    assertEquals(2, localDataSource.getItems().first().size)
+    assertEquals(2, results.size)
+  }
+
+  @Test
+  fun `getItems should return a new item list when patch changes`() = runTest {
     val firstPatch = "9.7"
     val secondPatch = "9.8"
 
@@ -87,5 +127,73 @@ internal class SmiteRepositoryTest {
 
     assertEquals(2, firstItemList.size)
     assertEquals(3, secondItemList.size)
+  }
+
+  @Test
+  fun `getItem returns result for valid ID`() = runTest {
+    val id = 1L
+    localDataSource.saveItems(listOf(getMockItemInformation(id)))
+    val itemResult = repository.getItem(id).first()
+    assertEquals(id, itemResult.itemID)
+  }
+
+  @Test
+  fun `getItem throws error for invalid ID`() = runTest {
+    val id = -1L
+    assertFails { repository.getItem(id).first() }
+  }
+
+  @Test
+  fun `getBuilds returns results`() = runTest {
+    localDataSource.saveBuild(getMockBuildInformation(0, 0, listOf(0, 1)))
+    val buildResults = repository.getBuilds().first()
+    assertTrue(buildResults.isNotEmpty())
+  }
+
+  @Test
+  fun `getBuilds returns empty results`() = runTest {
+    val buildResults = repository.getBuilds().first()
+    assertTrue(buildResults.isEmpty())
+  }
+
+  @Test
+  fun `getBuild returns result for valid ID`() = runTest {
+    val id = 1L
+    localDataSource.saveBuild(getMockBuildInformation(id, 0, listOf(0, 1)))
+    val build = repository.getBuild(id).first()
+    assertEquals(id, build.id)
+  }
+
+  @Test
+  fun `getBuild throws exception for invalid ID`() = runTest {
+    assertFails { repository.getBuild(-1L) }
+  }
+
+  @Test
+  fun `createBuild successfully creates a build`() = runTest {
+    val id = 1L
+    val build = getMockBuildInformation(id, 0, listOf(0, 1))
+    repository.createBuild(build)
+    assertEquals(build, repository.getBuild(id).first())
+  }
+
+  @Test
+  fun `deleteBuild successfully deletes a build`() = runTest {
+    val id = 1L
+    val build = getMockBuildInformation(id, 0, listOf(0, 1))
+    localDataSource.saveBuild(build)
+    repository.deleteBuild(build)
+    assertFails { repository.getBuild(id) }
+  }
+
+  @Test
+  fun `sync updates data from remote data source into local data source`() = runTest {
+    remoteDataSource.increaseReturnedGodsByOne()
+    remoteDataSource.increaseReturnedItemsByOne()
+    assertTrue { repository.getGods().first().isEmpty() }
+    assertTrue { repository.getItems().first().isEmpty() }
+    repository.sync()
+    assertTrue { repository.getGods().first().isNotEmpty() }
+    assertTrue { repository.getItems().first().isNotEmpty() }
   }
 }

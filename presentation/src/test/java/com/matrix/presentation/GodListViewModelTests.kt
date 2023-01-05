@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -44,7 +45,13 @@ class GodListViewModelTests {
   val mainDispatcherRule = MainDispatcherRule()
 
   private lateinit var godListViewModel: GodListViewModel
-  private val smiteRepo = FakeSmiteRepository()
+  private lateinit var smiteRepo: FakeSmiteRepository
+
+  @Before
+  fun setup() {
+    smiteRepo = FakeSmiteRepository()
+    godListViewModel = GodListViewModel(smiteRepo)
+  }
 
   @Test
   fun testGodListViewModelWithData() = runTest {

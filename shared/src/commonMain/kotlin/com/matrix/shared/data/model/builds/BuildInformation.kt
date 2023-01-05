@@ -9,3 +9,7 @@ data class BuildInformation(
   val items: List<ItemInformation>,
   val name: String? = null
 )
+
+
+
+
