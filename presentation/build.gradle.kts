@@ -52,6 +52,10 @@ android {
     lint {
         abortOnError=false
     }
+
+    testOptions {
+       unitTests.isIncludeAndroidResources = true
+    }
 }
 
 val accompanistVersion = "0.26.3-beta"
@@ -107,12 +111,18 @@ dependencies {
     // base test dependencies
     testImplementation(project(":shared"))
     testImplementation(kotlin("test"))
-    //testImplementation("junit:junit:4.13.2")
+    testImplementation("junit:junit:4.13.2")
+
+    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation("org.robolectric:robolectric:4.9")
+    testImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+
     //For runBlockingTest, CoroutineDispatcher etc.
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
     androidTestImplementation(project(":shared"))
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation(kotlin("test"))
+    //androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    //androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     // Needed for createAndroidComposeRule, but not createComposeRule:
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")

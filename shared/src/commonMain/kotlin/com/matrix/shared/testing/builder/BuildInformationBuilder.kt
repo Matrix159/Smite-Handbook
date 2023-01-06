@@ -8,5 +8,5 @@ fun getMockBuildInformation(buildId: Long, godId: Long, itemIds: List<Long>) = B
   items = itemIds.map {
     getMockItemInformation(it)
   },
-  name = "name test"
+  name = "mock build $buildId"
 )
