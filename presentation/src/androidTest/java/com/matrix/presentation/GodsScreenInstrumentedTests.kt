@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.printToLog
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 import com.matrix.presentation.ui.theme.MaterializedSmiteTheme
@@ -14,7 +15,6 @@ import com.matrix.shared.testing.builder.getMockGodInformation
 import com.matrix.shared.testing.fakes.FakeSmiteRepository
 import org.junit.Rule
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 /**
  * Roboelectric tests for the Gods Screen
  */
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class GodsScreenInstrumentedTests {
 
   @get:Rule

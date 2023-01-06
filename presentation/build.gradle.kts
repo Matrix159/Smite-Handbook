@@ -111,11 +111,10 @@ dependencies {
     // base test dependencies
     testImplementation(project(":shared"))
     testImplementation(kotlin("test"))
-    testImplementation("junit:junit:4.13.2")
-
-    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    testImplementation("org.robolectric:robolectric:4.9")
-    testImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+//    testImplementation("junit:junit:4.13.2")
+//    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
+//    testImplementation("org.robolectric:robolectric:4.9")
+//    testImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
 
     //For runBlockingTest, CoroutineDispatcher etc.
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
