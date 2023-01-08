@@ -33,6 +33,22 @@ jobs:
       - name: Unit tests
         run: bash ./gradlew test
 
+  instrumented-tests:
+    name: Run Instrumented Tests
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Configure JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew :presentation:connectedAndroidTest
+
   apk:
     name: Generate APK
     runs-on: macos-latest
