@@ -108,7 +108,16 @@ kotlin {
 //                testImplementation "io.mockk:mockk:$mockk_version"
       }
     }
-    val androidTest by getting
+    val androidTest by getting {
+//      //dependsOn(commonTest)
+//
+//      dependencies {
+//        //implementation(kotlin("test"))
+//        //implementation("androidx.test.ext:junit:1.1.5")
+//        implementation("androidx.test.espresso:espresso-core:3.5.1")
+//        //implementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+//      }
+    }
     val iosX64Main by getting
     val iosArm64Main by getting
     val iosSimulatorArm64Main by getting
@@ -151,7 +160,6 @@ android {
     minSdk = 26
     targetSdk = 33
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
 
     javaCompileOptions {
