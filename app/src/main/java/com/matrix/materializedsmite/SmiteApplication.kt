@@ -21,7 +21,7 @@ class SmiteApplication : Application() {
       .getInstance(this)
       .enqueueUniqueWork(
         PatchSyncWorker.WORK_NAME,
-        ExistingWorkPolicy.KEEP,
+        ExistingWorkPolicy.REPLACE,
         PatchSyncWorker.startUpSyncWork()
       )
 

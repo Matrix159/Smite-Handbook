@@ -1,8 +1,12 @@
 package com.matrix.materializedsmite.worker
 
+import android.R
+import android.app.Notification
+import android.app.NotificationChannel
 import android.content.Context
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
@@ -15,12 +19,25 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 
+const val PatchSyncWorkerNotificationId = 56767116
+
 class PatchSyncWorker constructor(
-  appContext: Context,
+  private val appContext: Context,
   workerParams: WorkerParameters,
 ) : CoroutineWorker(appContext, workerParams), KoinComponent {
 
   private val smiteRepository: SmiteRepository by inject()
+  override suspend fun getForegroundInfo(): ForegroundInfo {
+    return ForegroundInfo(
+      PatchSyncWorkerNotificationId,
+      Notification.Builder(appContext, NotificationChannel.DEFAULT_CHANNEL_ID)
+        .setContentTitle("Retrieving latest information for Smite Handbook")
+        .setContentText("subject")
+        .setSmallIcon(R.drawable.bottom_bar)
+        //.setLargeIcon(aBitmap)
+        .build()
+    )
+  }
 
   override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
     Timber.d("PATCH SYNC WORKER RUNNING...")
@@ -39,6 +56,7 @@ class PatchSyncWorker constructor(
 
   companion object {
     const val WORK_NAME = "PatchSyncWorker"
+
     /**
      * Expedited one time work to sync data on app startup
      */

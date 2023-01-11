@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
@@ -56,6 +57,9 @@ class GodsScreenInstrumentedTests {
     composeTestRule.onRoot().printToLog("afterGods")
 
     composeTestRule.onNodeWithText(gods[0].name).performClick()
+
+    composeTestRule.onNodeWithText("Search for a god").performTextInput(gods[0].name)
+    composeTestRule.onNodeWithText(gods[1].name).assertDoesNotExist()
     assertTrue(firstGodClicked)
   }
 }
