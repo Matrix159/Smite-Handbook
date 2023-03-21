@@ -1,6 +1,5 @@
 package com.matrix.materializedsmite.worker
 
-import android.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,8 +10,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.matrix.materializedsmite.R
 import com.matrix.shared.data.contracts.SmiteRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -21,22 +20,18 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
 
-
-const val PatchSyncWorkerNotificationId = 1
-
 class PatchSyncWorker constructor(
-  private val appContext: Context,
+  appContext: Context,
   workerParams: WorkerParameters,
 ) : CoroutineWorker(appContext, workerParams), KoinComponent {
-
+  private val patchSyncWorkerNotificationId = 1
   private val smiteRepository: SmiteRepository by inject()
   private val notificationManager =
     appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   override suspend fun getForegroundInfo(): ForegroundInfo {
-    //val chan = NotificationManager.chann
     return ForegroundInfo(
-      PatchSyncWorkerNotificationId,
+      patchSyncWorkerNotificationId,
       createNotification()
     )
   }
@@ -45,12 +40,11 @@ class PatchSyncWorker constructor(
     Timber.d("PATCH SYNC WORKER RUNNING...")
     try {
       smiteRepository.sync()
-    } catch (ex: Exception) {
-      if (ex !is CancellationException) {
-        Timber.e(ex.stackTraceToString())
-        return@withContext Result.retry()
-      }
+    } catch (ex: CancellationException) {
       throw ex
+    } catch (ex: Exception) {
+      Timber.e(ex.stackTraceToString())
+      return@withContext Result.retry()
     }
 
     return@withContext Result.success()
@@ -61,22 +55,20 @@ class PatchSyncWorker constructor(
    */
   private fun createNotification(): Notification {
     val channelId = "1"
-    val title = "title"
-    val cancel = "cancel"
-    val name = "name"
-    // This PendingIntent can be used to cancel the Worker.
-    val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
+    val title = "Loading information from server..."
+    val name = "Syncing Information"
 
-    val builder = Notification.Builder(applicationContext, channelId)
+    return Notification.Builder(applicationContext, channelId)
       .setContentTitle(title)
       .setTicker(title)
-      .setSmallIcon(R.drawable.ic_lock_idle_alarm)
+      .setSmallIcon(R.drawable.sync_24)
       .setOngoing(true)
-      .addAction(R.drawable.ic_delete, cancel, intent)
-    createNotificationChannel(channelId, name).also {
-      builder.setChannelId(it.id)
-    }
-    return builder.build()
+      .also { builder ->
+        createNotificationChannel(channelId, name).also {
+          builder.setChannelId(it.id)
+        }
+      }
+      .build()
   }
 
   /**

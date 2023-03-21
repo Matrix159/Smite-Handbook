@@ -117,9 +117,6 @@ fun BuildDetailsScreen(
                 })
               }
             }
-            BadgedBox(badge = ) {
-              
-            }
             Crossfade(
               targetState = editDetailState.inEditMode,
             ) { inEditMode ->
