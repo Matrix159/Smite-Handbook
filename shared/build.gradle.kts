@@ -21,15 +21,14 @@ kotlin {
 
   val ktorVersion = "2.1.2"
   val coroutinesVersion = "1.6.4"
-  val sqlDelightVersion = "1.5.3"
+  val sqlDelightVersion = "1.5.5"
   val koinVersion = "3.2.2"
   val koinAndroidVersion = "3.3.0"
   val kotlinxCoroutinesTest = "1.6.4"
   val jUnitVersion = "4.13.2"
   sourceSets {
     val commonMain by getting {
-      dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+      dependencies {       implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
         implementation("io.ktor:ktor-client-core:$ktorVersion")
         implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
         implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -107,16 +106,6 @@ kotlin {
 //                testImplementation "junit:junit:$junit_version"
 //                testImplementation "io.mockk:mockk:$mockk_version"
       }
-    }
-    val androidTest by getting {
-//      //dependsOn(commonTest)
-//
-//      dependencies {
-//        //implementation(kotlin("test"))
-//        //implementation("androidx.test.ext:junit:1.1.5")
-//        implementation("androidx.test.espresso:espresso-core:3.5.1")
-//        //implementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-//      }
     }
     val iosX64Main by getting
     val iosArm64Main by getting

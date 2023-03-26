@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-  val kotlin_version = "1.7.10"
+  val kotlin_version = "1.8.0"
   val hilt_version = "2.44"
-  val sqlDelightVersion = "1.5.3"
+  val sqlDelightVersion = "1.5.5"
   extra.apply {
     set("accompanist_version", "0.26.3-beta")
     set("coil_version", "2.2.1")
@@ -29,10 +29,10 @@ buildscript {
 }
 
 plugins {
-  id("com.android.application").version("7.3.1").apply(false)
-  id("com.android.library").version("7.3.1").apply(false)
-  kotlin("android").version("1.7.10").apply(false)
-  kotlin("multiplatform").version("1.7.10").apply(false)
+  id("com.android.application").version("7.4.2").apply(false)
+  id("com.android.library").version("7.4.2").apply(false)
+  kotlin("android").version("1.8.10").apply(false)
+  kotlin("multiplatform").version("1.8.10").apply(false)
   //id("com.google.dagger.hilt.android") version "2.44" apply false
   //id("com.google.devtools.ksp") version " 1.7.10-1.0.6" apply false
 }
