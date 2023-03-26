@@ -1,17 +1,13 @@
+@file:Suppress("DSL_SCOPE_VIOLATION")
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-  val kotlin_version = "1.8.0"
-  val hilt_version = "2.44"
-  val sqlDelightVersion = "1.5.5"
   extra.apply {
     set("accompanist_version", "0.26.3-beta")
     set("coil_version", "2.2.1")
     set("compose_version", "1.3.1")
     set("datastore_version", "1.0.0")
-    set("hiltVersion", hilt_version)
     set("androidXHiltVersion", "1.0.0")
     //set("junit_version", "4.13.2")
-    set("kotlin_version", kotlin_version)
     //set("kotlinx_coroutines_test", "1.6.4")
     set("lifecycle_version", "2.6.0-alpha03")
     set("lottie_version", "5.2.0")
@@ -21,20 +17,18 @@ buildscript {
   }
 
   dependencies {
-    //classpath("com.android.tools.build:gradle:8.0.0-alpha08")
-    classpath("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}")
-    classpath("com.squareup.sqldelight:gradle-plugin:$sqlDelightVersion")
-    //classpath("com.google.dagger:hilt-android-gradle-plugin:${hilt_version}")
+    //classpath("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}")
+    //classpath("com.squareup.sqldelight:gradle-plugin:$sqlDelightVersion")
   }
 }
 
 plugins {
-  id("com.android.application").version("7.4.2").apply(false)
-  id("com.android.library").version("7.4.2").apply(false)
-  kotlin("android").version("1.8.10").apply(false)
-  kotlin("multiplatform").version("1.8.10").apply(false)
-  //id("com.google.dagger.hilt.android") version "2.44" apply false
-  //id("com.google.devtools.ksp") version " 1.7.10-1.0.6" apply false
+  alias(libs.plugins.androidApplication).apply(false)
+  alias(libs.plugins.androidLibrary).apply(false)
+  alias(libs.plugins.kotlinMultiplatform).apply(false)
+  alias(libs.plugins.kotlinAndroid).apply(false)
+  alias(libs.plugins.kotlinSerialization).apply(false)
+  alias(libs.plugins.sqlDelight).apply(false)
 }
 
 tasks.register("clean", Delete::class) {

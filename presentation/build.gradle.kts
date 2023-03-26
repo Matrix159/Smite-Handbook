@@ -68,9 +68,9 @@ val kotlinxCoroutinesTest = "1.6.4"
 dependencies {
     implementation(project(":shared"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
+    implementation(libs.androidCoreKtx)
+    implementation(libs.composeUi)
+    implementation(libs.composeUiToolingPreview)
     // TODO: Migrate to M3 fully when we can
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
