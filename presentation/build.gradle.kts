@@ -30,17 +30,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-//        // This is needed until we can upgrade to kotlin 1.6.20
-//        // https://issuetracker.google.com/issues/217593040?pli=1
-//        freeCompilerArgs += [
-//                "-Xjvm-default=all",
-//        ]
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.1"
+        kotlinCompilerExtensionVersion = "1.4.4"
     }
     packagingOptions {
         resources {
@@ -58,73 +53,54 @@ android {
     }
 }
 
-val accompanistVersion = "0.26.3-beta"
-val coilVersion = "2.2.1"
-val composeVersion = "1.3.1"
-val lifecycleVersion = "2.6.0-alpha03"
-val lottieVersion = "5.2.0"
-val kotlinxCoroutinesTest = "1.6.4"
-
 dependencies {
     implementation(project(":shared"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
+    implementation(libs.androidCoreKtx)
+    implementation(libs.composeUi)
+    implementation(libs.composeUiToolingPreview)
     // TODO: Migrate to M3 fully when we can
-    implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation(libs.composeMaterial)
+    implementation(libs.composeMaterialIcons)
     // Material3 in Compose
-    implementation("androidx.compose.material3:material3:1.1.0-alpha02")
+    implementation(libs.composeMaterial3)
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    //implementation "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha04"
+    implementation(libs.lifecycleViewmodelKtx)
+    implementation(libs.lifecycleRuntimeCompose)
+    implementation(libs.activityCompose)
+    implementation(libs.navigationCompose)
 
     // accompanist
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
-
-    // hilt
-//    implementation("com.google.dagger:hilt-android:$hilt_version")
-//    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-//    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-
-    // ktor serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation(libs.accompanistFlowLayout)
+    implementation(libs.accompanistNavigationAnimation)
+    implementation(libs.accompanistPlaceholderMaterial)
+    implementation(libs.accompanistSystemUiController)
 
     // image loading - coil
-    implementation("io.coil-kt:coil-compose:$coilVersion")
+    implementation(libs.coilCompose)
 
     //lottie
-    implementation("com.airbnb.android:lottie-compose:$lottieVersion")
+    implementation(libs.lottieCompose)
 
     // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation(libs.coroutinesAndroid)
 
     // timber
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation(libs.timber)
+
+    // koin
+    implementation(libs.koinCompose)
+
     // base test dependencies
     testImplementation(project(":shared"))
     testImplementation(kotlin("test"))
-//    testImplementation("junit:junit:4.13.2")
-//    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
-//    testImplementation("org.robolectric:robolectric:4.9")
-//    testImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
 
     //For runBlockingTest, CoroutineDispatcher etc.
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
+    testImplementation(libs.coroutinesTest)
     androidTestImplementation(project(":shared"))
     androidTestImplementation(kotlin("test"))
-    //androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    //androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    androidTestImplementation(libs.composeUiTestJunit4)
     // Needed for createAndroidComposeRule, but not createComposeRule:
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
-
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    debugImplementation(libs.composeUiTestManifest)
+    debugImplementation(libs.composeUiTooling)
 }

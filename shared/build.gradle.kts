@@ -3,7 +3,6 @@ plugins {
   kotlin("plugin.serialization")
   id("com.android.library")
   id("com.squareup.sqldelight")
-  //id("com.google.devtools.ksp")
 }
 
 kotlin {
@@ -19,37 +18,27 @@ kotlin {
     }
   }
 
-  val ktorVersion = "2.1.2"
-  val coroutinesVersion = "1.6.4"
-  val sqlDelightVersion = "1.5.3"
-  val koinVersion = "3.2.2"
-  val koinAndroidVersion = "3.3.0"
-  val kotlinxCoroutinesTest = "1.6.4"
-  val jUnitVersion = "4.13.2"
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-        implementation("io.ktor:ktor-client-core:$ktorVersion")
-        implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-        implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-        implementation("io.ktor:ktor-client-logging:$ktorVersion")
-        implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
-        implementation("com.squareup.sqldelight:coroutines-extensions:$sqlDelightVersion")
+        implementation(libs.coroutinesCore)
+        implementation(libs.ktorClientCore)
+        implementation(libs.ktorClientContentNegotiation)
+        implementation(libs.ktorSerializationJson)
+        implementation(libs.ktorClientLogging)
+        implementation(libs.sqlDelightRuntime)
+        implementation(libs.sqlDelightCoroutines)
         // timber for logging
         //implementation("com.jakewharton.timber:timber:5.0.1")
         // Logging, using this until timber supports KMP
-        implementation("co.touchlab:kermit:1.2.2")
+        implementation(libs.kermit)
 
         // Settings
-        implementation("com.russhwolf:multiplatform-settings:1.0.0-RC")
+        implementation(libs.multiplatformSettings)
         //implementation("com.russhwolf:multiplatform-settings-datastore:1.0.0-RC")
 
-        // KOIN DI
-        // Koin Core features
-        api("io.insert-koin:koin-core:$koinVersion")
-        // Koin for JUnit 4
-        //implementation("io.insert-koin:koin-test-junit4:$koinVersion")
+        // Koin DI
+        api(libs.koinCore)
       }
     }
     val commonTest by getting {
@@ -57,66 +46,28 @@ kotlin {
         implementation(kotlin("test"))
         //implementation("junit:junit:$jUnitVersion")
         // Koin Test features
-        implementation("io.insert-koin:koin-test:$koinVersion")
+        implementation(libs.koinTest)
         //For runBlockingTest, CoroutineDispatcher etc.
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
+        implementation(libs.coroutinesTest)
       }
     }
     val androidMain by getting {
       dependencies {
-        implementation("io.ktor:ktor-client-android:$ktorVersion")
-        implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
+        implementation(libs.ktorClientAndroid)
+        implementation(libs.sqlDelightAndroid)
 
         // Koin main features for Android
-        api("io.insert-koin:koin-android:$koinAndroidVersion")
+        api(libs.koinAndroid)
         // Koin for Jetpack Compose
-        api("io.insert-koin:koin-androidx-compose:$koinAndroidVersion")
+        api(libs.koinAndroidXNavigation)
         // Jetpack WorkManager
-        api("io.insert-koin:koin-androidx-workmanager:$koinAndroidVersion")
+        api(libs.koinWorkManager)
         // Navigation Graph
-        api("io.insert-koin:koin-androidx-navigation:$koinAndroidVersion")
-        // Old data module deps below
-        // hilt
-        //implementation("com.google.dagger:hilt-android:${rootProject.extra.get("hilt_version")}")
-//        configurations["kapt"].dependencies.add(
-//          project.dependencies.create(
-//            "com.google.dagger:hilt-android-compiler:${
-//              rootProject.extra.get(
-//                "hilt_version"
-//              )
-//            }"
-//          )
-//        )
-        // two below are for working with WorkManager in hilt
-//        implementation("androidx.hilt:hilt-work:${rootProject.extra.get("androidx_hilt_version")}")
-//        configurations["kapt"].dependencies.add(
-//          project.dependencies.create(
-//            "androidx.hilt:hilt-compiler:${
-//              rootProject.extra.get(
-//                "androidx_hilt_version"
-//              )
-//            }"
-//          )
-//        )
-
+        api(libs.koinAndroidXNavigation)
 
         // data store
-        implementation("androidx.datastore:datastore-preferences:${rootProject.extra.get("datastore_version")}")
-
-//
-//                testImplementation "junit:junit:$junit_version"
-//                testImplementation "io.mockk:mockk:$mockk_version"
+        implementation(libs.datastorePreferences)
       }
-    }
-    val androidTest by getting {
-//      //dependsOn(commonTest)
-//
-//      dependencies {
-//        //implementation(kotlin("test"))
-//        //implementation("androidx.test.ext:junit:1.1.5")
-//        implementation("androidx.test.espresso:espresso-core:3.5.1")
-//        //implementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-//      }
     }
     val iosX64Main by getting
     val iosArm64Main by getting
@@ -128,8 +79,8 @@ kotlin {
       iosSimulatorArm64Main.dependsOn(this)
 
       dependencies {
-        implementation("io.ktor:ktor-client-darwin:$ktorVersion")
-        implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
+        implementation(libs.ktorClientDarwin)
+        implementation(libs.sqlDelightNativeDriver)
       }
     }
     val iosX64Test by getting
@@ -142,14 +93,6 @@ kotlin {
       iosSimulatorArm64Test.dependsOn(this)
     }
   }
-}
-
-dependencies {
-//  add("kspAndroid",  org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
-//    "androidx.room",
-//    "room-compiler",
-//    "2.4.3"
-//  ))
 }
 
 android {
