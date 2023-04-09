@@ -6,11 +6,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinSerialization)
-    //id("com.android.application")
-    //id("org.jetbrains.kotlin.android")
-    //id("kotlinx-serialization")
-    //kotlin("kapt")
-    //id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -79,9 +74,4 @@ dependencies {
 
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation(libs.leakCanary)
-
-    // base test dependencies
-    //testImplementation("junit:junit:4.13.2")
-    //androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    //androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 }

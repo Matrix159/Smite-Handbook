@@ -7,10 +7,17 @@ coil = "2.2.1"
 compose = "1.3.1"
 composeMaterial3 = "1.1.0-alpha02"
 coroutines = "1.6.4"
+coroutinesTest = "1.6.4"
+datastore = "1.0.0"
+kermit = "1.2.2"
+koin = "3.2.2"
+koinAndroid = "3.3.0"
 kotlin = "1.8.10"
+ktor = "2.1.2"
 leakCanary = "2.10"
 lifecycle = "2.6.0-alpha03"
 lottieCompose = "5.2.0"
+multiplatformSettings = "1.0.0-RC"
 navigationCompose = "2.5.3"
 sqlDelight = "1.5.5"
 timber = "5.0.1"
@@ -18,7 +25,7 @@ workManager = "2.7.1"
 
 [libraries]
 accompanistFlowLayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
-accompanistNavigationAnimation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist"}
+accompanistNavigationAnimation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
 accompanistPlaceholderMaterial = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -28,14 +35,38 @@ composeMaterial = { module = "androidx.compose.material:material", version.ref =
 composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "composeMaterial3" }
 composeMaterialIcons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose"}
+composeUiTestJunit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+composeUiTestManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
+composeUiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+composeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 coroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
+coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+datastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore"}
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koinAndroidXNavigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroid" }
+koinCompose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroid" }
+koinCore = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koinTest = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koinWorkManager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koinAndroid" }
+ktorClientAndroid = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktorClientContentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktorClientDarwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktorClientLogging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktorSerializationJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 leakCanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanary" }
 lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lottieCompose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber"}
+sqlDelightAndroid = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelightCoroutines= { module = "com.squareup.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+sqlDelightNativeDriver = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqlDelight"}
+sqlDelightRuntime= { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelight" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 workManager = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 
 [plugins]

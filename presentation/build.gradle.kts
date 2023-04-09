@@ -30,11 +30,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-//        // This is needed until we can upgrade to kotlin 1.6.20
-//        // https://issuetracker.google.com/issues/217593040?pli=1
-//        freeCompilerArgs += [
-//                "-Xjvm-default=all",
-//        ]
     }
     buildFeatures {
         compose = true
@@ -57,13 +52,6 @@ android {
        unitTests.isIncludeAndroidResources = true
     }
 }
-
-val accompanistVersion = "0.26.3-beta"
-val coilVersion = "2.2.1"
-val composeVersion = "1.3.1"
-val lifecycleVersion = "2.6.0-alpha03"
-val lottieVersion = "5.2.0"
-val kotlinxCoroutinesTest = "1.6.4"
 
 dependencies {
     implementation(project(":shared"))
@@ -88,9 +76,6 @@ dependencies {
     implementation(libs.accompanistPlaceholderMaterial)
     implementation(libs.accompanistSystemUiController)
 
-    // ktor serialization
-    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
-
     // image loading - coil
     implementation(libs.coilCompose)
 
@@ -102,18 +87,20 @@ dependencies {
 
     // timber
     implementation(libs.timber)
+
+    // koin
+    implementation(libs.koinCompose)
+
     // base test dependencies
     testImplementation(project(":shared"))
     testImplementation(kotlin("test"))
 
     //For runBlockingTest, CoroutineDispatcher etc.
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTest")
+    testImplementation(libs.coroutinesTest)
     androidTestImplementation(project(":shared"))
     androidTestImplementation(kotlin("test"))
-    //androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    androidTestImplementation(libs.composeUiTestJunit4)
     // Needed for createAndroidComposeRule, but not createComposeRule:
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
-
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    debugImplementation(libs.composeUiTestManifest)
+    debugImplementation(libs.composeUiTooling)
 }
