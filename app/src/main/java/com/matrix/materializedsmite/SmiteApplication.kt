@@ -8,6 +8,7 @@ import com.matrix.presentation.injection.presentationKoinModule
 import com.matrix.shared.di.initKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import timber.log.Timber
 import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
 
@@ -17,6 +18,12 @@ class SmiteApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
+    if (BuildConfig.DEBUG) {
+      plant(DebugTree())
+    } else {
+      plant(CrashReportingTree())
+    }
+
     WorkManager
       .getInstance(this)
       .enqueueUniqueWork(
@@ -24,13 +31,6 @@ class SmiteApplication : Application() {
         ExistingWorkPolicy.KEEP,
         PatchSyncWorker.startUpSyncWork()
       )
-
-
-    if (BuildConfig.DEBUG) {
-      plant(DebugTree())
-    } else {
-      //plant(CrashReportingTree())
-    }
 
     initKoin {
       androidContext(this@SmiteApplication)

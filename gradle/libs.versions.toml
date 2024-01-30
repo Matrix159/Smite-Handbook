@@ -9,6 +9,9 @@ composeMaterial3 = "1.1.0-alpha02"
 coroutines = "1.6.4"
 coroutinesTest = "1.6.4"
 datastore = "1.0.0"
+firebaseBOM = "32.7.1"
+firebaseCrashlyticsPlugin = "2.9.9"
+googleServices = "4.4.0"
 kermit = "1.2.2"
 koin = "3.2.2"
 koinAndroid = "3.3.0"
@@ -43,6 +46,9 @@ coroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android
 coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
 coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 datastorePreferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore"}
+firebaseBOM = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBOM"}
+firebaseCrashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebaseAnalytics = { module = "com.google.firebase:firebase-analytics" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koinAndroid = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koinAndroidXNavigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroid" }
@@ -76,3 +82,5 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 sqlDelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight" }
+googleServices = { id = "com.google.gms.google-services", version.ref="googleServices" }
+firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }

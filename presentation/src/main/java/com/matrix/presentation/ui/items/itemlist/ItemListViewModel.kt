@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 
 //@HiltViewModel
 class ItemListViewModel /*@Inject*/ constructor(
@@ -33,6 +34,7 @@ class ItemListViewModel /*@Inject*/ constructor(
         }
 
         is Result.Error -> {
+          Timber.e(result.exception)
           ItemListUiState.Error(result.exception)
         }
       }

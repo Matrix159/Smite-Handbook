@@ -50,6 +50,7 @@ class ItemDetailsViewModel /*@Inject*/ constructor(
             ItemDetailUiState.Loading
           }
           is Result.Error -> {
+            Timber.e(result.exception)
             ItemDetailUiState.Error(result.exception)
           }
         }

@@ -16,7 +16,9 @@ import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 
 //@HiltViewModel
 class CreateBuildViewModel /*@Inject*/ constructor(
@@ -29,26 +31,29 @@ class CreateBuildViewModel /*@Inject*/ constructor(
 
   // The UI collects from this StateFlow to get its state updates
   val uiState: StateFlow<CreateBuildUiState> = combine(
-    smiteRepository.getGods().asResult(),
-    smiteRepository.getItems().asResult(),
+    smiteRepository.getGods(),
+    smiteRepository.getItems(),
     snapshotFlow { selectedGod },
     snapshotFlow { selectedItems },
-    snapshotFlow { buildName }
-  ) { latestGods, latestItems, selectedGod, selectedItems, buildName ->
-    if (latestGods is Result.Success && latestItems is Result.Success) {
-      CreateBuildUiState.Success(
-        gods = latestGods.data,
-        items = latestItems.data,
-        selectedGod = selectedGod,
-        selectedItems = selectedItems,
-        buildName = buildName
-      )
-    } else if (latestGods is Result.Loading || latestItems is Result.Loading) {
-      CreateBuildUiState.Loading
-    } else if (latestGods is Result.Error && latestItems is Result.Error) {
-      CreateBuildUiState.Error(Exception("An error occurred while loading god and item data."))
-    } else {
-      CreateBuildUiState.Error(null)
+    snapshotFlow { buildName },
+    ::StateInputs
+  ).asResult().map { result ->
+    when (result) {
+      is Result.Success ->  {
+        val inputs = result.data
+        CreateBuildUiState.Success(
+          gods = inputs.gods,
+          items = inputs.items,
+          selectedGod = inputs.selectedGod,
+          selectedItems = inputs.selectedItems,
+          buildName = inputs.buildName
+        )
+      }
+      is Result.Loading -> CreateBuildUiState.Loading
+      is Result.Error -> {
+        Timber.e(result.exception)
+        CreateBuildUiState.Error(Exception("An error occurred while loading god and item data."))
+      }
     }
   }
     .stateIn(
@@ -92,6 +97,14 @@ class CreateBuildViewModel /*@Inject*/ constructor(
     }
   }
 }
+
+data class StateInputs(
+  val gods: List<GodInformation>,
+  val items: List<ItemInformation>,
+  val selectedGod: GodInformation?,
+  val selectedItems: List<ItemInformation>,
+  val buildName: String,
+)
 
 sealed interface CreateBuildUiState {
   data class Success(

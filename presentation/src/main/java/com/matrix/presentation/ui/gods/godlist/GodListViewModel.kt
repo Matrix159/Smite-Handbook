@@ -9,6 +9,7 @@ import com.matrix.shared.data.model.gods.GodInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 
 class GodListViewModel (smiteRepository: SmiteRepository) : ViewModel() {
 
@@ -26,6 +27,7 @@ class GodListViewModel (smiteRepository: SmiteRepository) : ViewModel() {
         GodListUiState.Loading
       }
       is Result.Error -> {
+        Timber.e(result.exception)
         GodListUiState.Error(result.exception)
       }
     }

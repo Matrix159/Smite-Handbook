@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 
 /*@HiltViewModel*/
 class GodDetailsViewModel /*@Inject*/ constructor(
@@ -41,6 +42,7 @@ class GodDetailsViewModel /*@Inject*/ constructor(
         }
 
         is Result.Error -> {
+          Timber.e(result.exception)
           GodDetailsUiState.Error(result.exception)
         }
       }

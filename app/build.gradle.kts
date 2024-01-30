@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.googleServices)
+    alias(libs.plugins.firebaseCrashlytics)
 }
 
 android {
@@ -29,7 +31,7 @@ android {
         applicationId = "com.matrix.materializedsmite"
         minSdk = 26
         targetSdk = 33
-        versionCode = 9
+        versionCode = 12
         versionName = "0.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -71,6 +73,11 @@ dependencies {
     implementation(libs.androidCoreKtx)
     implementation(libs.workManager)
     implementation(libs.timber)
+
+    // Firebase
+    implementation(platform(libs.firebaseBOM))
+    implementation(libs.firebaseCrashlytics)
+    implementation(libs.firebaseAnalytics)
 
     // debugImplementation because LeakCanary should only run in debug builds.
     debugImplementation(libs.leakCanary)

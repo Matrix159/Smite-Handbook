@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "977855319310",
+    "project_id": "smite-handbook",
+    "storage_bucket": "smite-handbook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977855319310:android:b21bba79e7cdf8f018db5f",
+        "android_client_info": {
+          "package_name": "com.matrix.materializedsmite"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6fgj3I1MEmswoPb3WOtw8UJMzhXZEbEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

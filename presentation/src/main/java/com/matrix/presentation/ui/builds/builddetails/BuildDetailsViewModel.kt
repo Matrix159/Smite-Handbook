@@ -12,8 +12,10 @@ import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 //@HiltViewModel
 class BuildDetailsViewModel /*@Inject*/ constructor(
@@ -24,28 +26,30 @@ class BuildDetailsViewModel /*@Inject*/ constructor(
     (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toLong()
 
   val uiState = combine(
-    smiteRepository.getBuild(buildId).asResult(),
-    smiteRepository.getGods().asResult(),
-    smiteRepository.getItems().asResult(),
-  ) { build, latestGods, latestItems ->
-    if (build is Result.Success && latestGods is Result.Success && latestItems is Result.Success) {
-      BuildDetailsUiState.Success(
-        buildInformation = build.data,
-        allGods = latestGods.data,
-        allItems = latestItems.data
-      )
-    } else if (build is Result.Loading || latestGods is Result.Loading || latestItems is Result.Loading) {
-      BuildDetailsUiState.Loading
-    } else if (build is Result.Loading || latestGods is Result.Error && latestItems is Result.Error) {
-      BuildDetailsUiState.Error(Exception("An error occurred while loading build information."))
-    } else {
-      BuildDetailsUiState.Error(null)
-    }
-  }.stateIn(
-    scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5_000),
-    initialValue = BuildDetailsUiState.Loading
+    smiteRepository.getBuild(buildId),
+    smiteRepository.getGods(),
+    smiteRepository.getItems(),
+    ::Triple
   )
+    .asResult()
+    .map { result ->
+      when (result) {
+        is Result.Success -> BuildDetailsUiState.Success(
+          buildInformation = result.data.first,
+          allGods = result.data.second,
+          allItems = result.data.third
+        )
+        is Result.Error -> {
+          Timber.e(result.exception)
+          BuildDetailsUiState.Error(Exception("An error occurred while loading build information."))
+        }
+        Result.Loading -> BuildDetailsUiState.Loading
+      }
+    }.stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.WhileSubscribed(5_000),
+      initialValue = BuildDetailsUiState.Loading
+    )
 
   suspend fun deleteBuild(buildInformation: BuildInformation) {
     smiteRepository.deleteBuild(buildInformation)
