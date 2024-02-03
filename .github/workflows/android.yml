@@ -16,7 +16,7 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: Linting
         run: bash ./gradlew lint
 
@@ -29,7 +29,7 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: Unit tests
         run: bash ./gradlew test
 
@@ -42,7 +42,7 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -58,7 +58,7 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
       - name: Build debug APK
         run: bash ./gradlew assembleDebug
       - name: Upload APK
