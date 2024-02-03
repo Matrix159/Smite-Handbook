@@ -36,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.Loader
 import kotlinx.coroutines.delay
@@ -44,8 +43,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(
-  ExperimentalMaterial3Api::class, ExperimentalLifecycleComposeApi::class,
-  ExperimentalFoundationApi::class, ExperimentalAnimationApi::class
+  ExperimentalFoundationApi::class
 )
 @Composable
 fun BuildOverviewScreen(

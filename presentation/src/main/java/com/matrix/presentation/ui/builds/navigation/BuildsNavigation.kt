@@ -14,7 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.google.accompanist.navigation.animation.composable
+import androidx.navigation.compose.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route

@@ -24,12 +24,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GodScreen(
   godDetailsViewModel: GodDetailsViewModel,

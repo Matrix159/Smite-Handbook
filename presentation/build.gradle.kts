@@ -8,12 +8,10 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 33
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -24,24 +22,20 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.4"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
-    packagingOptions {
+
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     namespace = "com.matrix.presentation"
 
     lint {
@@ -51,6 +45,10 @@ android {
     testOptions {
        unitTests.isIncludeAndroidResources = true
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
@@ -72,9 +70,7 @@ dependencies {
 
     // accompanist
     implementation(libs.accompanistFlowLayout)
-    implementation(libs.accompanistNavigationAnimation)
     implementation(libs.accompanistPlaceholderMaterial)
-    implementation(libs.accompanistSystemUiController)
 
     // image loading - coil
     implementation(libs.coilCompose)

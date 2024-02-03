@@ -1,13 +1,13 @@
 [versions]
 accompanist = "0.26.3-beta"
-activityCompose = "1.6.1"
-agp = "7.4.2"
-androidCoreKtx = "1.9.0"
-coil = "2.2.1"
-compose = "1.3.1"
-composeMaterial3 = "1.1.0-alpha02"
-coroutines = "1.6.4"
-coroutinesTest = "1.6.4"
+activityCompose = "1.8.2"
+agp = "8.2.2"
+androidCoreKtx = "1.12.0"
+coil = "2.5.0"
+compose = "1.6.0"
+composeMaterial3 = "1.1.2"
+coroutines = "1.7.3"
+coroutinesTest = "1.7.3"
 datastore = "1.0.0"
 firebaseBOM = "32.7.1"
 firebaseCrashlyticsPlugin = "2.9.9"
@@ -15,22 +15,20 @@ googleServices = "4.4.0"
 kermit = "1.2.2"
 koin = "3.2.2"
 koinAndroid = "3.3.0"
-kotlin = "1.8.10"
+kotlin = "1.9.22"
 ktor = "2.1.2"
 leakCanary = "2.10"
-lifecycle = "2.6.0-alpha03"
+lifecycle = "2.7.0"
 lottieCompose = "5.2.0"
 multiplatformSettings = "1.0.0-RC"
-navigationCompose = "2.5.3"
+navigationCompose = "2.7.6"
 sqlDelight = "1.5.5"
 timber = "5.0.1"
-workManager = "2.7.1"
+workManager = "2.9.0"
 
 [libraries]
 accompanistFlowLayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanist" }
-accompanistNavigationAnimation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
 accompanistPlaceholderMaterial = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
-accompanistSystemUiController = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidCoreKtx = { module = "androidx.core:core-ktx", version.ref = "androidCoreKtx" }
 coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }

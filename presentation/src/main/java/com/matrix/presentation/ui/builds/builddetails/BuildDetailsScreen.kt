@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.presentation.R
@@ -41,9 +40,6 @@ import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import java.lang.Integer.max
 
-@OptIn(
-  ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class,
-)
 @Composable
 fun BuildDetailsScreen(
   buildDetailsViewModel: BuildDetailsViewModel,

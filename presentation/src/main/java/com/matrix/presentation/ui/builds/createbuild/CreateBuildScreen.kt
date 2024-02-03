@@ -49,7 +49,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.presentation.ui.components.ErrorText
@@ -57,7 +56,6 @@ import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateBuildScreen(
   createBuildViewModel: CreateBuildViewModel,

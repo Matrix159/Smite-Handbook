@@ -9,13 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.shared.data.model.items.ItemInformation
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ItemDetailsScreen(
   itemDetailsViewModel: ItemDetailsViewModel,

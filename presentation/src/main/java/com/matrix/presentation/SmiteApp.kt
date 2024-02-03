@@ -6,7 +6,7 @@ import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,8 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.matrix.presentation.ui.builds.navigation.buildsGraph
 import com.matrix.presentation.ui.gods.navigation.godsGraph
 import com.matrix.presentation.ui.items.navigation.itemsGraph
@@ -29,13 +29,9 @@ import com.matrix.presentation.ui.navigation.SmiteNavigationBar
 
 val defaultAnimationSpec: FiniteAnimationSpec<Float> = tween(300)
 
-@OptIn(
-  ExperimentalAnimationApi::class,
-  ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class
-)
 @Composable
 fun SmiteApp() {
-  val navController: NavHostController = rememberAnimatedNavController()
+  val navController: NavHostController = rememberNavController()
   val configuration = LocalConfiguration.current
   var isLandScape by remember { mutableStateOf(false) }
   isLandScape = when (configuration.orientation) {
@@ -56,12 +52,12 @@ fun SmiteApp() {
     },
     contentWindowInsets = WindowInsets(0, 0, 0, 0)
   ) { paddingValues ->
-    AnimatedNavHost(
+    NavHost(
       navController = navController,
       startDestination = Screen.Gods.route,
       modifier = Modifier
         .padding(paddingValues)
-        .consumedWindowInsets(paddingValues)
+        .consumeWindowInsets(paddingValues)
         // The navigation bar padding is handled by bottomnavbar in portrait, but
         // we need to add it on for when it's on the sides in landscape
         .let {

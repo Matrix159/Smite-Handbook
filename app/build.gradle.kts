@@ -14,7 +14,7 @@ android {
     signingConfigs {
         create("release") {
             // Load keystore
-            val keystorePropertiesFile = rootProject.file("keystore.properties");
+            val keystorePropertiesFile = rootProject.file("keystore.properties")
             val keystoreProperties = Properties()
             if (keystorePropertiesFile.exists()) {
                 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
@@ -25,12 +25,12 @@ android {
             }
         }
     }
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.matrix.materializedsmite"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 12
         versionName = "0.0.2"
 
@@ -48,24 +48,27 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     namespace = "com.matrix.materializedsmite"
 
     lint {
         abortOnError=false
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
 }
+
+kotlin {
+    jvmToolchain(17)
+}
+
 
 dependencies {
     implementation(project(":presentation"))
