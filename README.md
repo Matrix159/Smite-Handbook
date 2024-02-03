@@ -1,6 +1,6 @@
-# Materialized Smite
+# Smite Handbook
 
-Materialized Smite is my experimentation with creating a new Jetpack Compose application from scratch and applying the topics I learn along the way.
+Smite Handbook is my experimentation with creating a new Jetpack Compose application from scratch and applying the topics I learn along the way.
 It uses Hi-Rez's Smite API to provide data. 
 
 It is available as a beta application in the Play Store [here](https://play.google.com/store/apps/details?id=com.matrix.materializedsmite).
