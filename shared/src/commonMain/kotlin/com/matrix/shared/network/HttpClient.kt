@@ -16,7 +16,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
-private const val TIME_OUT = 120 * 1000 // 120 seconds as milliseconds
+private const val TIME_OUT = 180 * 1000 // 3 minutes
 
 @ExperimentalSerializationApi
 internal val ktorHttpClient = HttpClient {

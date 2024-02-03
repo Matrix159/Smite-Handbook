@@ -27,14 +27,8 @@ kotlin {
       implementation(libs.ktorClientLogging)
       implementation(libs.sqlDelightRuntime)
       implementation(libs.sqlDelightCoroutines)
-      // timber for logging
-      //implementation("com.jakewharton.timber:timber:5.0.1")
       // Logging, using this until timber supports KMP
       implementation(libs.kermit)
-
-      // Settings
-      implementation(libs.multiplatformSettings)
-      //implementation("com.russhwolf:multiplatform-settings-datastore:1.0.0-RC")
 
       // Koin DI
       api(libs.koinCore)

@@ -20,7 +20,6 @@ ktor = "2.1.2"
 leakCanary = "2.10"
 lifecycle = "2.7.0"
 lottieCompose = "5.2.0"
-multiplatformSettings = "1.0.0-RC"
 navigationCompose = "2.7.6"
 sqlDelight = "1.5.5"
 timber = "5.0.1"
@@ -64,7 +63,6 @@ leakCanary = { module = "com.squareup.leakcanary:leakcanary-android", version.re
 lifecycleRuntimeCompose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lottieCompose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
-multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 navigationCompose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 sqlDelightAndroid = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelightCoroutines= { module = "com.squareup.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
