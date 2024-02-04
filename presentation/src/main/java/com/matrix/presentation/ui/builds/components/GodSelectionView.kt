@@ -9,15 +9,16 @@ import com.matrix.shared.data.model.gods.GodInformation
 fun GodSelectionView(
   gods: List<GodInformation>,
   godSelected: (god: GodInformation) -> Unit,
+  appliedGodFilters: AppliedGodFilters,
+  updateAppliedGodFilters: (filters: AppliedGodFilters) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Surface(modifier = modifier) {
     FilterableGodList(
       gods = gods,
       godSelected = godSelected,
-      // TODO
-      appliedFilters = AppliedGodFilters(),
-      updateAppliedFilters = {}
+      appliedFilters = appliedGodFilters,
+      updateAppliedFilters = { updateAppliedGodFilters(it) }
     )
   }
 }

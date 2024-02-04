@@ -28,7 +28,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -188,6 +187,8 @@ fun CreateBuildScreen(
                 showGodList = false
                 createBuildViewModel.setGod(it)
               },
+              appliedGodFilters = buildUiState.appliedGodFilters,
+              updateAppliedGodFilters = createBuildViewModel::updateAppliedFilters,
               modifier = Modifier.fillMaxSize()
             )
           }

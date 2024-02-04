@@ -62,8 +62,8 @@ class GodListViewModel (
 
 sealed interface GodListUiState {
   data class Success(
-    val gods: List<GodInformation>,
-    val appliedGodFilters: AppliedGodFilters
+    val gods: List<GodInformation> = emptyList(),
+    val appliedGodFilters: AppliedGodFilters = AppliedGodFilters()
   ) : GodListUiState
 
   data class Error(val exception: Throwable?) : GodListUiState
