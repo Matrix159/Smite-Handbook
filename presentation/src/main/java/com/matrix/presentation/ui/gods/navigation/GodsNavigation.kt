@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.matrix.presentation.Screen
@@ -17,6 +18,7 @@ import com.matrix.presentation.ui.gods.goddetails.GodScreen
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 
 sealed class GodsNavigation: Route {
   object GodList: GodsNavigation() {

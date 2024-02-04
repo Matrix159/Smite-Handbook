@@ -31,6 +31,8 @@ fun GodListScreen(
         FilterableGodList(
           gods = godListUiState.gods,
           godSelected = godClicked,
+          appliedFilters = godListUiState.appliedGodFilters,
+          updateAppliedFilters = godListViewModel::updateAppliedFilters
         )
       }
     }

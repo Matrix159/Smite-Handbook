@@ -10,11 +10,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -35,16 +32,10 @@ import kotlinx.coroutines.launch
 fun FilterableGodList(
   gods: List<GodInformation>,
   godSelected: (godInfo: GodInformation) -> Unit,
+  appliedFilters: AppliedGodFilters,
+  updateAppliedFilters: (filters: AppliedGodFilters) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-
-  var appliedFilters by remember { mutableStateOf(AppliedGodFilters()) }
-  fun updateAppliedFilters(newFilters: AppliedGodFilters) {
-    appliedFilters = newFilters
-  }
-  fun updateSearchText(text: String) {
-    appliedFilters = appliedFilters.copy(searchText = text)
-  }
 
   val shownGods = remember(appliedFilters) {
     gods.filter { filterGod(appliedFilters, it) }.sortedBy { it.name }
@@ -54,7 +45,7 @@ fun FilterableGodList(
     sheetContent = {
       GodFilters(
         appliedFilters = appliedFilters,
-        filtersChanged = ::updateAppliedFilters,
+        filtersChanged = { updateAppliedFilters(it) },
         modifier = Modifier.padding(16.dp),
       )
     }
@@ -75,7 +66,7 @@ fun FilterableGodList(
       SearchPanel(
         searchText = appliedFilters.searchText,
         searchLabel = stringResource(R.string.search_for_god),
-        searchTextChanged = ::updateSearchText,
+        searchTextChanged = { updateAppliedFilters(appliedFilters.copy(searchText = it)) },
         filterIconTap = {
           coroutineScope.launch {
             bottomSheetState.show()
