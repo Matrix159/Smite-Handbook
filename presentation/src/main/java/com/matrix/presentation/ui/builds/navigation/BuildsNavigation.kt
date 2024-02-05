@@ -1,7 +1,6 @@
 package com.matrix.presentation.ui.builds.navigation
 
 import android.net.Uri
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,41 +8,44 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import androidx.navigation.compose.composable
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
 import com.matrix.presentation.ui.builds.builddetails.BuildDetailsScreen
 import com.matrix.presentation.ui.builds.builddetails.BuildDetailsViewModel
+import com.matrix.presentation.ui.builds.buildlist.BuildListScreen
 import com.matrix.presentation.ui.builds.buildlist.BuildListViewModel
-import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
-import com.matrix.presentation.ui.gods.navigation.GodsNavigation
-import com.matrix.presentation.ui.gods.navigation.godListRoute
+import com.matrix.presentation.ui.builds.itemselection.ItemSelectionScreen
+import com.matrix.presentation.ui.builds.itemselection.ItemSelectionViewModel
+import com.matrix.presentation.ui.navigation.godListRoute
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
-import timber.log.Timber
 
-sealed interface BuildsNavigation: Route {
+sealed interface BuildsNavigation : Route {
   data object Builds : BuildsNavigation {
     override val route = "builds"
   }
+
   data object CreateBuilds : BuildsNavigation {
     override val route = "create_builds"
   }
-  data object GodList: BuildsNavigation {
+
+  data object GodList : BuildsNavigation {
     override val route: String = "builds_god_list"
     const val selectedGodId = "selectedGodId"
+  }
+
+  data object ItemList : BuildsNavigation {
+    override val route: String = "builds_item_list"
+    const val selectedItemIds = "selectedItemIds"
   }
 
   data object BuildDetails : BuildsNavigation {
@@ -54,7 +56,29 @@ sealed interface BuildsNavigation: Route {
   }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+private fun NavGraphBuilder.itemSelectionRoute(navController: NavController) {
+  composable(
+    BuildsNavigation.ItemList.route,
+    enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
+    exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
+  ) {
+    val viewModel: ItemSelectionViewModel = koinViewModel()
+    ItemSelectionScreen(
+      viewModel = viewModel,
+      done = {
+        navController.previousBackStackEntry
+          ?.savedStateHandle
+          ?.set(BuildsNavigation.ItemList.selectedItemIds, it)
+        navController.popBackStack()
+      },
+      modifier = Modifier
+        .fillMaxSize()
+        .statusBarsPadding()
+        .imePadding()
+    )
+  }
+}
+
 fun NavGraphBuilder.buildsGraph(
   screen: Screen,
   navController: NavController,
@@ -65,12 +89,8 @@ fun NavGraphBuilder.buildsGraph(
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) { _ ->
-//      val parentEntry = remember(backStackEntry) {
-//        navController.getBackStackEntry(Screen.Builds.route)
-//      }
-      //val buildViewModel = hiltViewModel<BuildViewModel>(parentEntry)
       val buildListViewModel: BuildListViewModel = koinViewModel()
-      BuildOverviewScreen(
+      BuildListScreen(
         buildListViewModel,
         createBuild = {
           navController.navigate(BuildsNavigation.CreateBuilds.route) {
@@ -92,14 +112,19 @@ fun NavGraphBuilder.buildsGraph(
       BuildsNavigation.CreateBuilds.route,
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) {backStackEntry ->
-      val selectedGodId = backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
+    ) { backStackEntry ->
+      val selectedGodId =
+        backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
+      val selectedItemIds = backStackEntry.savedStateHandle.get<List<Long>>(BuildsNavigation.ItemList.selectedItemIds)
+
       val createBuildViewModel: CreateBuildViewModel = koinViewModel()
       createBuildViewModel.savedStateHandle[BuildsNavigation.GodList.selectedGodId] = selectedGodId
+      createBuildViewModel.savedStateHandle[BuildsNavigation.ItemList.selectedItemIds] = selectedItemIds
 
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
         navigateToGodList = { navController.navigate(BuildsNavigation.GodList.route) },
+        navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.route) },
         done = {
           navController.popBackStack()
         },
@@ -111,7 +136,9 @@ fun NavGraphBuilder.buildsGraph(
     }
     composable(
       BuildsNavigation.BuildDetails.route,
-      arguments = listOf(navArgument(BuildsNavigation.BuildDetails.buildIdArg) { type = NavType.StringType }),
+      arguments = listOf(navArgument(BuildsNavigation.BuildDetails.buildIdArg) {
+        type = NavType.StringType
+      }),
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {
@@ -139,10 +166,8 @@ fun NavGraphBuilder.buildsGraph(
           ?.savedStateHandle
           ?.set(BuildsNavigation.GodList.selectedGodId, it.id)
         navController.popBackStack()
-//        navController.navigate(GodsNavigation.GodDetails.createNavigationRoute(it.id.toString())) {
-//          launchSingleTop = true
-//        }
       }
     )
+    itemSelectionRoute(navController)
   }
 }

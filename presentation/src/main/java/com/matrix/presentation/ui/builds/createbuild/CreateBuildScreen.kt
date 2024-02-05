@@ -1,7 +1,5 @@
 package com.matrix.presentation.ui.builds.createbuild
 
-import GodSelectionView
-import ItemSelectionView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,11 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,26 +54,16 @@ import kotlinx.coroutines.launch
 fun CreateBuildScreen(
   createBuildViewModel: CreateBuildViewModel,
   navigateToGodList: () -> Unit,
+  navigateToItemList: () -> Unit,
   done: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
 
   val _buildUiState by createBuildViewModel.uiState.collectAsStateWithLifecycle()
-
   val focusManager = LocalFocusManager.current
 
-  var showGodList by rememberSaveable { mutableStateOf(false) }
-  var showItemList by rememberSaveable { mutableStateOf(false) }
-
   BackHandler {
-    if (showGodList) {
-      showGodList = false
-    } else if (showItemList) {
-      createBuildViewModel.clearSelectedItems()
-      showItemList = false
-    } else {
-      done()
-    }
+    done()
   }
 
   Column(
@@ -141,7 +126,7 @@ fun CreateBuildScreen(
                       MaterialTheme.shapes.medium
                     )
                     .clip(MaterialTheme.shapes.medium)
-                    .clickable { showItemList = true }
+                    .clickable { navigateToItemList() }
                 ) {
                   for (item in buildUiState.selectedItems) {
                     AsyncImage(
@@ -156,7 +141,7 @@ fun CreateBuildScreen(
                   }
                 }
               } else {
-                Button(onClick = { showItemList = true }, modifier = Modifier.padding(paddingValues)) {
+                Button(onClick = { navigateToItemList() }, modifier = Modifier.padding(paddingValues)) {
                   Text(text = "Add items")
                 }
               }
@@ -181,45 +166,14 @@ fun CreateBuildScreen(
               )
             }
           }
-//          if (showGodList) {
-//            GodSelectionView(
-//              gods = buildUiState.gods,
-//              godSelected = {
-//                showGodList = false
-//                createBuildViewModel.setGod(it)
-//              },
-//              appliedGodFilters = buildUiState.appliedGodFilters,
-//              updateAppliedGodFilters = createBuildViewModel::updateAppliedFilters,
-//              modifier = Modifier.fillMaxSize()
-//            )
-//          }
-          if (showItemList) {
-            ItemSelectionView(
-              items = buildUiState.items,
-              selectedItems = buildUiState.selectedItems,
-              addSelectedItem = createBuildViewModel::addSelectedItem,
-              removeSelectedItem = createBuildViewModel::removeSelectedItem,
-              modifier = Modifier.fillMaxSize()
-            )
-          }
-          // The FAB shouldn't show on the god list view, but do show as long as we have a
-          // selected god/items or are selecting items
-          if (
-            !showGodList &&
-            ((showItemList && buildUiState.selectedItems.isNotEmpty()) ||
-              (buildUiState.selectedGod != null && buildUiState.selectedItems.isNotEmpty()))
-          ) {
+          if (buildUiState.selectedGod != null && buildUiState.selectedItems.isNotEmpty()) {
             val coroutineScope = rememberCoroutineScope()
             FloatingActionButton(
               onClick = {
-                if (showItemList) {
-                  showItemList = false
-                } else {
                   coroutineScope.launch {
                     createBuildViewModel.createBuild()
                     done()
                   }
-                }
               },
               modifier = Modifier
                 .align(Alignment.BottomEnd)

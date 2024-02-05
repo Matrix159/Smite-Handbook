@@ -7,6 +7,7 @@ import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailsViewModel
 import com.matrix.presentation.ui.items.itemlist.ItemListViewModel
+import com.matrix.presentation.ui.builds.itemselection.ItemSelectionViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -15,6 +16,7 @@ fun presentationKoinModule() = module {
   viewModelOf(::GodDetailsViewModel)
   viewModelOf(::ItemListViewModel)
   viewModelOf(::ItemDetailsViewModel)
+  viewModelOf(::ItemSelectionViewModel)
   viewModelOf(::BuildListViewModel)
   viewModelOf(::CreateBuildViewModel)
   viewModelOf(::BuildDetailsViewModel)

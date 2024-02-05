@@ -29,17 +29,20 @@ class CreateBuildViewModel(
   val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-  private val selectedGodId: StateFlow<Long?> = savedStateHandle.getStateFlow(BuildsNavigation.GodList.selectedGodId, null)
+  private val selectedGodId: StateFlow<Long?> = savedStateHandle.getStateFlow(
+    BuildsNavigation.GodList.selectedGodId, null
+  )
+
+  private val selectedItemIds: StateFlow<List<Long>> = savedStateHandle.getStateFlow(
+    BuildsNavigation.ItemList.selectedItemIds, emptyList()
+  )
 
   private var selectedItems = mutableStateListOf<ItemInformation>()
   private var buildName by mutableStateOf("")
-//  private var appliedGodFilters by mutableStateOf(AppliedGodFilters())
 
   private var uiInputs = derivedStateOf {
     UIInputs(
-      selectedItems = selectedItems,
       buildName = buildName
-//      appliedGodFilters = appliedGodFilters
     )
   }
 
@@ -48,6 +51,7 @@ class CreateBuildViewModel(
     smiteRepository.getGods(),
     smiteRepository.getItems(),
     selectedGodId,
+    selectedItemIds,
     snapshotFlow { uiInputs.value },
     ::StateInputs
   ).asResult()
@@ -59,9 +63,8 @@ class CreateBuildViewModel(
           gods = inputs.gods,
           items = inputs.items,
           selectedGod = inputs.gods.firstOrNull { it.id == inputs.selectedGodId },
-          selectedItems = inputs.uiInput.selectedItems,
+          selectedItems = inputs.items.filter { item -> inputs.selectedItemIds.contains(item.itemID) },
           buildName = inputs.uiInput.buildName,
-//          appliedGodFilters = inputs.uiInput.appliedGodFilters
         )
       }
       is Result.Loading -> CreateBuildUiState.Loading
@@ -76,18 +79,6 @@ class CreateBuildViewModel(
       started = SharingStarted.WhileSubscribed(5000),
       initialValue = CreateBuildUiState.Loading
     )
-
-  fun addSelectedItem(item: ItemInformation) {
-    selectedItems.add(item)
-  }
-
-  fun removeSelectedItem(item: ItemInformation) {
-    selectedItems.remove(item)
-  }
-
-  fun clearSelectedItems() {
-    selectedItems.clear()
-  }
 
   fun updateBuildName(name: String) {
     buildName = name
@@ -108,23 +99,17 @@ class CreateBuildViewModel(
       )
     }
   }
-
-//  fun updateAppliedFilters(newFilters: AppliedGodFilters) {
-//    appliedGodFilters = newFilters
-//  }
 }
 
 data class UIInputs(
-//  val selectedGod: GodInformation?,
-  val selectedItems: List<ItemInformation>,
   val buildName: String
-//  val appliedGodFilters: AppliedGodFilters
 )
 
 data class StateInputs(
   val gods: List<GodInformation>,
   val items: List<ItemInformation>,
   val selectedGodId: Long?,
+  val selectedItemIds: List<Long>,
   val uiInput: UIInputs,
 )
 

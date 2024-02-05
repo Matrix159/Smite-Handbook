@@ -1,25 +1,26 @@
 package com.matrix.presentation.ui.gods.navigation
 
 import android.net.Uri
-import androidx.compose.animation.*
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.navigation.*
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.matrix.presentation.Screen
 import com.matrix.presentation.defaultAnimationSpec
 import com.matrix.presentation.models.navigation.Route
 import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
 import com.matrix.presentation.ui.gods.goddetails.GodScreen
-import com.matrix.presentation.ui.gods.godlist.GodListScreen
-import com.matrix.presentation.ui.gods.godlist.GodListViewModel
-import com.matrix.shared.data.model.gods.GodInformation
+import com.matrix.presentation.ui.navigation.godListRoute
 import org.koin.androidx.compose.koinViewModel
-import org.koin.androidx.navigation.koinNavGraphViewModel
 
 sealed class GodsNavigation : Route {
   data object GodList : GodsNavigation() {
@@ -34,31 +35,6 @@ sealed class GodsNavigation : Route {
   }
 }
 
-fun NavGraphBuilder.godListRoute(
-  route: String,
-  godClicked: (godInformation: GodInformation) -> Unit,
-) {
-  composable(
-    route,
-    enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
-    exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-  ) {
-    val godListViewModel = koinViewModel<GodListViewModel>()
-
-    GodListScreen(
-      godListViewModel,
-      godClicked = {
-        godClicked(it)
-      },
-      modifier = Modifier
-        .fillMaxSize()
-        .statusBarsPadding()
-        .imePadding()
-    )
-  }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.godsGraph(
   screen: Screen,
   navController: NavController,
