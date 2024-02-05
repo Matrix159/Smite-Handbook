@@ -58,6 +58,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateBuildScreen(
   createBuildViewModel: CreateBuildViewModel,
+  navigateToGodList: () -> Unit,
   done: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -112,13 +113,13 @@ fun CreateBuildScreen(
                   godImageUrl = buildUiState.selectedGod.godIconURL,
                   godName = buildUiState.selectedGod.name,
                   godTitle = buildUiState.selectedGod.title,
-                  onClick = { showGodList = true },
+                  onClick = { navigateToGodList() },
                   modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingValues)
                 )
               } else {
-                Button(onClick = { showGodList = true }, modifier = Modifier.padding(paddingValues)) {
+                Button(onClick = { navigateToGodList() }, modifier = Modifier.padding(paddingValues)) {
                   Text(text = "Add god")
                 }
               }
@@ -180,18 +181,18 @@ fun CreateBuildScreen(
               )
             }
           }
-          if (showGodList) {
-            GodSelectionView(
-              gods = buildUiState.gods,
-              godSelected = {
-                showGodList = false
-                createBuildViewModel.setGod(it)
-              },
-              appliedGodFilters = buildUiState.appliedGodFilters,
-              updateAppliedGodFilters = createBuildViewModel::updateAppliedFilters,
-              modifier = Modifier.fillMaxSize()
-            )
-          }
+//          if (showGodList) {
+//            GodSelectionView(
+//              gods = buildUiState.gods,
+//              godSelected = {
+//                showGodList = false
+//                createBuildViewModel.setGod(it)
+//              },
+//              appliedGodFilters = buildUiState.appliedGodFilters,
+//              updateAppliedGodFilters = createBuildViewModel::updateAppliedFilters,
+//              modifier = Modifier.fillMaxSize()
+//            )
+//          }
           if (showItemList) {
             ItemSelectionView(
               items = buildUiState.items,

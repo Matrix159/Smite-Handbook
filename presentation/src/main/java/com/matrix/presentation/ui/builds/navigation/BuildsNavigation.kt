@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -24,17 +26,27 @@ import com.matrix.presentation.ui.builds.buildlist.BuildListViewModel
 import com.matrix.presentation.ui.builds.buildlist.BuildOverviewScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildScreen
 import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
+import com.matrix.presentation.ui.gods.navigation.GodsNavigation
+import com.matrix.presentation.ui.gods.navigation.godListRoute
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 sealed interface BuildsNavigation: Route {
-  object Builds : BuildsNavigation {
+  data object Builds : BuildsNavigation {
     override val route = "builds"
   }
-  object CreateBuilds : BuildsNavigation {
+  data object CreateBuilds : BuildsNavigation {
     override val route = "create_builds"
   }
-  object BuildDetails : BuildsNavigation {
+  data object GodList: BuildsNavigation {
+    override val route: String = "builds_god_list"
+    const val selectedGodId = "selectedGodId"
+  }
+
+  data object BuildDetails : BuildsNavigation {
     const val buildIdArg = "buildId"
     override val route = "build_details/{${buildIdArg}}"
 
@@ -80,11 +92,14 @@ fun NavGraphBuilder.buildsGraph(
       BuildsNavigation.CreateBuilds.route,
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) {
+    ) {backStackEntry ->
+      val selectedGodId = backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
       val createBuildViewModel: CreateBuildViewModel = koinViewModel()
+      createBuildViewModel.savedStateHandle[BuildsNavigation.GodList.selectedGodId] = selectedGodId
 
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
+        navigateToGodList = { navController.navigate(BuildsNavigation.GodList.route) },
         done = {
           navController.popBackStack()
         },
@@ -117,5 +132,17 @@ fun NavGraphBuilder.buildsGraph(
           .imePadding()
       )
     }
+    godListRoute(
+      route = BuildsNavigation.GodList.route,
+      godClicked = {
+        navController.previousBackStackEntry
+          ?.savedStateHandle
+          ?.set(BuildsNavigation.GodList.selectedGodId, it.id)
+        navController.popBackStack()
+//        navController.navigate(GodsNavigation.GodDetails.createNavigationRoute(it.id.toString())) {
+//          launchSingleTop = true
+//        }
+      }
+    )
   }
 }

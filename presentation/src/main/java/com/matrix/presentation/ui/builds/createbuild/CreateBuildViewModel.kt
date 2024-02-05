@@ -6,9 +6,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matrix.presentation.models.filters.AppliedGodFilters
+import com.matrix.presentation.ui.builds.navigation.BuildsNavigation
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
@@ -23,20 +25,21 @@ import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
 class CreateBuildViewModel(
-  private val smiteRepository: SmiteRepository
+  private val smiteRepository: SmiteRepository,
+  val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-  private var selectedGod by mutableStateOf<GodInformation?>(null)
+  private val selectedGodId: StateFlow<Long?> = savedStateHandle.getStateFlow(BuildsNavigation.GodList.selectedGodId, null)
+
   private var selectedItems = mutableStateListOf<ItemInformation>()
   private var buildName by mutableStateOf("")
-  private var appliedGodFilters by mutableStateOf(AppliedGodFilters())
+//  private var appliedGodFilters by mutableStateOf(AppliedGodFilters())
 
   private var uiInputs = derivedStateOf {
     UIInputs(
-      selectedGod = selectedGod,
       selectedItems = selectedItems,
-      buildName = buildName,
-      appliedGodFilters = appliedGodFilters
+      buildName = buildName
+//      appliedGodFilters = appliedGodFilters
     )
   }
 
@@ -44,6 +47,7 @@ class CreateBuildViewModel(
   val uiState: StateFlow<CreateBuildUiState> = combine(
     smiteRepository.getGods(),
     smiteRepository.getItems(),
+    selectedGodId,
     snapshotFlow { uiInputs.value },
     ::StateInputs
   ).asResult()
@@ -54,10 +58,10 @@ class CreateBuildViewModel(
         CreateBuildUiState.Success(
           gods = inputs.gods,
           items = inputs.items,
-          selectedGod = inputs.uiInput.selectedGod,
+          selectedGod = inputs.gods.firstOrNull { it.id == inputs.selectedGodId },
           selectedItems = inputs.uiInput.selectedItems,
           buildName = inputs.uiInput.buildName,
-          appliedGodFilters = inputs.uiInput.appliedGodFilters
+//          appliedGodFilters = inputs.uiInput.appliedGodFilters
         )
       }
       is Result.Loading -> CreateBuildUiState.Loading
@@ -72,10 +76,6 @@ class CreateBuildViewModel(
       started = SharingStarted.WhileSubscribed(5000),
       initialValue = CreateBuildUiState.Loading
     )
-
-  fun setGod(god: GodInformation) {
-    selectedGod = god
-  }
 
   fun addSelectedItem(item: ItemInformation) {
     selectedItems.add(item)
@@ -94,12 +94,13 @@ class CreateBuildViewModel(
   }
 
   suspend fun createBuild() {
-    if (selectedGod != null && selectedItems.isNotEmpty()) {
+    val uiState = uiState.value
+    if (selectedItems.isNotEmpty() && uiState is CreateBuildUiState.Success && uiState.selectedGod != null) {
       smiteRepository.createBuild(
         BuildInformation(
-          god = selectedGod!!,
+          god = uiState.selectedGod,
           name = when {
-            buildName.isEmpty() -> "${selectedGod!!.name}'s build"
+            buildName.isEmpty() -> "${uiState.selectedGod.name}'s build"
             else -> buildName
           },
           items = selectedItems
@@ -108,21 +109,22 @@ class CreateBuildViewModel(
     }
   }
 
-  fun updateAppliedFilters(newFilters: AppliedGodFilters) {
-    appliedGodFilters = newFilters
-  }
+//  fun updateAppliedFilters(newFilters: AppliedGodFilters) {
+//    appliedGodFilters = newFilters
+//  }
 }
 
 data class UIInputs(
-  val selectedGod: GodInformation?,
+//  val selectedGod: GodInformation?,
   val selectedItems: List<ItemInformation>,
-  val buildName: String,
-  val appliedGodFilters: AppliedGodFilters
+  val buildName: String
+//  val appliedGodFilters: AppliedGodFilters
 )
 
 data class StateInputs(
   val gods: List<GodInformation>,
   val items: List<ItemInformation>,
+  val selectedGodId: Long?,
   val uiInput: UIInputs,
 )
 
