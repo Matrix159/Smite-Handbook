@@ -12,6 +12,8 @@ import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -127,6 +129,19 @@ internal class SmiteDatabaseLocalDataSource constructor(
     }
   }
 
+  override suspend fun updateGodInBuild(buildId: Long, godId: Long) {
+    var build = getBuild(buildId).first()
+    val god = getGod(godId).first()
+    build = build.copy(god = god)
+    saveBuild(build)
+  }
+
+  override suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>) {
+    var build = getBuild(buildId).first()
+    val items = getItems().first()
+    build = build.copy(items = items.filter { item -> itemIds.contains(item.itemID) })
+    saveBuild(build)
+  }
 
   override fun getBuilds(): Flow<List<BuildInformation>> =
     database.buildEntityQueries.selectAllBuilds().asFlow().mapToList().map { it.toDomain() }

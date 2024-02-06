@@ -10,20 +10,47 @@ import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-//@HiltViewModel
-class BuildDetailsViewModel /*@Inject*/ constructor(
+class BuildDetailsViewModel(
   private val smiteRepository: SmiteRepository,
-  savedStateHandle: SavedStateHandle,
+  val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
   private val buildId: Long =
     (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toLong()
+
+  private val selectedGodId: StateFlow<Long?> = savedStateHandle.getStateFlow(
+    BuildsNavigation.GodList.selectedGodId, null
+  )
+
+  private val selectedItemIds: StateFlow<List<Long>> = savedStateHandle.getStateFlow(
+    BuildsNavigation.ItemList.selectedItemIds, emptyList()
+  )
+
+  init {
+    selectedGodId
+      .filterNotNull()
+      .onEach {
+        smiteRepository.updateGodInBuild(buildId, it)
+      }.launchIn(viewModelScope)
+    selectedItemIds
+      .onEach { itemIds ->
+        if (itemIds.isNotEmpty()) {
+          smiteRepository.updateItemsInBuild(buildId, itemIds)
+        }
+      }
+      .launchIn(viewModelScope)
+  }
 
   val uiState = combine(
     smiteRepository.getBuild(buildId),
@@ -40,7 +67,10 @@ class BuildDetailsViewModel /*@Inject*/ constructor(
           allItems = result.data.third
         )
         is Result.Error -> {
-          Timber.e(result.exception)
+          // Ignoring no such element exception when logging as a deleted build triggers this
+          if (result.exception !is NoSuchElementException) {
+            Timber.e(result.exception)
+          }
           BuildDetailsUiState.Error(Exception("An error occurred while loading build information."))
         }
         Result.Loading -> BuildDetailsUiState.Loading
@@ -51,12 +81,12 @@ class BuildDetailsViewModel /*@Inject*/ constructor(
       initialValue = BuildDetailsUiState.Loading
     )
 
-  suspend fun deleteBuild(buildInformation: BuildInformation) {
+  fun deleteBuild(buildInformation: BuildInformation) = viewModelScope.launch {
     smiteRepository.deleteBuild(buildInformation)
   }
 
   fun saveBuild(buildInformation: BuildInformation) = viewModelScope.launch {
-    smiteRepository.createBuild(buildInformation)
+    smiteRepository.saveBuild(buildInformation)
   }
 }
 
@@ -65,8 +95,9 @@ sealed interface BuildDetailsUiState {
     val buildInformation: BuildInformation,
     val allGods: List<GodInformation>,
     val allItems: List<ItemInformation>,
+    val isEditing: Boolean = false,
   ) : BuildDetailsUiState
 
   data class Error(val exception: Throwable?) : BuildDetailsUiState
-  object Loading : BuildDetailsUiState
+  data object Loading : BuildDetailsUiState
 }

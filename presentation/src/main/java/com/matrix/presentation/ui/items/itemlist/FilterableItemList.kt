@@ -10,11 +10,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,17 +31,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun FilterableItemList(
   items: List<ItemInformation>,
-  itemClicked: (itemInformation: ItemInformation) -> Unit,
+  itemSelected: (item: ItemInformation) -> Unit,
+  appliedFilters: AppliedItemFilters,
+  updateAppliedFilters: (filters: AppliedItemFilters) -> Unit,
   modifier: Modifier = Modifier,
 ) {
-
-  var appliedFilters by remember { mutableStateOf(AppliedItemFilters()) }
-  fun updateAppliedFilters(newFilters: AppliedItemFilters) {
-    appliedFilters = newFilters
-  }
-  fun updateSearchText(text: String) {
-    appliedFilters = appliedFilters.copy(searchText = text)
-  }
 
   val shownItems = remember(appliedFilters) {
     items.filter { filterItem(appliedFilters, it) }.sortedBy { it.deviceName }
@@ -54,7 +45,7 @@ fun FilterableItemList(
     sheetContent = {
       ItemFilters(
         appliedItemFilters = appliedFilters,
-        filtersChanged = ::updateAppliedFilters,
+        filtersChanged = { updateAppliedFilters(it) },
         modifier = Modifier.padding(16.dp),
       )
     }
@@ -75,7 +66,7 @@ fun FilterableItemList(
       SearchPanel(
         searchText = appliedFilters.searchText,
         searchLabel = stringResource(R.string.search_for_item),
-        searchTextChanged = ::updateSearchText,
+        searchTextChanged = { updateAppliedFilters(appliedFilters.copy(searchText = it)) },
         filterIconTap = {
           coroutineScope.launch {
             bottomSheetState.show()
@@ -86,7 +77,7 @@ fun FilterableItemList(
           .fillMaxWidth()
       )
       if (shownItems.isNotEmpty()) {
-        ItemList(items = shownItems, itemClicked = itemClicked)
+        ItemList(items = shownItems, itemClicked = itemSelected)
       } else {
         Text(
           text = stringResource(R.string.no_results_found),

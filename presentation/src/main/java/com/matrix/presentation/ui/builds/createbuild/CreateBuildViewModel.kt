@@ -2,7 +2,6 @@ package com.matrix.presentation.ui.builds.createbuild
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -37,7 +36,6 @@ class CreateBuildViewModel(
     BuildsNavigation.ItemList.selectedItemIds, emptyList()
   )
 
-  private var selectedItems = mutableStateListOf<ItemInformation>()
   private var buildName by mutableStateOf("")
 
   private var uiInputs = derivedStateOf {
@@ -86,15 +84,15 @@ class CreateBuildViewModel(
 
   suspend fun createBuild() {
     val uiState = uiState.value
-    if (selectedItems.isNotEmpty() && uiState is CreateBuildUiState.Success && uiState.selectedGod != null) {
-      smiteRepository.createBuild(
+    if (uiState is CreateBuildUiState.Success && uiState.selectedGod != null && uiState.selectedItems.isNotEmpty()) {
+      smiteRepository.saveBuild(
         BuildInformation(
           god = uiState.selectedGod,
           name = when {
             buildName.isEmpty() -> "${uiState.selectedGod.name}'s build"
             else -> buildName
           },
-          items = selectedItems
+          items = uiState.selectedItems
         )
       )
     }

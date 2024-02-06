@@ -58,6 +58,14 @@ internal class FakeSmiteLocalDataSource : SmiteLocalDataSource {
 //    localBuildItemCrossRef.addAll(distinctBuildItemCrossRef)
   }
 
+  override suspend fun updateGodInBuild(buildId: Long, godId: Long) {
+    TODO("Not yet implemented")
+  }
+
+  override suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>) {
+    TODO("Not yet implemented")
+  }
+
   override fun getBuilds(): Flow<List<BuildInformation>> = flowOf( localBuilds.map { it.copy() })
 //    val buildDbResults = localBuilds.map { build ->
 //      val god: GodEntity = localGods.find { god -> god.id == build.godId }!!

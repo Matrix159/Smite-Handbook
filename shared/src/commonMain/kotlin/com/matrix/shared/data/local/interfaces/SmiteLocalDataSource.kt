@@ -32,6 +32,8 @@ internal interface SmiteLocalDataSource {
   fun getItem(itemId: Long): Flow<ItemInformation>
 
   suspend fun saveBuild(buildInformation: BuildInformation)
+  suspend fun updateGodInBuild(buildId: Long, godId: Long)
+  suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>)
   fun getBuilds(): Flow<List<BuildInformation>>
 
   fun getBuild(buildId: Long): Flow<BuildInformation>

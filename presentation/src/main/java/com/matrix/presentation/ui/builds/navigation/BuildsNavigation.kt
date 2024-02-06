@@ -26,6 +26,7 @@ import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
 import com.matrix.presentation.ui.builds.itemselection.ItemSelectionScreen
 import com.matrix.presentation.ui.builds.itemselection.ItemSelectionViewModel
 import com.matrix.presentation.ui.navigation.godListRoute
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -115,7 +116,7 @@ fun NavGraphBuilder.buildsGraph(
     ) { backStackEntry ->
       val selectedGodId =
         backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
-      val selectedItemIds = backStackEntry.savedStateHandle.get<List<Long>>(BuildsNavigation.ItemList.selectedItemIds)
+      val selectedItemIds = backStackEntry.savedStateHandle.get<List<Long>>(BuildsNavigation.ItemList.selectedItemIds) ?: emptyList()
 
       val createBuildViewModel: CreateBuildViewModel = koinViewModel()
       createBuildViewModel.savedStateHandle[BuildsNavigation.GodList.selectedGodId] = selectedGodId
@@ -141,17 +142,22 @@ fun NavGraphBuilder.buildsGraph(
       }),
       enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
-    ) {
+    ) {backStackEntry ->
+      val selectedGodId =
+        backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
+      val selectedItemIds = backStackEntry.savedStateHandle.get<List<Long>>(
+        BuildsNavigation.ItemList.selectedItemIds
+      ) ?: emptyList()
       val buildDetailsViewModel: BuildDetailsViewModel = koinViewModel()
-      val coroutineScope = rememberCoroutineScope()
+      buildDetailsViewModel.savedStateHandle[BuildsNavigation.GodList.selectedGodId] = selectedGodId
+      buildDetailsViewModel.savedStateHandle[BuildsNavigation.ItemList.selectedItemIds] = selectedItemIds
+
       BuildDetailsScreen(
         buildDetailsViewModel = buildDetailsViewModel,
+        navigateToGodList = { navController.navigate(BuildsNavigation.GodList.route) },
+        navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.route) },
         onDeleteBuild = { build ->
-          coroutineScope.launch {
-            // Delete after navigating to avoid the ViewModel possibly loading a non-existent build
-            navController.popBackStack()
-            buildDetailsViewModel.deleteBuild(build)
-          }
+          navController.popBackStack()
         },
         modifier = Modifier
           .fillMaxSize()

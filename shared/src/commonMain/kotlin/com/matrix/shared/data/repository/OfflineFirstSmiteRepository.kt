@@ -41,7 +41,10 @@ internal class OfflineFirstSmiteRepository constructor(
 
   override fun getBuild(buildId: Long): Flow<BuildInformation> = localDataSource.getBuild(buildId)
 
-  override suspend fun createBuild(buildInformation: BuildInformation) = localDataSource.saveBuild(buildInformation)
+  override suspend fun saveBuild(buildInformation: BuildInformation) = localDataSource.saveBuild(buildInformation)
+  override suspend fun updateGodInBuild(buildId: Long, godId: Long) = localDataSource.updateGodInBuild(buildId, godId)
+
+  override suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>) = localDataSource.updateItemsInBuild(buildId, itemIds)
 
   override suspend fun deleteBuild(buildInformation: BuildInformation) {
     buildInformation.id?.let {

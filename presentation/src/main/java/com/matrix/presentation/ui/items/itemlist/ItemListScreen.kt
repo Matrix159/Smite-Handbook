@@ -31,7 +31,9 @@ fun ItemListScreen(
       is ItemListUiState.Success -> {
         FilterableItemList(
           items = itemListUiState.items,
-          itemClicked = itemClicked,
+          itemSelected = itemClicked,
+          appliedFilters = itemListUiState.appliedItemFilters,
+          updateAppliedFilters = itemListViewModel::updateAppliedFilters,
           modifier = Modifier.fillMaxSize()
         )
       }

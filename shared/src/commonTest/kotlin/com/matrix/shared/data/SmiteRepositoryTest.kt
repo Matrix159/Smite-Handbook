@@ -173,7 +173,7 @@ internal class SmiteRepositoryTest {
   fun `createBuild successfully creates a build`() = runTest {
     val id = 1L
     val build = getMockBuildInformation(id, 0, listOf(0, 1))
-    repository.createBuild(build)
+    repository.saveBuild(build)
     assertEquals(build, repository.getBuild(id).first())
   }
 

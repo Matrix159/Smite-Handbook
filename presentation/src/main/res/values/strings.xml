@@ -37,4 +37,8 @@
 
     <!-- Build Details -->
     <string name="build_details_items">Items</string>
+    <string name="build_name">Build Name</string>
+    <string name="deleted_build">Deleted build</string>
+    <string name="undo">Undo</string>
+    <string name="no_builds_available">No builds available</string>
 </resources>

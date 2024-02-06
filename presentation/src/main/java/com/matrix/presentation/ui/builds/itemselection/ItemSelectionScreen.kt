@@ -43,11 +43,15 @@ fun ItemSelectionScreen(
   val _uiState by viewModel.uiState.collectAsStateWithLifecycle()
   val focusManager = LocalFocusManager.current
 
-  when (val uiState = _uiState) {
-    is ItemSelectionUiState.Error -> ErrorText(uiState.exception)
-    is ItemSelectionUiState.Loading -> Loader()
-    is ItemSelectionUiState.Success -> {
-      Surface(modifier = modifier) {
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
+    modifier = modifier
+  ) {
+    when (val uiState = _uiState) {
+      is ItemSelectionUiState.Error -> ErrorText(uiState.exception)
+      is ItemSelectionUiState.Loading -> Loader()
+      is ItemSelectionUiState.Success -> {
         Box(
           modifier = Modifier
             .fillMaxSize()
@@ -94,12 +98,14 @@ fun ItemSelectionScreen(
             }
             FilterableItemList(
               items = uiState.items,
-              itemClicked = { item ->
+              itemSelected = { item ->
                 // Builds should only have 6 total items and no duplicates
                 if (uiState.selectedItems.size < 6 && !uiState.selectedItems.contains(item)) {
                   viewModel.addItem(item)
                 }
               },
+              appliedFilters = uiState.appliedItemFilters,
+              updateAppliedFilters = viewModel::updateAppliedFilters,
               modifier = Modifier.weight(1f)
             )
           }
@@ -118,4 +124,5 @@ fun ItemSelectionScreen(
       }
     }
   }
+
 }

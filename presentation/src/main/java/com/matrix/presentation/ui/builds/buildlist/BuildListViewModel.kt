@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 //@HiltViewModel
@@ -43,12 +44,12 @@ class BuildListViewModel /*@Inject*/ constructor(
       initialValue = BuildsUiState.Loading
     )
 
-  suspend fun deleteBuild(buildInformation: BuildInformation) {
+  fun deleteBuild(buildInformation: BuildInformation) = viewModelScope.launch {
     smiteRepository.deleteBuild(buildInformation)
   }
 
-  suspend fun addBuild(buildInformation: BuildInformation) {
-    smiteRepository.createBuild(buildInformation)
+  fun addBuild(buildInformation: BuildInformation) = viewModelScope.launch {
+    smiteRepository.saveBuild(buildInformation)
   }
 }
 

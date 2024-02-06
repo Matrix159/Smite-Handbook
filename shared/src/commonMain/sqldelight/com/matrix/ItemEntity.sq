@@ -1,5 +1,22 @@
-upsertItem:
-    INSERT OR REPLACE INTO ItemEntity(
+upsertItem {
+    UPDATE ItemEntity SET
+        id = :id,
+        activeFlag = :activeFlag,
+        childItemID = :childItemID,
+        deviceName = :deviceName,
+        glyph = :glyph,
+        iconID = :iconID,
+        itemTier = :itemTier,
+        price = :price,
+        restrictedRoles = :restrictedRoles,
+        rootItemID = :rootItemID,
+        shortDesc = :shortDesc,
+        startingItem = :startingItem,
+        type = :type,
+        itemIconURL = :itemIconURL,
+        itemDescription = :itemDescription
+        WHERE id = :id;
+    INSERT OR IGNORE INTO ItemEntity(
         id,
         activeFlag,
         childItemID,
@@ -16,8 +33,24 @@ upsertItem:
         itemIconURL,
         itemDescription
     )
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-
+    VALUES(
+        :id,
+        :activeFlag,
+        :childItemID,
+        :deviceName,
+        :glyph,
+        :iconID,
+        :itemTier,
+        :price,
+        :restrictedRoles,
+        :rootItemID,
+        :shortDesc,
+        :startingItem,
+        :type,
+        :itemIconURL,
+        :itemDescription
+    );
+}
 selectAllItems:
 SELECT * FROM ItemEntity WHERE activeFlag = ?;
 

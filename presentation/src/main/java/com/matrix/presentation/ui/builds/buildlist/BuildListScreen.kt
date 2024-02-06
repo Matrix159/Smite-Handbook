@@ -33,8 +33,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.Loader
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -90,7 +92,7 @@ fun BuildListScreen(
               .fillMaxSize()
               .padding(paddingValues)) {
               Text(
-                text = "No builds available",
+                text = stringResource(R.string.no_builds_available),
                 style = MaterialTheme.typography.displaySmall,
                 modifier = Modifier.align(Alignment.Center)
               )
@@ -111,6 +113,8 @@ fun BuildListScreen(
                     )
                   )
                 ) {
+                  val deleteBuildString = stringResource(id = R.string.deleted_build)
+                  val undoString = stringResource(id = R.string.undo)
                   BuildOverviewCard(
                     buildInformation = build,
                     modifier = Modifier
@@ -123,8 +127,8 @@ fun BuildListScreen(
                         delay(300)
                         viewModel.deleteBuild(build)
                         val snackbarResult = snackbarHostState.showSnackbar(
-                          message = "Deleted build",
-                          actionLabel = "Undo",
+                          message = deleteBuildString,
+                          actionLabel = undoString,
                           withDismissAction = true,
                           duration = SnackbarDuration.Short
                         )

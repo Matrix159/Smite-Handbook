@@ -1,9 +1,13 @@
 package com.matrix.presentation.ui.builds.itemselection
 
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
+import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
@@ -15,15 +19,24 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
+@OptIn(SavedStateHandleSaveableApi::class)
 class ItemSelectionViewModel(
-  smiteRepository: SmiteRepository
+  smiteRepository: SmiteRepository,
+  savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-  private val selectedItems = mutableStateListOf<ItemInformation>()
+  private var appliedItemFilters by savedStateHandle.saveable {
+    mutableStateOf(AppliedItemFilters())
+  }
+
+  private var selectedItemIds by savedStateHandle.saveable {
+    mutableStateOf<List<Long>>(emptyList())
+  }
 
   val uiState: StateFlow<ItemSelectionUiState> = combine(
     smiteRepository.getItems(),
-    snapshotFlow { selectedItems },
+    snapshotFlow { selectedItemIds },
+    snapshotFlow { appliedItemFilters },
     ::StateInputs
   ).asResult()
     .map { result ->
@@ -32,7 +45,8 @@ class ItemSelectionViewModel(
           val inputs = result.data
           ItemSelectionUiState.Success(
             items = inputs.items,
-            selectedItems = inputs.selectedItems
+            selectedItems = inputs.items.filter { item -> inputs.selectedItemIds.contains(item.itemID) },
+            appliedItemFilters = appliedItemFilters
           )
         }
         is Result.Loading -> ItemSelectionUiState.Loading
@@ -49,18 +63,23 @@ class ItemSelectionViewModel(
     )
 
   fun addItem(item: ItemInformation) {
-    selectedItems.add(item)
+    selectedItemIds = selectedItemIds + item.itemID
   }
 
   fun removeItem(item: ItemInformation) {
-    selectedItems.remove(item)
+    selectedItemIds = selectedItemIds - item.itemID
+  }
+
+  fun updateAppliedFilters(newFilters: AppliedItemFilters) {
+    appliedItemFilters = newFilters
   }
 }
 
 sealed interface ItemSelectionUiState {
   data class Success(
-    val items: List<ItemInformation>,
-    val selectedItems: List<ItemInformation>
+    val items: List<ItemInformation> = emptyList(),
+    val selectedItems: List<ItemInformation> = emptyList(),
+    val appliedItemFilters: AppliedItemFilters = AppliedItemFilters()
   ) : ItemSelectionUiState
 
   data class Error(val exception: Throwable?) : ItemSelectionUiState
@@ -69,5 +88,6 @@ sealed interface ItemSelectionUiState {
 
 private data class StateInputs(
   val items: List<ItemInformation>,
-  val selectedItems: List<ItemInformation>
+  val selectedItemIds: List<Long>,
+  val appliedItemFilters: AppliedItemFilters
 )

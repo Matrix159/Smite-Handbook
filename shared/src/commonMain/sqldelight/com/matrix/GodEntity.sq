@@ -1,5 +1,45 @@
-upsertGod:
-    INSERT OR REPLACE INTO GodEntity(
+upsertGod {
+    UPDATE GodEntity SET
+        abilityDetails1 = :abilityDetails1,
+        abilityDetails2 = :abilityDetails2,
+        abilityDetails3 = :abilityDetails3,
+        abilityDetails4 = :abilityDetails4,
+        abilityDetails5 = :abilityDetails5,
+        basicAttack = :basicAttack,
+        attackSpeed = :attackSpeed,
+        attackSpeedPerLevel = :attackSpeedPerLevel,
+        autoBanned = :autoBanned,
+        cons = :cons,
+        hp5PerLevel = :hp5PerLevel,
+        health = :health,
+        healthPerFive = :healthPerFive,
+        healthPerLevel = :healthPerLevel,
+        lore = :lore,
+        mp5PerLevel = :mp5PerLevel,
+        magicProtection = :magicProtection,
+        magicProtectionPerLevel = :magicProtectionPerLevel,
+        magicalPower = :magicalPower,
+        magicalPowerPerLevel = :magicalPowerPerLevel,
+        mana = :mana,
+        manaPerFive = :manaPerFive,
+        manaPerLevel = :manaPerLevel,
+        name = :name,
+        onFreeRotation = :onFreeRotation,
+        pantheon = :pantheon,
+        physicalPower = :physicalPower,
+        physicalPowerPerLevel = :physicalPowerPerLevel,
+        physicalProtection = :physicalProtection,
+        physicalProtectionPerLevel = :physicalProtectionPerLevel,
+        pros = :pros,
+        roles = :roles,
+        speed = :speed,
+        title = :title,
+        type = :type,
+        godIconURL = :godIconURL,
+        godCardURL = :godCardURL,
+        latestGod = :latestGod
+        WHERE id = :id;
+    INSERT OR IGNORE INTO GodEntity(
         id,
         abilityDetails1,
         abilityDetails2,
@@ -40,7 +80,49 @@ upsertGod:
         godCardURL,
         latestGod
     )
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    VALUES(
+        :id,
+        :abilityDetails1,
+        :abilityDetails2,
+        :abilityDetails3,
+        :abilityDetails4,
+        :abilityDetails5,
+        :basicAttack,
+        :attackSpeed,
+        :attackSpeedPerLevel,
+        :autoBanned,
+        :cons,
+        :hp5PerLevel,
+        :health,
+        :healthPerFive,
+        :healthPerLevel,
+        :lore,
+        :mp5PerLevel,
+        :magicProtection,
+        :magicProtectionPerLevel,
+        :magicalPower,
+        :magicalPowerPerLevel,
+        :mana,
+        :manaPerFive,
+        :manaPerLevel,
+        :name,
+        :onFreeRotation,
+        :pantheon,
+        :physicalPower,
+        :physicalPowerPerLevel,
+        :physicalProtection,
+        :physicalProtectionPerLevel,
+        :pros,
+        :roles,
+        :speed,
+        :title,
+        :type,
+        :godIconURL,
+        :godCardURL,
+        :latestGod
+    );
+}
+
 
 selectAllGods:
 SELECT * FROM GodEntity;

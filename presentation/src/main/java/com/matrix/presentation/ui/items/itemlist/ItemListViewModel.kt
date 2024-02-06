@@ -1,30 +1,46 @@
 package com.matrix.presentation.ui.items.itemlist
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
+import androidx.lifecycle.viewmodel.compose.saveable
+import com.matrix.presentation.models.filters.AppliedGodFilters
+import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
-//@HiltViewModel
-class ItemListViewModel /*@Inject*/ constructor(
+@OptIn(SavedStateHandleSaveableApi::class)
+class ItemListViewModel(
   smiteRepository: SmiteRepository,
+  savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-  var uiState: StateFlow<ItemListUiState> = smiteRepository.getItems().asResult()
-    .map { result ->
+  private var appliedItemFilters by savedStateHandle.saveable {
+    mutableStateOf(AppliedItemFilters())
+  }
+
+  var uiState: StateFlow<ItemListUiState> =  combine(
+    smiteRepository.getItems().asResult(),
+    snapshotFlow { appliedItemFilters },
+  ) { result , appliedItemFilters ->
       when (result) {
         is Result.Success -> {
           when (result.data.isEmpty()) {
             true -> ItemListUiState.Loading
             false -> ItemListUiState.Success(
-              items = result.data
+              items = result.data,
+              appliedItemFilters = appliedItemFilters
             )
           }
         }
@@ -44,12 +60,18 @@ class ItemListViewModel /*@Inject*/ constructor(
       initialValue = ItemListUiState.Loading
     )
 
+  fun updateAppliedFilters(newFilters: AppliedItemFilters) {
+    appliedItemFilters = newFilters
+  }
 }
 
 sealed interface ItemListUiState {
-  data class Success(val items: List<ItemInformation>) : ItemListUiState
+  data class Success(
+    val items: List<ItemInformation> = emptyList(),
+    val appliedItemFilters: AppliedItemFilters = AppliedItemFilters()
+  ) : ItemListUiState
 
   data class Error(val exception: Throwable?) : ItemListUiState
-  object Loading : ItemListUiState
+  data object Loading : ItemListUiState
 }
 

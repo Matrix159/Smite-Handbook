@@ -47,7 +47,15 @@ class FakeSmiteRepository: SmiteRepository {
     TODO("Not yet implemented")
   }
 
-  override suspend fun createBuild(buildInformation: BuildInformation) {
+  override suspend fun saveBuild(buildInformation: BuildInformation) {
+    TODO("Not yet implemented")
+  }
+
+  override suspend fun updateGodInBuild(buildId: Long, godId: Long) {
+    TODO("Not yet implemented")
+  }
+
+  override suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>) {
     TODO("Not yet implemented")
   }
 

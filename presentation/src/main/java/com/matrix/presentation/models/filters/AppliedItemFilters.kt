@@ -1,5 +1,8 @@
 package com.matrix.presentation.models.filters
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 enum class ItemType {
   Consumable,
   Item,
@@ -13,6 +16,7 @@ enum class ItemTier {
   Four
 }
 
+@Parcelize
 data class AppliedItemFilters(
   val searchText: String = "",
   // Type
@@ -42,4 +46,4 @@ data class AppliedItemFilters(
   val mana: Boolean = false,
   val mp5: Boolean = false,
   val movementSpeed: Boolean = false,
-)
+) : Parcelable

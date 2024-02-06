@@ -67,6 +67,8 @@ import java.lang.Integer.max
 @Composable
 fun BuildDetailsScreen(
   buildDetailsViewModel: BuildDetailsViewModel,
+  navigateToGodList: () -> Unit,
+  navigateToItemList: () -> Unit,
   onDeleteBuild: (buildInfo: BuildInformation) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -123,8 +125,9 @@ fun BuildDetailsScreen(
                 // Delete Dialog
                 AlertDialog(onDismissRequest = { showDeleteDialog = false }, confirmButton = {
                   TextButton(onClick = {
-                    onDeleteBuild(uiState.buildInformation)
                     showDeleteDialog = false
+                    buildDetailsViewModel.deleteBuild(uiState.buildInformation)
+                    onDeleteBuild(uiState.buildInformation)
                   }) {
                     Text("Delete")
                   }
@@ -139,6 +142,7 @@ fun BuildDetailsScreen(
             }
             Crossfade(
               targetState = editDetailState.inEditMode,
+              label = "Build details build name input"
             ) { inEditMode ->
               Layout(
                 modifier = Modifier.fillMaxWidth(),
@@ -146,7 +150,7 @@ fun BuildDetailsScreen(
                   TextField(
                     value = editDetailState.name,
                     onValueChange = { editDetailState = editDetailState.copy(name = it) },
-                    label = { Text("Build Name") },
+                    label = { Text(stringResource(R.string.build_name)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
@@ -191,7 +195,8 @@ fun BuildDetailsScreen(
                 .clip(MaterialTheme.shapes.medium)
                 .conditional(editDetailState.inEditMode) {
                   clickable {
-                    editDetailState = editDetailState.copy(currentlyEditing = CurrentlyEditing.GODS)
+                    navigateToGodList()
+//                    editDetailState = editDetailState.copy(currentlyEditing = CurrentlyEditing.GODS)
                   }
                 }
             ) {
@@ -252,8 +257,9 @@ fun BuildDetailsScreen(
                 .clip(MaterialTheme.shapes.medium)
                 .conditional(editDetailState.inEditMode) {
                   clickable {
-                    editDetailState =
-                      editDetailState.copy(currentlyEditing = CurrentlyEditing.ITEMS)
+                    navigateToItemList()
+//                    editDetailState =
+//                      editDetailState.copy(currentlyEditing = CurrentlyEditing.ITEMS)
                   }
                 }
             ) {
