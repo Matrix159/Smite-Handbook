@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -29,6 +30,7 @@ import com.matrix.presentation.ui.navigation.godListRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 
 sealed interface BuildsNavigation : Route {
   data object Builds : BuildsNavigation {
@@ -45,8 +47,15 @@ sealed interface BuildsNavigation : Route {
   }
 
   data object ItemList : BuildsNavigation {
-    override val route: String = "builds_item_list"
+
     const val selectedItemIds = "selectedItemIds"
+    const val initialItemIdsArg = "initialItemIds"
+    override val route: String = "builds_item_list?$initialItemIdsArg={$initialItemIdsArg}"
+    fun createNavigationRoute(initialItemIds: Array<Long> = emptyArray()): String {
+      val queryParamBuilder = Uri.Builder()
+      initialItemIds.forEach { id -> queryParamBuilder.appendQueryParameter(initialItemIdsArg, id.toString()) }
+      return "builds_item_list$queryParamBuilder"
+    }
   }
 
   data object BuildDetails : BuildsNavigation {
@@ -60,6 +69,10 @@ sealed interface BuildsNavigation : Route {
 private fun NavGraphBuilder.itemSelectionRoute(navController: NavController) {
   composable(
     BuildsNavigation.ItemList.route,
+    arguments = listOf(navArgument(BuildsNavigation.ItemList.initialItemIdsArg) {
+      this.type = NavType.LongArrayType
+      this.defaultValue = LongArray(0)
+    }),
     enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
     exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
   ) {
@@ -125,7 +138,7 @@ fun NavGraphBuilder.buildsGraph(
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
         navigateToGodList = { navController.navigate(BuildsNavigation.GodList.route) },
-        navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.route) },
+        navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.createNavigationRoute()) },
         done = {
           navController.popBackStack()
         },
@@ -155,7 +168,7 @@ fun NavGraphBuilder.buildsGraph(
       BuildDetailsScreen(
         buildDetailsViewModel = buildDetailsViewModel,
         navigateToGodList = { navController.navigate(BuildsNavigation.GodList.route) },
-        navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.route) },
+        navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.createNavigationRoute(it)) },
         onDeleteBuild = { build ->
           navController.popBackStack()
         },

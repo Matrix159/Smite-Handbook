@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import com.matrix.presentation.models.filters.AppliedItemFilters
+import com.matrix.presentation.ui.builds.navigation.BuildsNavigation
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
 import com.matrix.shared.data.model.asResult
@@ -25,12 +26,14 @@ class ItemSelectionViewModel(
   savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
+  private val initialItemIds: LongArray = savedStateHandle[BuildsNavigation.ItemList.initialItemIdsArg] ?: LongArray(0)
+
   private var appliedItemFilters by savedStateHandle.saveable {
     mutableStateOf(AppliedItemFilters())
   }
 
   private var selectedItemIds by savedStateHandle.saveable {
-    mutableStateOf<List<Long>>(emptyList())
+    mutableStateOf<List<Long>>(initialItemIds.toList())
   }
 
   val uiState: StateFlow<ItemSelectionUiState> = combine(

@@ -68,7 +68,7 @@ import java.lang.Integer.max
 fun BuildDetailsScreen(
   buildDetailsViewModel: BuildDetailsViewModel,
   navigateToGodList: () -> Unit,
-  navigateToItemList: () -> Unit,
+  navigateToItemList: (Array<Long>) -> Unit,
   onDeleteBuild: (buildInfo: BuildInformation) -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -257,7 +257,7 @@ fun BuildDetailsScreen(
                 .clip(MaterialTheme.shapes.medium)
                 .conditional(editDetailState.inEditMode) {
                   clickable {
-                    navigateToItemList()
+                    navigateToItemList(uiState.buildInformation.items.map { it.itemID }.toTypedArray())
 //                    editDetailState =
 //                      editDetailState.copy(currentlyEditing = CurrentlyEditing.ITEMS)
                   }
