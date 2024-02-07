@@ -11,7 +11,7 @@ import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
-import com.matrix.presentation.ui.theme.MaterializedSmiteTheme
+import com.matrix.presentation.ui.theme.SmiteHandbookTheme
 import com.matrix.shared.testing.builder.getMockGodInformation
 import com.matrix.shared.testing.fakes.FakeSmiteRepository
 import org.junit.Rule
@@ -40,7 +40,7 @@ class GodsScreenInstrumentedTests {
     // Start the app
     var firstGodClicked = false
     composeTestRule.setContent {
-      MaterializedSmiteTheme {
+      SmiteHandbookTheme {
         GodListScreen(GodListViewModel(smiteRepository), {
           firstGodClicked = true
         })

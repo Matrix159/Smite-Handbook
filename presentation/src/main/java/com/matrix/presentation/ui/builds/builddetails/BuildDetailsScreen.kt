@@ -1,7 +1,5 @@
 package com.matrix.presentation.ui.builds.builddetails
 
-import GodSelectionView
-import ItemSelectionView
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -38,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,13 +51,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.matrix.presentation.R
-import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.GodTitleCard
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.presentation.ui.extension.conditional
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailUiState
 import com.matrix.presentation.ui.items.itemdetails.ItemDetails
+import com.matrix.presentation.ui.preview.SmiteHandbookPreviews
+import com.matrix.presentation.ui.theme.SmiteHandbookTheme
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
@@ -73,6 +73,32 @@ fun BuildDetailsScreen(
   modifier: Modifier = Modifier,
 ) {
   val collectedUiState by buildDetailsViewModel.uiState.collectAsStateWithLifecycle()
+
+  BuildDetailsScreen(
+    collectedUiState,
+    navigateToGodList = navigateToGodList,
+    navigateToItemList = navigateToItemList,
+    onDeleteBuild = {
+      buildDetailsViewModel.deleteBuild(it)
+      onDeleteBuild(it)
+    },
+    onSaveBuild = {
+      buildDetailsViewModel.saveBuild(it)
+    },
+    modifier = modifier
+  )
+}
+
+@Composable
+private fun BuildDetailsScreen(
+  buildDetailsUiState: BuildDetailsUiState,
+  navigateToGodList: () -> Unit,
+  navigateToItemList: (Array<Long>) -> Unit,
+  onDeleteBuild: (buildInfo: BuildInformation) -> Unit,
+  onSaveBuild: (buildInfo: BuildInformation) -> Unit,
+  modifier: Modifier = Modifier,
+) {
+
   val focusManger = LocalFocusManager.current
 
   Column(
@@ -81,22 +107,23 @@ fun BuildDetailsScreen(
     modifier = modifier
   ) {
 
-    when (val uiState = collectedUiState) {
+    when (val uiState = buildDetailsUiState) {
       is BuildDetailsUiState.Error -> ErrorText(uiState.exception)
       BuildDetailsUiState.Loading -> Loader()
       is BuildDetailsUiState.Success -> {
-        var editDetailState: EditDetailsState by remember(uiState) {
-          val buildInfo = uiState.buildInformation
-          mutableStateOf(
-            EditDetailsState(
-              name = buildInfo.name ?: "",
-              godInformation = buildInfo.god,
-              itemInformationList = buildInfo.items
-            )
-          )
-        }
-        var selectedItem by remember(editDetailState.itemInformationList) {
-          mutableStateOf(if (editDetailState.itemInformationList.isNotEmpty()) editDetailState.itemInformationList[0] else null)
+        var isEditing by rememberSaveable { mutableStateOf(false) }
+//        var editDetailState: EditDetailsState by remember(uiState) {
+//          val buildInfo = uiState.buildInformation
+//          mutableStateOf(
+//            EditDetailsState(
+//              name = buildInfo.name ?: "",
+//              godInformation = buildInfo.god,
+//              itemInformationList = buildInfo.items
+//            )
+//          )
+//        }
+        var selectedItem by remember(uiState.buildInformation.items) {
+          mutableStateOf(if (uiState.buildInformation.items.isNotEmpty()) uiState.buildInformation.items[0] else null)
         }
 
         Box(
@@ -126,7 +153,6 @@ fun BuildDetailsScreen(
                 AlertDialog(onDismissRequest = { showDeleteDialog = false }, confirmButton = {
                   TextButton(onClick = {
                     showDeleteDialog = false
-                    buildDetailsViewModel.deleteBuild(uiState.buildInformation)
                     onDeleteBuild(uiState.buildInformation)
                   }) {
                     Text("Delete")
@@ -141,15 +167,15 @@ fun BuildDetailsScreen(
               }
             }
             Crossfade(
-              targetState = editDetailState.inEditMode,
+              targetState = isEditing,
               label = "Build details build name input"
             ) { inEditMode ->
               Layout(
                 modifier = Modifier.fillMaxWidth(),
                 content = {
                   TextField(
-                    value = editDetailState.name,
-                    onValueChange = { editDetailState = editDetailState.copy(name = it) },
+                    value = uiState.buildInformation.name ?: "",
+                    onValueChange = { onSaveBuild(uiState.buildInformation.copy(name = it)) },
                     label = { Text(stringResource(R.string.build_name)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -158,7 +184,7 @@ fun BuildDetailsScreen(
                     }),
                   )
                   Text(
-                    text = editDetailState.name,
+                    text = uiState.buildInformation.name ?: "",
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Visible,
@@ -193,7 +219,7 @@ fun BuildDetailsScreen(
               modifier = Modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.medium)
-                .conditional(editDetailState.inEditMode) {
+                .conditional(isEditing) {
                   clickable {
                     navigateToGodList()
 //                    editDetailState = editDetailState.copy(currentlyEditing = CurrentlyEditing.GODS)
@@ -201,14 +227,14 @@ fun BuildDetailsScreen(
                 }
             ) {
               GodTitleCard(
-                godImageUrl = editDetailState.godInformation.godIconURL,
-                godName = editDetailState.godInformation.name,
-                godTitle = editDetailState.godInformation.title,
+                godImageUrl = uiState.buildInformation.god.godIconURL,
+                godName = uiState.buildInformation.god.name,
+                godTitle = uiState.buildInformation.god.title,
                 modifier = Modifier.fillMaxWidth()
               )
 
               androidx.compose.animation.AnimatedVisibility(
-                visible = editDetailState.inEditMode,
+                visible = isEditing,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.matchParentSize()
@@ -255,9 +281,10 @@ fun BuildDetailsScreen(
             Box(
               modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
-                .conditional(editDetailState.inEditMode) {
+                .conditional(isEditing) {
                   clickable {
-                    navigateToItemList(uiState.buildInformation.items.map { it.itemID }.toTypedArray())
+                    navigateToItemList(uiState.buildInformation.items.map { it.itemID }
+                      .toTypedArray())
 //                    editDetailState =
 //                      editDetailState.copy(currentlyEditing = CurrentlyEditing.ITEMS)
                   }
@@ -267,7 +294,7 @@ fun BuildDetailsScreen(
                 Row(
                   modifier = Modifier.fillMaxWidth()
                 ) {
-                  for (item in editDetailState.itemInformationList) {
+                  for (item in uiState.buildInformation.items) {
                     AsyncImage(
                       model = item.itemIconURL,
                       contentDescription = item.deviceName,
@@ -282,7 +309,7 @@ fun BuildDetailsScreen(
                         .size(64.dp)
                         .padding(8.dp)
                         .clip(MaterialTheme.shapes.small)
-                        .conditional(!editDetailState.inEditMode) {
+                        .conditional(!isEditing) {
                           clickable {
                             selectedItem = item
                           }
@@ -297,19 +324,19 @@ fun BuildDetailsScreen(
                       selectedItem = it
                     },
                     modifier = Modifier
-                      .let {
-                        when (editDetailState.itemInformationList.indexOf(selectedItem)) {
-                          0 -> it.background(
+                      .let { modifier ->
+                        when (uiState.buildInformation.items.indexOf(selectedItem)) {
+                          0 -> modifier.background(
                             MaterialTheme.colorScheme.secondaryContainer,
                             RoundedCornerShape(0.dp, 12.dp, 12.dp, 12.dp)
                           )
 
-                          editDetailState.itemInformationList.lastIndex -> it.background(
+                          uiState.buildInformation.items.lastIndex -> modifier.background(
                             MaterialTheme.colorScheme.secondaryContainer,
                             RoundedCornerShape(12.dp, 0.dp, 12.dp, 12.dp)
                           )
 
-                          else -> it.background(
+                          else -> modifier.background(
                             MaterialTheme.colorScheme.secondaryContainer,
                             MaterialTheme.shapes.medium
                           )
@@ -321,7 +348,7 @@ fun BuildDetailsScreen(
               }
 
               androidx.compose.animation.AnimatedVisibility(
-                visible = editDetailState.inEditMode,
+                visible = isEditing,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.matchParentSize()
@@ -354,77 +381,66 @@ fun BuildDetailsScreen(
             }
           }
 
-          when (editDetailState.currentlyEditing) {
-            CurrentlyEditing.GODS -> GodSelectionView(
-              gods = uiState.allGods,
-              godSelected = { selectedGod ->
-                editDetailState = editDetailState.copy(
-                  godInformation = selectedGod,
-                  currentlyEditing = CurrentlyEditing.NONE
-                )
-              },
-              // TODO
-              appliedGodFilters = AppliedGodFilters(),
-              updateAppliedGodFilters = {},
-              modifier = Modifier.fillMaxSize()
-            )
-
-            CurrentlyEditing.ITEMS -> ItemSelectionView(
-              items = uiState.allItems,
-              selectedItems = editDetailState.itemInformationList,
-              addSelectedItem = {
-                editDetailState =
-                  editDetailState.copy(itemInformationList = editDetailState.itemInformationList + it)
-              },
-              removeSelectedItem = {
-                editDetailState =
-                  editDetailState.copy(itemInformationList = editDetailState.itemInformationList - it)
-              },
-              modifier = Modifier.fillMaxSize()
-            )
-
-            else -> {}
-          }
+//          when (editDetailState.currentlyEditing) {
+//            CurrentlyEditing.GODS -> GodSelectionView(
+//              gods = uiState.allGods,
+//              godSelected = { selectedGod ->
+//                editDetailState = editDetailState.copy(
+//                  godInformation = selectedGod,
+//                  currentlyEditing = CurrentlyEditing.NONE
+//                )
+//              },
+//              // TODO
+//              appliedGodFilters = AppliedGodFilters(),
+//              updateAppliedGodFilters = {},
+//              modifier = Modifier.fillMaxSize()
+//            )
+//
+//            CurrentlyEditing.ITEMS -> ItemSelectionView(
+//              items = uiState.allItems,
+//              selectedItems = editDetailState.itemInformationList,
+//              addSelectedItem = {
+//                editDetailState =
+//                  editDetailState.copy(itemInformationList = editDetailState.itemInformationList + it)
+//              },
+//              removeSelectedItem = {
+//                editDetailState =
+//                  editDetailState.copy(itemInformationList = editDetailState.itemInformationList - it)
+//              },
+//              modifier = Modifier.fillMaxSize()
+//            )
+//
+//            else -> {}
+//          }
           // FAB
-          if (!(editDetailState.currentlyEditing == CurrentlyEditing.ITEMS && editDetailState.itemInformationList.isEmpty())) {
-            FloatingActionButton(
-              modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-              onClick = {
-                when (editDetailState.inEditMode) {
-                  true -> {
-                    // Don't perform a save action when using the fab on the item screen, just go back
-                    // to previous view and stay in edit mode
-                    if (editDetailState.currentlyEditing != CurrentlyEditing.ITEMS) {
-                      buildDetailsViewModel.saveBuild(
-                        BuildInformation(
-                          id = uiState.buildInformation.id,
-                          name = editDetailState.name,
-                          god = editDetailState.godInformation,
-                          items = editDetailState.itemInformationList,
-                        )
-                      )
-                      editDetailState = editDetailState.copy(
-                        inEditMode = false,
-                        currentlyEditing = CurrentlyEditing.NONE,
-                      )
-                    } else {
-                      editDetailState =
-                        editDetailState.copy(currentlyEditing = CurrentlyEditing.NONE)
-                    }
-                  }
-
-                  false -> {
-                    editDetailState = editDetailState.copy(inEditMode = true)
-                  }
+          FloatingActionButton(
+            modifier = Modifier
+              .align(Alignment.BottomEnd)
+              .padding(16.dp),
+            onClick = {
+              when (isEditing) {
+                true -> {
+                  isEditing = false
+                  // Don't perform a save action when using the fab on the item screen, just go back
+                  // to previous view and stay in edit mode
+//                  onSaveBuild(
+//                    BuildInformation(
+//                      id = uiState.buildInformation.id,
+//                      name = uiState.buildInformation.name,
+//                      god = uiState.buildInformation.god,
+//                      items = uiState.buildInformation.items,
+//                    )
+//                  )
                 }
-              },
-            ) {
-              when (editDetailState.inEditMode) {
-                true -> Icon(Icons.Default.Check, contentDescription = "Save build")
-                false -> Icon(Icons.Default.Edit, contentDescription = "Edit build")
+                false -> {
+                  isEditing = true
+                }
               }
+            },
+          ) {
+            when (isEditing) {
+              true -> Icon(Icons.Default.Check, contentDescription = "Save build")
+              false -> Icon(Icons.Default.Edit, contentDescription = "Edit build")
             }
           }
         }
@@ -445,4 +461,22 @@ private enum class CurrentlyEditing {
   NONE,
   GODS,
   ITEMS,
+}
+
+@SmiteHandbookPreviews
+@Composable
+fun BuildDetailsScreenPreview() {
+  SmiteHandbookTheme {
+    BuildDetailsScreen(
+      buildDetailsUiState = BuildDetailsUiState.Success(
+        buildInformation = BuildInformation.default(),
+        allGods = emptyList(),
+        allItems = emptyList(),
+      ),
+      navigateToGodList = {},
+      navigateToItemList = {},
+      onDeleteBuild = {},
+      onSaveBuild = {},
+    )
+  }
 }

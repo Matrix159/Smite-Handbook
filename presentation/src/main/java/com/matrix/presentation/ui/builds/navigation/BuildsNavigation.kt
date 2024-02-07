@@ -6,9 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -27,10 +25,7 @@ import com.matrix.presentation.ui.builds.createbuild.CreateBuildViewModel
 import com.matrix.presentation.ui.builds.itemselection.ItemSelectionScreen
 import com.matrix.presentation.ui.builds.itemselection.ItemSelectionViewModel
 import com.matrix.presentation.ui.navigation.godListRoute
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 sealed interface BuildsNavigation : Route {
   data object Builds : BuildsNavigation {
@@ -53,8 +48,8 @@ sealed interface BuildsNavigation : Route {
     override val route: String = "builds_item_list?$initialItemIdsArg={$initialItemIdsArg}"
     fun createNavigationRoute(initialItemIds: Array<Long> = emptyArray()): String {
       val queryParamBuilder = Uri.Builder()
-      initialItemIds.forEach { id -> queryParamBuilder.appendQueryParameter(initialItemIdsArg, id.toString()) }
-      return "builds_item_list$queryParamBuilder"
+//      initialItemIds.forEach { id -> queryParamBuilder.appendQueryParameter(initialItemIdsArg, id.toString()) }
+      return "builds_item_list?initialItemIds=${initialItemIds.joinToString(",")}"
     }
   }
 
@@ -70,8 +65,7 @@ private fun NavGraphBuilder.itemSelectionRoute(navController: NavController) {
   composable(
     BuildsNavigation.ItemList.route,
     arguments = listOf(navArgument(BuildsNavigation.ItemList.initialItemIdsArg) {
-      this.type = NavType.LongArrayType
-      this.defaultValue = LongArray(0)
+      this.type = NavType.StringType
     }),
     enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
     exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }

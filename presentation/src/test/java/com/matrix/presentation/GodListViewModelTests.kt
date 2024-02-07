@@ -1,5 +1,6 @@
 package com.matrix.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import com.matrix.presentation.ui.gods.godlist.GodListUiState
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 import com.matrix.shared.testing.builder.getMockGodInformation
@@ -50,12 +51,11 @@ class GodListViewModelTests {
   @Before
   fun setup() {
     smiteRepo = FakeSmiteRepository()
-    godListViewModel = GodListViewModel(smiteRepo)
+    godListViewModel = GodListViewModel(smiteRepo, SavedStateHandle())
   }
 
   @Test
   fun testGodListViewModelWithData() = runTest {
-    godListViewModel = GodListViewModel(smiteRepo)
     val collectJob = launch(UnconfinedTestDispatcher()) { godListViewModel.uiState.collect() }
 
     assertEquals(GodListUiState.Loading, godListViewModel.uiState.value)

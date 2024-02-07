@@ -26,7 +26,12 @@ class ItemSelectionViewModel(
   savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-  private val initialItemIds: LongArray = savedStateHandle[BuildsNavigation.ItemList.initialItemIdsArg] ?: LongArray(0)
+  private val initialItemIds: Array<Long> =
+    (checkNotNull(savedStateHandle[BuildsNavigation.ItemList.initialItemIdsArg]) as String)
+      .split(",")
+      .map { it.toLong() }
+      .toTypedArray()
+
 
   private var appliedItemFilters by savedStateHandle.saveable {
     mutableStateOf(AppliedItemFilters())

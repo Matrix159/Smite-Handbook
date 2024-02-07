@@ -13,9 +13,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.matrix.presentation.R
+import com.matrix.presentation.ui.preview.SmiteHandbookPreviews
+import com.matrix.presentation.ui.theme.SmiteHandbookTheme
+
+@Composable
+fun GodTitleCard(
+  godImageUrl: String,
+  godName: String,
+  godTitle: String,
+  modifier: Modifier = Modifier
+) {
+  Card(
+    modifier = modifier,
+  ) {
+    GodTitleCardContent(godImageUrl, godName, godTitle)
+  }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,20 +53,6 @@ fun GodTitleCard(
 }
 
 @Composable
-fun GodTitleCard(
-  godImageUrl: String,
-  godName: String,
-  godTitle: String,
-  modifier: Modifier = Modifier
-) {
-  Card(
-    modifier = modifier,
-  ) {
-    GodTitleCardContent(godImageUrl, godName, godTitle)
-  }
-}
-
-@Composable
 private fun GodTitleCardContent(
   godImageUrl: String,
   godName: String,
@@ -61,6 +65,7 @@ private fun GodTitleCardContent(
     AsyncImage(
       model = godImageUrl,
       contentDescription = godName,
+      placeholder = painterResource(R.drawable.guardian),
       modifier = Modifier.fillMaxHeight()
     )
     Column(
@@ -76,5 +81,17 @@ private fun GodTitleCardContent(
         fontStyle = FontStyle.Italic
       )
     }
+  }
+}
+
+@SmiteHandbookPreviews
+@Composable
+fun GodTitleCardPreview() {
+  SmiteHandbookTheme {
+    GodTitleCard(
+      godImageUrl = "",
+      godName = "SomeGuardian",
+      godTitle = "The guardian",
+    )
   }
 }
