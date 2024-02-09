@@ -21,7 +21,6 @@ import kotlin.test.assertTrue
 /**
  * Tests the SmiteRepository implementation in the data layer
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class SmiteRepositoryTest {
   private lateinit var remoteDataSource: FakeSmiteRemoteDataSource
   private lateinit var localDataSource: FakeSmiteLocalDataSource
@@ -39,6 +38,7 @@ internal class SmiteRepositoryTest {
   }
 
 
+  // <editor-fold desc="getGods"/>
   @Test
   fun `getGods should populate and return two gods after syncing`() = runTest {
     // verify local is empty before the retrieval
@@ -71,6 +71,14 @@ internal class SmiteRepositoryTest {
   }
 
   @Test
+  fun `getGods should return an empty list when no data exists`() = runTest {
+    val results = repository.getGods().first()
+    assertTrue(results.isEmpty())
+  }
+  // </editor-fold>
+
+  // <editor-fold desc="getGod">
+  @Test
   fun `getGod returns result for valid ID`() = runTest {
     val id = 1L
     localDataSource.saveGods(listOf(getMockGodInformation(id)))
@@ -83,7 +91,9 @@ internal class SmiteRepositoryTest {
     val id = -1L
     assertFails { repository.getGod(id).first() }
   }
+  // </editor-fold>
 
+  // <editor-fold desc="getGodSkins">
   @Test
   fun `getGodSkins returns two results for ID - 1`() = runTest {
     val id = 1L
@@ -97,7 +107,10 @@ internal class SmiteRepositoryTest {
     val results = repository.getGodSkins(id).first()
     assertTrue(results.isEmpty())
   }
+  // </editor-fold>
 
+
+  // <editor-fold desc="getItems">
   @Test
   fun `getItems should populate and return two items after syncing`() = runTest {
     // verify local is empty before the retrieval
@@ -130,6 +143,15 @@ internal class SmiteRepositoryTest {
   }
 
   @Test
+  fun `getItems should return an empty list when no data exists`() = runTest {
+    val results = repository.getItems().first()
+    assertTrue(results.isEmpty())
+  }
+  // </editor-fold>
+
+
+  // <editor-fold desc="getItem">
+  @Test
   fun `getItem returns result for valid ID`() = runTest {
     val id = 1L
     localDataSource.saveItems(listOf(getMockItemInformation(id)))
@@ -142,7 +164,10 @@ internal class SmiteRepositoryTest {
     val id = -1L
     assertFails { repository.getItem(id).first() }
   }
+  // </editor-fold>
 
+
+  // <editor-fold desc="getBuilds">
   @Test
   fun `getBuilds returns results`() = runTest {
     localDataSource.saveBuild(getMockBuildInformation(0, 0, listOf(0, 1)))
@@ -155,7 +180,10 @@ internal class SmiteRepositoryTest {
     val buildResults = repository.getBuilds().first()
     assertTrue(buildResults.isEmpty())
   }
+  // </editor-fold>
 
+
+  // <editor-fold desc="getBuild">
   @Test
   fun `getBuild returns result for valid ID`() = runTest {
     val id = 1L
@@ -168,13 +196,41 @@ internal class SmiteRepositoryTest {
   fun `getBuild throws exception for invalid ID`() = runTest {
     assertFails { repository.getBuild(-1L) }
   }
+  // </ editor-fold>
 
   @Test
-  fun `createBuild successfully creates a build`() = runTest {
+  fun `saveBuild successfully creates a build`() = runTest {
     val id = 1L
     val build = getMockBuildInformation(id, 0, listOf(0, 1))
     repository.saveBuild(build)
     assertEquals(build, repository.getBuild(id).first())
+  }
+
+  @Test
+  fun `updateGodInBuild successfully updates a build`() = runTest {
+    val buildId = 1L
+    val godId = 1L
+    val newGodId = 2L
+    val god = getMockGodInformation(godId)
+    val newGod = getMockGodInformation(newGodId)
+    val build = getMockBuildInformation(buildId, godId, emptyList())
+    localDataSource.saveGods(listOf(god, newGod))
+    localDataSource.saveBuild(build)
+    repository.updateGodInBuild(buildId, newGodId)
+    assertEquals(newGodId, repository.getBuild(buildId).first().god.id)
+  }
+
+  @Test
+  fun `updateItemsInBuild successfully updates a build`() = runTest {
+    val buildId = 1L
+    val item1 = getMockItemInformation(1)
+    val item2 = getMockItemInformation(2)
+    val build = getMockBuildInformation(buildId, 1, listOf(1))
+    localDataSource.saveItems(listOf(item1, item2))
+    localDataSource.saveBuild(build)
+    val newItemIds = listOf(2L)
+    repository.updateItemsInBuild(buildId, newItemIds)
+    assertEquals(newItemIds, repository.getBuild(buildId).first().items.map { it.itemID })
   }
 
   @Test

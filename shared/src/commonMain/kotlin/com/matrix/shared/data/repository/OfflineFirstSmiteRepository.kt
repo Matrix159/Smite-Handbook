@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class OfflineFirstSmiteRepository constructor(
+internal class OfflineFirstSmiteRepository(
   private val networkDataSource: SmiteRemoteDataSource,
   private val localDataSource: SmiteLocalDataSource,
   private val patchVersionDataSource: PatchVersionDataSource,

@@ -44,47 +44,25 @@ internal class FakeSmiteLocalDataSource : SmiteLocalDataSource {
       localBuilds.remove(foundBuild)
     }
     localBuilds.add(buildInformation)
-//    val lastId: Int = localBuilds.maxBy { it.godId }.godId
-//    val newBuildEntity = buildEntity.copy(id = lastId + 1)
-//    localBuilds.add(newBuildEntity)
-//    val distinctBuildEntities = localBuilds.distinctBy { it.id }
-//    localBuilds.clear()
-//    localBuilds.addAll(distinctBuildEntities)
-//    itemIds.forEach {
-//      localBuildItemCrossRef.add(BuildItemCrossRef(newBuildEntity.id!!, it))
-//    }
-//    val distinctBuildItemCrossRef = localBuildItemCrossRef.distinctBy { it.buildId to it.itemId }
-//    localBuildItemCrossRef.clear()
-//    localBuildItemCrossRef.addAll(distinctBuildItemCrossRef)
   }
 
   override suspend fun updateGodInBuild(buildId: Long, godId: Long) {
-    TODO("Not yet implemented")
+    val build = localBuilds.first { it.id == buildId }
+    localBuilds.remove(build)
+    localBuilds.add(build.copy(god = localGods.first { it.id == godId }))
   }
 
   override suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>) {
-    TODO("Not yet implemented")
+    val build = localBuilds.first { it.id == buildId }
+    localBuilds.remove(build)
+    localBuilds.add(build.copy(items = itemIds.map { localItems.first { item -> item.itemID == it } }))
   }
 
-  override fun getBuilds(): Flow<List<BuildInformation>> = flowOf( localBuilds.map { it.copy() })
-//    val buildDbResults = localBuilds.map { build ->
-//      val god: GodEntity = localGods.find { god -> god.id == build.godId }!!
-//      val itemIds: List<Int> = localBuildItemCrossRef
-//        .filter { ref -> ref.buildId == build.id }
-//        .map { it.itemId }
-//
-//      return@map BuildDbResult(
-//        build = build,
-//        god = god,
-//        items = localItems.filter { itemIds.contains(it.id) }
-//      )
-//
-//    }
+  override fun getBuilds(): Flow<List<BuildInformation>> = flowOf(localBuilds.map { it.copy() })
 
   override fun getBuild(buildId: Long): Flow<BuildInformation> = flowOf(localBuilds.first { it.id == buildId })
 
   override suspend fun deleteBuild(buildId: Long) {
     localBuilds.removeAll { it.id == buildId }
-    //localBuildItemCrossRef.removeIf { it.buildId == buildEntity.id }
   }
 }
