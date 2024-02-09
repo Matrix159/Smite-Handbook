@@ -13,13 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.matrix.presentation.R
 import com.matrix.presentation.ui.preview.SmiteHandbookPreviews
 import com.matrix.presentation.ui.theme.SmiteHandbookTheme
+import com.matrix.presentation.utils.debugPlaceholder
 
 @Composable
 fun GodTitleCard(
@@ -65,7 +65,7 @@ private fun GodTitleCardContent(
     AsyncImage(
       model = godImageUrl,
       contentDescription = godName,
-      placeholder = painterResource(R.drawable.guardian),
+      placeholder = debugPlaceholder(R.drawable.guardian),
       modifier = Modifier.fillMaxHeight()
     )
     Column(

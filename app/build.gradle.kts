@@ -1,6 +1,6 @@
 @file:Suppress("DSL_SCOPE_VIOLATION")
 import java.io.FileInputStream
-import java.util.*
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -31,8 +31,8 @@ android {
         applicationId = "com.matrix.materializedsmite"
         minSdk = 26
         targetSdk = 34
-        versionCode = 12
-        versionName = "0.0.2"
+        versionCode = 13
+        versionName = "0.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.printToLog
+import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.matrix.presentation.ui.gods.godlist.GodListScreen
 import com.matrix.presentation.ui.gods.godlist.GodListViewModel
@@ -41,7 +42,7 @@ class GodsScreenInstrumentedTests {
     var firstGodClicked = false
     composeTestRule.setContent {
       SmiteHandbookTheme {
-        GodListScreen(GodListViewModel(smiteRepository), {
+        GodListScreen(GodListViewModel(smiteRepository, SavedStateHandle()), {
           firstGodClicked = true
         })
       }
