@@ -29,6 +29,7 @@ class ItemSelectionViewModel(
   private val initialItemIds: Array<Long> =
     (checkNotNull(savedStateHandle[BuildsNavigation.ItemList.initialItemIdsArg]) as String)
       .split(",")
+      .filter { it.isNotEmpty() }
       .map { it.toLong() }
       .toTypedArray()
 

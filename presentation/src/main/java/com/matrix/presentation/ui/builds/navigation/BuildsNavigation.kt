@@ -49,7 +49,8 @@ sealed interface BuildsNavigation : Route {
     fun createNavigationRoute(initialItemIds: Array<Long> = emptyArray()): String {
       val queryParamBuilder = Uri.Builder()
 //      initialItemIds.forEach { id -> queryParamBuilder.appendQueryParameter(initialItemIdsArg, id.toString()) }
-      return "builds_item_list?initialItemIds=${initialItemIds.joinToString(",")}"
+      var params = if(initialItemIds.isNotEmpty()) "?initialItemIds=${initialItemIds.joinToString(",")}" else ""
+      return "builds_item_list${params}"
     }
   }
 
@@ -66,6 +67,7 @@ private fun NavGraphBuilder.itemSelectionRoute(navController: NavController) {
     BuildsNavigation.ItemList.route,
     arguments = listOf(navArgument(BuildsNavigation.ItemList.initialItemIdsArg) {
       this.type = NavType.StringType
+      this.defaultValue = ""
     }),
     enterTransition = { fadeIn(animationSpec = defaultAnimationSpec) },
     exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
