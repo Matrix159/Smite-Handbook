@@ -34,7 +34,7 @@ fun GodScreen(
   godDetailsViewModel: GodDetailsViewModel,
   modifier: Modifier = Modifier
 ) {
-  val _godDetailsUiState by godDetailsViewModel.godDetailsUiState.collectAsStateWithLifecycle()
+  val _godDetailsUiState by godDetailsViewModel.uiState.collectAsStateWithLifecycle()
   val swipeState = rememberSwipeableState(initialValue = 0)
   val scrollState = rememberScrollState()
 

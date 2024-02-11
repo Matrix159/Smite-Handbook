@@ -16,8 +16,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
-/*@HiltViewModel*/
-class GodDetailsViewModel /*@Inject*/ constructor(
+class GodDetailsViewModel(
   smiteRepository: SmiteRepository,
   savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -25,7 +24,7 @@ class GodDetailsViewModel /*@Inject*/ constructor(
   private val selectedGodId: Long =
     (checkNotNull(savedStateHandle[GodsNavigation.GodDetails.godIdArg]) as String).toLong()
 
-  val godDetailsUiState = combine(
+  val uiState = combine(
     smiteRepository.getGod(selectedGodId),
     // Skins don't need to be loaded immediately
     smiteRepository.getGodSkins(selectedGodId).onStart { emit(emptyList()) },
@@ -58,5 +57,5 @@ sealed interface GodDetailsUiState {
     GodDetailsUiState
 
   data class Error(val exception: Throwable?) : GodDetailsUiState
-  object Loading : GodDetailsUiState
+  data object Loading : GodDetailsUiState
 }

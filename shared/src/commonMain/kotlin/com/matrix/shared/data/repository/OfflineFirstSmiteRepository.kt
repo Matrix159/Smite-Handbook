@@ -11,6 +11,7 @@ import com.matrix.shared.data.model.skins.GodSkinInformation
 import com.matrix.shared.data.model.toDomain
 import com.matrix.shared.data.network.interfaces.SmiteRemoteDataSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -52,7 +53,7 @@ internal class OfflineFirstSmiteRepository(
     }
   }
 
-  override suspend fun sync() = withContext(Dispatchers.Default) {
+  override suspend fun sync() = withContext(Dispatchers.IO) {
     val newPatchVersion = networkDataSource.getPatchVersion().version
     val oldPatchVersion = patchVersionDataSource.getPatchVersion().firstOrNull()
     if (
@@ -74,8 +75,7 @@ internal class OfflineFirstSmiteRepository(
     patchVersionDataSource.setPatchVersion(networkDataSource.getPatchVersion().version)
   }
 
-  private suspend fun syncGods() = withContext(Dispatchers.Default) {
-    //val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
+  private suspend fun syncGods() = withContext(Dispatchers.IO) {
     val newData = networkDataSource.getGods()
     localDataSource.saveGods(newData.map {
       it.toDomain()
@@ -83,8 +83,7 @@ internal class OfflineFirstSmiteRepository(
     logger.d("Saved new god data to local storage")
   }
 
-  private suspend fun syncItems() = withContext(Dispatchers.Default) {
-    //val currentPatchVersion: String? = patchVersionDataSource.getPatchVersion().firstOrNull()
+  private suspend fun syncItems() = withContext(Dispatchers.IO) {
     val newData = networkDataSource.getItems()
     localDataSource.saveItems(newData.map {
       it.toDomain()

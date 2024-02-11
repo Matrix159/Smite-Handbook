@@ -206,6 +206,7 @@ internal class SmiteRepositoryTest {
     assertEquals(build, repository.getBuild(id).first())
   }
 
+  // <editor-fold desc="updateGodInBuild">
   @Test
   fun `updateGodInBuild successfully updates a build`() = runTest {
     val buildId = 1L
@@ -221,6 +222,32 @@ internal class SmiteRepositoryTest {
   }
 
   @Test
+  fun `updateGodInBuild throws exception when build does not exist`() = runTest {
+    val buildId = 1L
+    val godId = 1L
+    val newGodId = 2L
+    val god = getMockGodInformation(godId)
+    localDataSource.saveGods(listOf(god))
+    assertFails { repository.updateGodInBuild(buildId, newGodId) }
+  }
+
+  @Test
+  fun `updateGodInBuild throws exception when god does not exist`() = runTest {
+    val buildId = 1L
+    val godId = 1L
+    val newGodId = 2L
+    val god = getMockGodInformation(godId)
+    val build = getMockBuildInformation(buildId, godId, emptyList())
+    localDataSource.saveGods(listOf(god))
+    localDataSource.saveBuild(build)
+    assertFails { repository.updateGodInBuild(buildId, newGodId) }
+  }
+
+  // </editor-fold>
+
+
+  // <editor-fold desc="updateItemsInBuild">
+  @Test
   fun `updateItemsInBuild successfully updates a build`() = runTest {
     val buildId = 1L
     val item1 = getMockItemInformation(1)
@@ -232,6 +259,29 @@ internal class SmiteRepositoryTest {
     repository.updateItemsInBuild(buildId, newItemIds)
     assertEquals(newItemIds, repository.getBuild(buildId).first().items.map { it.itemID })
   }
+
+  @Test
+  fun `updateItemsInBuild throws exception when build does not exist`() = runTest {
+    val buildId = 1L
+    val item1 = getMockItemInformation(1)
+    val item2 = getMockItemInformation(2)
+    val newItemIds = listOf(1L, 2L)
+    localDataSource.saveItems(listOf(item1, item2))
+    assertFails { repository.updateItemsInBuild(buildId, newItemIds) }
+  }
+
+  @Test
+  fun `updateItemsInBuild throws exception when item does not exist`() = runTest {
+    val buildId = 1L
+    val item1 = getMockItemInformation(1)
+    val build = getMockBuildInformation(buildId, 1, listOf(1))
+    localDataSource.saveItems(listOf(item1))
+    localDataSource.saveBuild(build)
+    val newItemIds = listOf(2L)
+    assertFails { repository.updateItemsInBuild(buildId, newItemIds) }
+  }
+
+  //  </editor-fold>
 
   @Test
   fun `deleteBuild successfully deletes a build`() = runTest {
