@@ -8,6 +8,8 @@ import com.matrix.presentation.ui.gods.godlist.GodListViewModel
 import com.matrix.presentation.ui.items.itemdetails.ItemDetailsViewModel
 import com.matrix.presentation.ui.items.itemlist.ItemListViewModel
 import com.matrix.presentation.ui.builds.itemselection.ItemSelectionViewModel
+import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -18,6 +20,6 @@ fun presentationKoinModule() = module {
   viewModelOf(::ItemDetailsViewModel)
   viewModelOf(::ItemSelectionViewModel)
   viewModelOf(::BuildListViewModel)
-  viewModelOf(::CreateBuildViewModel)
+  viewModel { (selectedGodId: Flow<Long?>, selectedItemIds: Flow<List<Long>>) -> CreateBuildViewModel(get(), selectedGodId, selectedItemIds) }
   viewModelOf(::BuildDetailsViewModel)
 }

@@ -21,6 +21,7 @@ import com.matrix.presentation.ui.gods.goddetails.GodDetailsViewModel
 import com.matrix.presentation.ui.gods.goddetails.GodScreen
 import com.matrix.presentation.ui.navigation.godListRoute
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 sealed class GodsNavigation : Route {
   data object GodList : GodsNavigation() {

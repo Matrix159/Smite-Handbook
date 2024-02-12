@@ -26,6 +26,7 @@ import com.matrix.presentation.ui.builds.itemselection.ItemSelectionScreen
 import com.matrix.presentation.ui.builds.itemselection.ItemSelectionViewModel
 import com.matrix.presentation.ui.navigation.godListRoute
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 sealed interface BuildsNavigation : Route {
   data object Builds : BuildsNavigation {
@@ -47,9 +48,7 @@ sealed interface BuildsNavigation : Route {
     const val initialItemIdsArg = "initialItemIds"
     override val route: String = "builds_item_list?$initialItemIdsArg={$initialItemIdsArg}"
     fun createNavigationRoute(initialItemIds: Array<Long> = emptyArray()): String {
-      val queryParamBuilder = Uri.Builder()
-//      initialItemIds.forEach { id -> queryParamBuilder.appendQueryParameter(initialItemIdsArg, id.toString()) }
-      var params = if(initialItemIds.isNotEmpty()) "?initialItemIds=${initialItemIds.joinToString(",")}" else ""
+      val params = if(initialItemIds.isNotEmpty()) "?initialItemIds=${initialItemIds.joinToString(",")}" else ""
       return "builds_item_list${params}"
     }
   }
@@ -124,12 +123,10 @@ fun NavGraphBuilder.buildsGraph(
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) { backStackEntry ->
       val selectedGodId =
-        backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
-      val selectedItemIds = backStackEntry.savedStateHandle.get<List<Long>>(BuildsNavigation.ItemList.selectedItemIds) ?: emptyList()
+         backStackEntry.savedStateHandle.getStateFlow<Long?>(BuildsNavigation.GodList.selectedGodId, null)
+      val selectedItemIds = backStackEntry.savedStateHandle.getStateFlow<List<Long>>(BuildsNavigation.ItemList.selectedItemIds, emptyList())
 
-      val createBuildViewModel: CreateBuildViewModel = koinViewModel()
-      createBuildViewModel.savedStateHandle[BuildsNavigation.GodList.selectedGodId] = selectedGodId
-      createBuildViewModel.savedStateHandle[BuildsNavigation.ItemList.selectedItemIds] = selectedItemIds
+      val createBuildViewModel: CreateBuildViewModel = koinViewModel(parameters =  { parametersOf(selectedGodId, selectedItemIds)})
 
       CreateBuildScreen(
         createBuildViewModel = createBuildViewModel,
@@ -165,9 +162,7 @@ fun NavGraphBuilder.buildsGraph(
         buildDetailsViewModel = buildDetailsViewModel,
         navigateToGodList = { navController.navigate(BuildsNavigation.GodList.route) },
         navigateToItemList = { navController.navigate(BuildsNavigation.ItemList.createNavigationRoute(it)) },
-        onDeleteBuild = { build ->
-          navController.popBackStack()
-        },
+        onDeleteBuild = { navController.popBackStack() },
         modifier = Modifier
           .fillMaxSize()
           .statusBarsPadding()

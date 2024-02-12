@@ -62,4 +62,15 @@ class GodDetailsViewModelTests {
     assertEquals(GodDetailsUiState.Success(godInformation = expectedGod, skins = expectedSkins), godDetailsViewModel.uiState.value)
     collectJob.cancel()
   }
+
+  @Test
+  fun `God details state is Error when god does not exist`() = runTest {
+    savedStateHandle[GodsNavigation.GodDetails.godIdArg] = "000"
+    godDetailsViewModel = GodDetailsViewModel(smiteRepo, savedStateHandle)
+    val expectedGod = getMockGodInformation(1)
+    smiteRepo.addGods(listOf(expectedGod))
+    val collectJob = launch(UnconfinedTestDispatcher()) { godDetailsViewModel.uiState.collect() }
+    assertEquals(GodDetailsUiState.Error, godDetailsViewModel.uiState.value)
+    collectJob.cancel()
+  }
 }

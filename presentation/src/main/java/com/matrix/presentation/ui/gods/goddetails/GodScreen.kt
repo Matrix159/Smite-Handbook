@@ -22,9 +22,11 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 
@@ -91,7 +93,7 @@ fun GodScreen(
   ) {
     when (val godDetailsUiState = _godDetailsUiState) {
       GodDetailsUiState.Loading -> Loader()
-      is GodDetailsUiState.Error -> ErrorText(godDetailsUiState.exception.toString())
+      is GodDetailsUiState.Error -> ErrorText(stringResource(R.string.an_error_occurred_loading_the_god_details))
       is GodDetailsUiState.Success -> {
         Box(
           contentAlignment = Alignment.BottomCenter,

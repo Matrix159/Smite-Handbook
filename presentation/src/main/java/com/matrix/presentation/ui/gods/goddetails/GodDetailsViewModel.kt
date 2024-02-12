@@ -18,7 +18,7 @@ import timber.log.Timber
 
 class GodDetailsViewModel(
   smiteRepository: SmiteRepository,
-  savedStateHandle: SavedStateHandle,
+  savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
   private val selectedGodId: Long =
@@ -42,7 +42,7 @@ class GodDetailsViewModel(
 
         is Result.Error -> {
           Timber.e(result.exception)
-          GodDetailsUiState.Error(result.exception)
+          GodDetailsUiState.Error
         }
       }
     }.stateIn(
@@ -56,6 +56,6 @@ sealed interface GodDetailsUiState {
   data class Success(val godInformation: GodInformation, val skins: List<GodSkinInformation>) :
     GodDetailsUiState
 
-  data class Error(val exception: Throwable?) : GodDetailsUiState
+  data object Error : GodDetailsUiState
   data object Loading : GodDetailsUiState
 }

@@ -41,4 +41,5 @@
     <string name="deleted_build">Deleted build</string>
     <string name="undo">Undo</string>
     <string name="no_builds_available">No builds available</string>
+    <string name="an_error_occurred_loading_the_god_details">An error occurred loading the god details.</string>
 </resources>

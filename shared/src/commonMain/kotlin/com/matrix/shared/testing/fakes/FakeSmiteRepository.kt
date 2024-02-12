@@ -9,10 +9,9 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 
-class FakeSmiteRepository: SmiteRepository {
+class FakeSmiteRepository : SmiteRepository {
   /**
    * The backing hot flow for the list of gods for testing.
    */
@@ -28,11 +27,7 @@ class FakeSmiteRepository: SmiteRepository {
   private val buildsFlow: MutableSharedFlow<List<BuildInformation>> =
     MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
-  override fun getGods(): Flow<List<GodInformation>> = godsFlow
-
-  override fun getGod(godId: Long): Flow<GodInformation> {
-    return godsFlow.map { gods -> gods.first { god -> god.id == godId } }
-  }
+  var shouldThrowError = false
 
   // Test usage only
   fun addGods(gods: List<GodInformation>) {
@@ -45,6 +40,12 @@ class FakeSmiteRepository: SmiteRepository {
 
   fun addSkins(skins: List<GodSkinInformation>) {
     skinsFlow.tryEmit(skins)
+  }
+
+  override fun getGods(): Flow<List<GodInformation>> = godsFlow
+
+  override fun getGod(godId: Long): Flow<GodInformation> {
+    return godsFlow.map { gods -> gods.first { god -> god.id == godId } }
   }
 
   override fun getGodSkins(godId: Long): Flow<List<GodSkinInformation>> = skinsFlow
@@ -97,5 +98,12 @@ class FakeSmiteRepository: SmiteRepository {
 
   override suspend fun sync() {
     // No-op
+  }
+
+  private fun <T> throwOrAction(action: () -> T): T {
+    if (shouldThrowError) {
+      throw Exception("Error")
+    }
+    return action()
   }
 }
