@@ -11,6 +11,7 @@ import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -24,18 +25,12 @@ import timber.log.Timber
 
 class BuildDetailsViewModel(
   private val smiteRepository: SmiteRepository,
-  val savedStateHandle: SavedStateHandle,
+  savedStateHandle: SavedStateHandle,
+  selectedGodId: Flow<Long?>,
+  selectedItemIds: Flow<List<Long>>
 ) : ViewModel() {
   private val buildId: Long =
     (checkNotNull(savedStateHandle[BuildsNavigation.BuildDetails.buildIdArg]) as String).toLong()
-
-  private val selectedGodId: StateFlow<Long?> = savedStateHandle.getStateFlow(
-    BuildsNavigation.GodList.selectedGodId, null
-  )
-
-  private val selectedItemIds: StateFlow<List<Long>> = savedStateHandle.getStateFlow(
-    BuildsNavigation.ItemList.selectedItemIds, emptyList()
-  )
 
   init {
     selectedGodId

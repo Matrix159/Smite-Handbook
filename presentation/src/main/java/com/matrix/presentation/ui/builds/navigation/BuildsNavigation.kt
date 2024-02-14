@@ -150,13 +150,9 @@ fun NavGraphBuilder.buildsGraph(
       exitTransition = { fadeOut(animationSpec = defaultAnimationSpec) }
     ) {backStackEntry ->
       val selectedGodId =
-        backStackEntry.savedStateHandle.get<Long>(BuildsNavigation.GodList.selectedGodId)
-      val selectedItemIds = backStackEntry.savedStateHandle.get<List<Long>>(
-        BuildsNavigation.ItemList.selectedItemIds
-      ) ?: emptyList()
-      val buildDetailsViewModel: BuildDetailsViewModel = koinViewModel()
-      buildDetailsViewModel.savedStateHandle[BuildsNavigation.GodList.selectedGodId] = selectedGodId
-      buildDetailsViewModel.savedStateHandle[BuildsNavigation.ItemList.selectedItemIds] = selectedItemIds
+        backStackEntry.savedStateHandle.getStateFlow<Long?>(BuildsNavigation.GodList.selectedGodId, null)
+      val selectedItemIds = backStackEntry.savedStateHandle.getStateFlow<List<Long>>(BuildsNavigation.ItemList.selectedItemIds, emptyList())
+      val buildDetailsViewModel: BuildDetailsViewModel = koinViewModel(parameters =  { parametersOf(selectedGodId, selectedItemIds)})
 
       BuildDetailsScreen(
         buildDetailsViewModel = buildDetailsViewModel,

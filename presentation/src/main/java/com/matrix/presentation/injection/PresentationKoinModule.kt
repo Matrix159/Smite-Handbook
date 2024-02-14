@@ -21,5 +21,5 @@ fun presentationKoinModule() = module {
   viewModelOf(::ItemSelectionViewModel)
   viewModelOf(::BuildListViewModel)
   viewModel { (selectedGodId: Flow<Long?>, selectedItemIds: Flow<List<Long>>) -> CreateBuildViewModel(get(), selectedGodId, selectedItemIds) }
-  viewModelOf(::BuildDetailsViewModel)
+  viewModel { (selectedGodId: Flow<Long?>, selectedItemIds: Flow<List<Long>>) -> BuildDetailsViewModel(get(), get(), selectedGodId, selectedItemIds) }
 }

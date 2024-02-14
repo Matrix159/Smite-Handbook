@@ -54,7 +54,7 @@ class ItemSelectionViewModel(
           val inputs = result.data
           ItemSelectionUiState.Success(
             items = inputs.items,
-            selectedItems = inputs.items.filter { item -> inputs.selectedItemIds.contains(item.itemID) },
+            selectedItems = inputs.selectedItemIds.map { itemId -> inputs.items.first { it.itemID == itemId} },
             appliedItemFilters = appliedItemFilters
           )
         }

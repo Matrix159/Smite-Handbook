@@ -13,8 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-//@HiltViewModel
-class BuildListViewModel /*@Inject*/ constructor(
+class BuildListViewModel(
   private val smiteRepository: SmiteRepository
 ) : ViewModel() {
 
@@ -26,7 +25,7 @@ class BuildListViewModel /*@Inject*/ constructor(
       when (result) {
         is Result.Success -> {
           BuildsUiState.Success(
-            result.data.sortedBy { it.god.name }
+            result.data
           )
         }
         is Result.Loading -> {

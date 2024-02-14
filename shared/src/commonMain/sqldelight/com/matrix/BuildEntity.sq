@@ -6,8 +6,8 @@ upsertBuild:
 
 
 insertBuildItems:
-    INSERT INTO BuildItemCrossRef(buildId, itemId)
-    VALUES(:buildId, :itemId);
+    INSERT INTO BuildItemCrossRef(buildId, itemId, sortIndex)
+    VALUES(:buildId, :itemId, :sortIndex);
 
 lastInsertRowId:
     SELECT last_insert_rowid();
@@ -17,7 +17,8 @@ selectAllBuilds:
     FROM BuildEntity AS buildEntity
     JOIN GodEntity AS godEntity ON godEntity.id = buildEntity.godId
     JOIN BuildItemCrossRef AS crossRef ON buildEntity.id = crossRef.buildId
-    JOIN ItemEntity AS itemEntity ON crossRef.itemId = itemEntity.id;
+    JOIN ItemEntity AS itemEntity ON crossRef.itemId = itemEntity.id
+    ORDER BY godEntity.name, buildEntity.name, crossRef.sortIndex;
 
 deleteBuildById:
     DELETE FROM BuildEntity WHERE id = ?;

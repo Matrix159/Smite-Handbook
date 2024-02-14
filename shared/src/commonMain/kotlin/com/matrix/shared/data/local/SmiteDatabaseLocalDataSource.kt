@@ -30,6 +30,8 @@ internal class SmiteDatabaseLocalDataSource constructor(
 
   private val database = createDatabase(databaseDriverFactory)
 
+  init {
+  }
   override suspend fun saveGods(gods: List<GodInformation>) = database.transaction {
     gods.forEach {
       database.godEntityQueries.upsertGod(
@@ -117,13 +119,14 @@ internal class SmiteDatabaseLocalDataSource constructor(
       database.buildEntityQueries.upsertBuild(
         buildId = buildInformation.id,
         buildName = buildInformation.name,
-        godId = buildInformation.god.id
+        godId = buildInformation.god.id,
       )
       val lastInsertId = database.buildEntityQueries.lastInsertRowId().executeAsOne()
-      buildInformation.items.forEach {
+      buildInformation.items.forEachIndexed { index, it ->
         database.buildEntityQueries.insertBuildItems(
           buildId = lastInsertId,
-          itemId = it.itemID
+          itemId = it.itemID,
+          sortIndex = index.toLong()
         )
       }
     }
@@ -139,7 +142,7 @@ internal class SmiteDatabaseLocalDataSource constructor(
   override suspend fun updateItemsInBuild(buildId: Long, itemIds: List<Long>) {
     var build = getBuild(buildId).first()
     val items = getItems().first()
-    build = build.copy(items = items.filter { item -> itemIds.contains(item.itemID) })
+    build = build.copy(items = itemIds.map { items.first { item -> item.itemID == it } })
     saveBuild(build)
   }
 

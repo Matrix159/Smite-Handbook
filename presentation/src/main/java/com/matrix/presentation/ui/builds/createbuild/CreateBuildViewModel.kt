@@ -56,7 +56,7 @@ class CreateBuildViewModel(
           gods = inputs.gods,
           items = inputs.items,
           selectedGod = inputs.gods.firstOrNull { it.id == inputs.selectedGodId },
-          selectedItems = inputs.items.filter { item -> inputs.selectedItemIds.contains(item.itemID) },
+          selectedItems = inputs.selectedItemIds.map { itemId -> inputs.items.first { it.itemID == itemId} },
           buildName = inputs.uiInput.buildName,
         )
       }

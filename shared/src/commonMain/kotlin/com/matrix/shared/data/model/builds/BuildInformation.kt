@@ -10,7 +10,7 @@ data class BuildInformation(
   val id: Long? = null,
   val god: GodInformation,
   val items: List<ItemInformation>,
-  val name: String? = null,
+  val name: String? = null
 ) {
   companion object {
     fun default(): BuildInformation {
@@ -141,7 +141,7 @@ data class BuildInformation(
             itemIconURL = "http://www.bing.com/search?q=sem"
           )
         ),
-        name = "The build of all builds"
+        name = "The build of all builds",
       )
     }
   }

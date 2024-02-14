@@ -98,6 +98,13 @@ sqldelight {
   database("SmiteHandbookDatabase") {
     packageName = "com.matrix"
     dialect = "sqlite:3.25"
+
+    // The directory where to store '.db' schema files relative to the root
+    // of the project. These files are used to verify that migrations yield
+    // a database with the latest schema. Defaults to null so the verification
+    // tasks will not be created.
+    schemaOutputDirectory = file("src/commonMain/sqldelight/databases")
+    verifyMigrations = true
   }
 }
 
