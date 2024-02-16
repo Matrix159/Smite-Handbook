@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.matrix.presentation.R
 import com.matrix.presentation.ui.components.ErrorText
 import com.matrix.presentation.ui.components.Loader
 import com.matrix.shared.data.model.gods.GodInformation
@@ -26,7 +28,7 @@ fun GodListScreen(
   ) {
     when (val godListUiState = uiState) {
       GodListUiState.Loading -> Loader()
-      is GodListUiState.Error -> ErrorText(godListUiState.exception.toString())
+      is GodListUiState.Error -> ErrorText(stringResource(R.string.unknown_error))
       is GodListUiState.Success -> {
         FilterableGodList(
           gods = godListUiState.gods,

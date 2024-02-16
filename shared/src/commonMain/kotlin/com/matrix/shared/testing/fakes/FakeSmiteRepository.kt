@@ -5,9 +5,8 @@ import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
 import com.matrix.shared.data.model.skins.GodSkinInformation
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -15,17 +14,17 @@ class FakeSmiteRepository : SmiteRepository {
   /**
    * The backing hot flow for the list of gods for testing.
    */
-  private val godsFlow: MutableSharedFlow<List<GodInformation>> =
-    MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  private val godsFlow: MutableStateFlow<List<GodInformation>> =
+    MutableStateFlow(emptyList())
 
-  private val itemsFlow: MutableSharedFlow<List<ItemInformation>> =
-    MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  private val itemsFlow: MutableStateFlow<List<ItemInformation>> =
+    MutableStateFlow(emptyList())
 
-  private val skinsFlow: MutableSharedFlow<List<GodSkinInformation>> =
-    MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  private val skinsFlow: MutableStateFlow<List<GodSkinInformation>> =
+    MutableStateFlow(emptyList())
 
-  private val buildsFlow: MutableSharedFlow<List<BuildInformation>> =
-    MutableSharedFlow(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+  private val buildsFlow: MutableStateFlow<List<BuildInformation>> =
+    MutableStateFlow(emptyList())
 
   var shouldThrowError = false
 
@@ -42,7 +41,11 @@ class FakeSmiteRepository : SmiteRepository {
     skinsFlow.tryEmit(skins)
   }
 
-  override fun getGods(): Flow<List<GodInformation>> = godsFlow
+  fun addBuilds(builds: List<BuildInformation>) {
+    buildsFlow.tryEmit(builds)
+  }
+
+  override fun getGods(): Flow<List<GodInformation>> = godsFlow.map { throwOrAction { it } }
 
   override fun getGod(godId: Long): Flow<GodInformation> {
     return godsFlow.map { gods -> gods.first { god -> god.id == godId } }
@@ -50,13 +53,13 @@ class FakeSmiteRepository : SmiteRepository {
 
   override fun getGodSkins(godId: Long): Flow<List<GodSkinInformation>> = skinsFlow
 
-  override fun getItems(): Flow<List<ItemInformation>> = itemsFlow
+  override fun getItems(): Flow<List<ItemInformation>> = itemsFlow.map { throwOrAction { it } }
 
   override fun getItem(itemId: Long): Flow<ItemInformation> {
     return itemsFlow.map { it.first { it.itemID == itemId } }
   }
 
-  override fun getBuilds(): Flow<List<BuildInformation>> = buildsFlow
+  override fun getBuilds(): Flow<List<BuildInformation>> = buildsFlow.map { throwOrAction { it } }
 
   override fun getBuild(buildId: Long): Flow<BuildInformation> {
     return buildsFlow.map { builds -> builds.first { it.id == buildId } }

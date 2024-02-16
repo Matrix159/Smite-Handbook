@@ -54,5 +54,11 @@ class GodListViewModelTests {
     collectJob.cancel()
   }
 
-
+@Test
+  fun `God list state is Error when an exception happens`() = runTest {
+    smiteRepo.shouldThrowError = true
+    val collectJob = launch(UnconfinedTestDispatcher()) { godListViewModel.uiState.collect() }
+    assertEquals(GodListUiState.Error, godListViewModel.uiState.value)
+    collectJob.cancel()
+  }
 }

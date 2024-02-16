@@ -46,7 +46,7 @@ class GodListViewModel (
       }
       is Result.Error -> {
         Timber.e(godsResult.exception)
-        GodListUiState.Error(godsResult.exception)
+        GodListUiState.Error
       }
     }
   }.stateIn(
@@ -66,6 +66,6 @@ sealed interface GodListUiState {
     val appliedGodFilters: AppliedGodFilters = AppliedGodFilters()
   ) : GodListUiState
 
-  data class Error(val exception: Throwable?) : GodListUiState
+  data object Error : GodListUiState
   data object Loading : GodListUiState
 }

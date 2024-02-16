@@ -53,4 +53,12 @@ class ItemListViewModelTests {
 
     collectJob.cancel()
   }
+
+  @Test
+  fun `Item list state is Error when an exception happens`() = runTest {
+    smiteRepo.shouldThrowError = true
+    val collectJob = launch(UnconfinedTestDispatcher()) { itemListViewModel.uiState.collect() }
+    assertEquals(ItemListUiState.Error, itemListViewModel.uiState.value)
+    collectJob.cancel()
+  }
 }

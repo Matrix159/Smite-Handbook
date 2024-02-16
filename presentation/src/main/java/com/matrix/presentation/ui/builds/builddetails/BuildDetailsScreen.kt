@@ -108,20 +108,10 @@ private fun BuildDetailsScreen(
   ) {
 
     when (val uiState = buildDetailsUiState) {
-      is BuildDetailsUiState.Error -> ErrorText(uiState.exception)
+      is BuildDetailsUiState.Error -> ErrorText(stringResource(R.string.unknown_error))
       BuildDetailsUiState.Loading -> Loader()
       is BuildDetailsUiState.Success -> {
         var isEditing by rememberSaveable { mutableStateOf(false) }
-//        var editDetailState: EditDetailsState by remember(uiState) {
-//          val buildInfo = uiState.buildInformation
-//          mutableStateOf(
-//            EditDetailsState(
-//              name = buildInfo.name ?: "",
-//              godInformation = buildInfo.god,
-//              itemInformationList = buildInfo.items
-//            )
-//          )
-//        }
         var selectedItem by remember(uiState.buildInformation.items) {
           mutableStateOf(if (uiState.buildInformation.items.isNotEmpty()) uiState.buildInformation.items[0] else null)
         }

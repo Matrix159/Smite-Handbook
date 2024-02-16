@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
-import com.matrix.presentation.models.filters.AppliedGodFilters
 import com.matrix.presentation.models.filters.AppliedItemFilters
 import com.matrix.shared.data.contracts.SmiteRepository
 import com.matrix.shared.data.model.Result
@@ -16,7 +15,6 @@ import com.matrix.shared.data.model.items.ItemInformation
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
@@ -51,7 +49,7 @@ class ItemListViewModel(
 
         is Result.Error -> {
           Timber.e(result.exception)
-          ItemListUiState.Error(result.exception)
+          ItemListUiState.Error
         }
       }
     }.stateIn(
@@ -71,7 +69,7 @@ sealed interface ItemListUiState {
     val appliedItemFilters: AppliedItemFilters = AppliedItemFilters()
   ) : ItemListUiState
 
-  data class Error(val exception: Throwable?) : ItemListUiState
+  data object Error : ItemListUiState
   data object Loading : ItemListUiState
 }
 

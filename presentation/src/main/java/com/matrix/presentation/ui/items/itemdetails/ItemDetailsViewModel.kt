@@ -51,7 +51,7 @@ class ItemDetailsViewModel /*@Inject*/ constructor(
           }
           is Result.Error -> {
             Timber.e(result.exception)
-            ItemDetailUiState.Error(result.exception)
+            ItemDetailUiState.Error
           }
         }
       }.stateIn(
@@ -90,8 +90,8 @@ sealed interface ItemDetailUiState {
     val itemTreeNodes: List<ItemNode>
   ) : ItemDetailUiState
 
-  data class Error(val exception: Throwable?) : ItemDetailUiState
-  object Loading : ItemDetailUiState
+  data object Error : ItemDetailUiState
+  data object Loading : ItemDetailUiState
 }
 
 

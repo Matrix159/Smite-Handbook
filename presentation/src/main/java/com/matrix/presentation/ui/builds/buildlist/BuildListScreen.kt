@@ -57,19 +57,19 @@ fun BuildListScreen(
     verticalArrangement = Arrangement.Center,
     modifier = modifier
   ) {
-    val buildState: BuildsUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val buildState: BuildListUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (val state = buildState) {
-      is BuildsUiState.Error -> {
-        Text(state.exception.toString())
+      is BuildListUiState.Error -> {
+        Text(stringResource(R.string.unknown_error))
       }
 
-      is BuildsUiState.Loading -> {
+      is BuildListUiState.Loading -> {
         Timber.d(buildState.toString())
         Loader()
       }
 
-      is BuildsUiState.Success -> {
+      is BuildListUiState.Success -> {
         val coroutineScope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
 

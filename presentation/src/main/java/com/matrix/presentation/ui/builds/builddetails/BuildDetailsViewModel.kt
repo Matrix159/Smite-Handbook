@@ -10,10 +10,8 @@ import com.matrix.shared.data.model.asResult
 import com.matrix.shared.data.model.builds.BuildInformation
 import com.matrix.shared.data.model.gods.GodInformation
 import com.matrix.shared.data.model.items.ItemInformation
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -61,13 +59,15 @@ class BuildDetailsViewModel(
           allGods = result.data.second,
           allItems = result.data.third
         )
+
         is Result.Error -> {
           // Ignoring no such element exception when logging as a deleted build triggers this
           if (result.exception !is NoSuchElementException) {
             Timber.e(result.exception)
           }
-          BuildDetailsUiState.Error(Exception("An error occurred while loading build information."))
+          BuildDetailsUiState.Error
         }
+
         Result.Loading -> BuildDetailsUiState.Loading
       }
     }.stateIn(
@@ -93,6 +93,6 @@ sealed interface BuildDetailsUiState {
     val isEditing: Boolean = false,
   ) : BuildDetailsUiState
 
-  data class Error(val exception: Throwable?) : BuildDetailsUiState
+  data object Error : BuildDetailsUiState
   data object Loading : BuildDetailsUiState
 }

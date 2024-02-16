@@ -18,29 +18,29 @@ class BuildListViewModel(
 ) : ViewModel() {
 
   // The UI collects from this StateFlow to get its state updates
-  val uiState: StateFlow<BuildsUiState> = smiteRepository
+  val uiState: StateFlow<BuildListUiState> = smiteRepository
     .getBuilds()
     .asResult()
     .map { result ->
       when (result) {
         is Result.Success -> {
-          BuildsUiState.Success(
+          BuildListUiState.Success(
             result.data
           )
         }
         is Result.Loading -> {
-          BuildsUiState.Loading
+          BuildListUiState.Loading
         }
         is Result.Error -> {
           Timber.e(result.exception)
-          BuildsUiState.Error(result.exception)
+          BuildListUiState.Error
         }
       }
     }
     .stateIn(
       scope = viewModelScope,
       started = SharingStarted.WhileSubscribed(5000),
-      initialValue = BuildsUiState.Loading
+      initialValue = BuildListUiState.Loading
     )
 
   fun deleteBuild(buildInformation: BuildInformation) = viewModelScope.launch {
@@ -53,8 +53,8 @@ class BuildListViewModel(
 }
 
 // Represents different states for the Builds screen
-sealed interface BuildsUiState {
-  data class Success(val builds: List<BuildInformation>) : BuildsUiState
-  data class Error(val exception: Throwable?) : BuildsUiState
-  object Loading : BuildsUiState
+sealed interface BuildListUiState {
+  data class Success(val builds: List<BuildInformation>) : BuildListUiState
+  data object Error : BuildListUiState
+  data object Loading : BuildListUiState
 }
