@@ -118,17 +118,43 @@ class BuildDetailsViewModelTests {
       ), buildDetailsViewModel.uiState.value
     )
     selectedGodId.value = 2
-    assertIs<BuildDetailsUiState.Success>(buildDetailsViewModel.uiState.value)
-    assertEquals(allGods, (buildDetailsViewModel.uiState.value as BuildDetailsUiState.Success).allGods)
-    assertEquals(allItems, (buildDetailsViewModel.uiState.value as BuildDetailsUiState.Success).allItems)
-    assertEquals(expectedBuild.copy(god = mockGod2), (buildDetailsViewModel.uiState.value as BuildDetailsUiState.Success).buildInformation)
-//    assertEquals(
-//      BuildDetailsUiState.Success(
-//        buildInformation = expectedBuild.copy(god = mockGod2),
-//        allGods = allGods,
-//        allItems = allItems,
-//      ), buildDetailsViewModel.uiState.value
-//    )
+    assertEquals(
+      BuildDetailsUiState.Success(
+        buildInformation = expectedBuild.copy(god = mockGod2),
+        allGods = allGods,
+        allItems = allItems,
+      ), buildDetailsViewModel.uiState.value
+    )
+    collectJob.cancel()
+  }
+
+  @Test
+  fun `items are updated in build when selectedItemIds updates`() = runTest {
+    val mockGod = getMockGodInformation(1)
+    val mockItem = getMockItemInformation(1)
+    val mockItem2 = getMockItemInformation(2)
+    val expectedBuild = getMockBuildInformation(1, 1, listOf(1))
+    val allGods = listOf(mockGod)
+    val allItems = listOf(mockItem, mockItem2)
+    smiteRepo.addGods(allGods)
+    smiteRepo.addItems(allItems)
+    smiteRepo.addBuilds(listOf(expectedBuild))
+    val collectJob = launch(UnconfinedTestDispatcher()) { buildDetailsViewModel.uiState.collect() }
+    assertEquals(
+      BuildDetailsUiState.Success(
+        buildInformation = expectedBuild,
+        allGods = listOf(mockGod),
+        allItems = listOf(mockItem, mockItem2),
+      ), buildDetailsViewModel.uiState.value
+    )
+    selectedItemIds.value = listOf(2)
+    assertEquals(
+      BuildDetailsUiState.Success(
+        buildInformation = expectedBuild.copy(items = listOf(mockItem2)),
+        allGods = allGods,
+        allItems = allItems,
+      ), buildDetailsViewModel.uiState.value
+    )
     collectJob.cancel()
   }
 }

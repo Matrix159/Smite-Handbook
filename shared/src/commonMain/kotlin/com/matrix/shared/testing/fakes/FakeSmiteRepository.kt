@@ -73,7 +73,7 @@ class FakeSmiteRepository : SmiteRepository {
     val builds = buildsFlow.first()
     val updatedBuilds = builds.map { build ->
       if (build.id == buildId) {
-        build.copy(god = build.god.copy(id = godId))
+        build.copy(god = godsFlow.first().first { it.id == godId })
       } else {
         build
       }
@@ -85,7 +85,7 @@ class FakeSmiteRepository : SmiteRepository {
     val builds = buildsFlow.first()
     val updatedBuilds = builds.map { build ->
       if (build.id == buildId) {
-        build.copy(items = itemIds.map { itemId -> build.items.first { it.itemID == itemId } })
+        build.copy(items = itemIds.map { itemId -> itemsFlow.value.first { it.itemID == itemId } })
       } else {
         build
       }
